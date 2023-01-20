@@ -1,20 +1,100 @@
-import { View, Text, StatusBar, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import { View, Text, StatusBar, FlatList, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import Header from '../../component/Header'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import colors from '../../constant/colors'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
+
+
+import Comment from '../../component/Comment'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore';
+import ShowingComments from '../../component/ShowingComments'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
 const NoteDetail = ({ route, navigation }) => {
+    const UID = auth().currentUser.uid
+
     const HEIGHT = StatusBar.currentHeight;
-    const { detail } = route.params
-    const text = "1) Anchor the desired FIX into 1L \n2) Line select that FIX to scratch pad & insert radial to fly + 99: ex. FIX025/99 \n3) Select that to L2\n4) Select L2 to the scratch pad and then back to L1\n5) Select the radial displayed on 6R (great circle route)\n6) *As a check, enter the original fix into the FIX page and enter the desired radial on first line. A green dashed line will overlay the new proposed route.\n7) Execute"
+    const { detail, Title } = route.params
+    const text = detail.Note
+    const isSelected = detail.title
+
+    console.log(isSelected)
+
+    const [commentText, onCommentText] = useState("")
+    const [Comments, getComment] = useState("")
+
+    useEffect(() => {
+        FetchComment()
+    }, [])
+
+    const sendComment = () => {
+
+        if (commentText !== "") {
+            firestore()
+                .collection('Users')
+                .doc(UID)
+                .get()
+                .then((info) => {
+                    firestore()
+                        .collection('Comments')
+                        .doc(Title)
+                        .collection("Comments")
+                        .add({
+                            name: info?.data()?.username,
+                            Comment: commentText,
+                            UID: UID,
+                            CreatedAt: Math.floor(Date.now() / 1000)
+                        }, {
+                            merge: true
+                        })
+                }).then(() => {
+                    onCommentText("")
+                })
+
+
+        }
+
+    }
+
+
+    const FetchComment = () => {
+
+        firestore()
+            .collection('Comments')
+            .doc(Title)
+            .collection("Comments")
+            .orderBy('CreatedAt', 'desc')
+            .onSnapshot((doc) => {
+                const Temp = []
+                doc?.docs?.map((tnt) => {
+                    Temp.push(tnt)
+                })
+                getComment(Temp)
+            })
+    }
+
+    const onDeleteComment = (chatID) => {
+
+        firestore()
+            .collection('Comments')
+            .doc(Title)
+            .collection("Comments")
+            .doc(chatID)
+            .delete()
+    }
+
+
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             <View style={{ marginTop: HEIGHT + hp('5'), alignSelf: 'center' }}>
                 <Header Logo={require('../../assets/images/logo1.png')} profile={require('../../assets/images/profile.png')} btnColor={colors.primary} Nav={navigation} />
             </View>
-            <View style={{ backgroundColor: colors.primary, width: wp('90'), height: hp('85'), alignSelf: 'center', borderRadius: 20, top: 30 }}>
+
+
+            <ScrollView contentContainerStyle={{ backgroundColor: colors.primary, width: wp('90'), alignSelf: 'center', borderRadius: 20, top: 30 }}>
                 <View style={{ padding: 30 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -31,12 +111,59 @@ const NoteDetail = ({ route, navigation }) => {
                         <Image source={require('../../assets/images/airplan.png')} style={{ width: wp(9), height: hp('2'), marginRight: 10 }} />
                     </View>
                 </View>
-                <View style={{ backgroundColor: '#FFFF', paddingVertical: 10, borderRadius: 10, paddingLeft: 20, marginVertical: 10, width: wp('80'), height: hp(65), alignSelf: "center", top: 30 }}>
-                    <Text style={{lineHeight:50,fontSize:22,color:'black',paddingRight:20}}>
+                <View style={{ backgroundColor: '#FFFF', paddingVertical: 10, borderRadius: 10, paddingLeft: 20, marginVertical: 10, width: wp('80'), alignSelf: "center", top: 30 }}>
+                    <Text style={{ lineHeight: 50, fontSize: 22, color: 'black', paddingRight: 20 }}>
                         {text}
                     </Text>
                 </View>
-            </View>
+                <View style={{ width: wp('80%'), alignSelf: 'center', padding: 20, backgroundColor: 'white', marginTop: 40, borderRadius: 20, marginBottom:20 }}>
+
+                    <Comment onSendComment={sendComment} onState={onCommentText} val={commentText} />
+
+                    <FlatList
+                        data={Comments}
+                        renderItem={(cmt) => {
+
+                            const comment = cmt?.item.data().Comment
+                            const name = cmt?.item.data().name
+                            const uid = cmt?.item.data().UID
+
+                            return (
+                                <>
+                                    {
+                                        comment !== "" ?
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 35, width: wp('70%'), justifyContent: 'space-between' }}>
+                                                <ShowingComments name={name} comment={comment} />
+                                                {
+                                                    UID === uid ?
+                                                        <TouchableOpacity onPress={() => onDeleteComment(cmt.item.id)}>
+
+                                                            <MaterialCommunityIcons
+                                                                name='delete'
+                                                                size={25}
+
+                                                            />
+                                                        </TouchableOpacity>
+                                                        :
+                                                        null
+                                                }
+
+                                            </View>
+
+                                            :
+
+                                            <Text>No Comment here</Text>
+
+                                    }
+
+
+                                </>
+                            )
+                        }}
+                    />
+                </View>
+            </ScrollView>
+
         </View>
     )
 }

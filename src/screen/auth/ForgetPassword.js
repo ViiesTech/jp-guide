@@ -5,6 +5,7 @@ import CustomButton from '../../component/CustomButton'
 import colors from '../../constant/colors'
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
+import { ScrollView } from 'react-native'
 
 
 const ForgetPassword = ({ navigation }) => {
@@ -50,7 +51,7 @@ const ForgetPassword = ({ navigation }) => {
   }
     
   return (
-    <>
+    <ScrollView contentContainerStyle={{flexGrow:1}}>
       <View style={styles.container}>
         <StatusBar
           animated={true}
@@ -95,7 +96,7 @@ const ForgetPassword = ({ navigation }) => {
         </ImageBackground>
       </View>
       <Toast />
-    </>
+    </ScrollView>
   )
 }
 const styles = StyleSheet.create({

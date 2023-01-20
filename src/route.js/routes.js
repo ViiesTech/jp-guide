@@ -19,11 +19,22 @@ import SignUp from '../screen/auth/SignUp';
 import ForgetPassword from '../screen/auth/ForgetPassword';
 import Payment from '../screen/protected/Payment';
 import PrivacyPolicy from '../screen/auth/PrivacyPolicy';
+import PDFText from '../screen/protected/PDFText';
 
 const Stack = createNativeStackNavigator();
 
 
 const Routes = () => {
+
+  const [Loader, setLoader] = useState(true)
+
+  useEffect(() => {
+
+    setTimeout(() => {
+      setLoader(false)
+    }, 4000);
+
+  }, [])
 
 
   const [initializing, setInitializing] = useState(true);
@@ -43,33 +54,37 @@ const Routes = () => {
 
   return (
     <Stack.Navigator initialRouteName='GetStart' screenOptions={{ headerShown: false }}>
-      {/* <Stack.Screen name='Animation' component={Animation} /> */}
       {
-        !user ?
-          <>
-            <Stack.Screen name="GetStart" component={GetStart} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-            <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} />
-            {/* <Stack.Screen name='Animation' component={Animation} /> */}
+        Loader == true ?
 
-
-          </>
+          <Stack.Screen name='Animation' component={Animation} />
           :
-          <>
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name='Detail' component={Detail} />
-            <Stack.Screen name='Emergency' component={Emergency} />
-            <Stack.Screen name='Operational' component={Operational} />
-            <Stack.Screen name='Maintenances' component={Maintenances} />
-            <Stack.Screen name='EditProfile' component={EditProfile} />
-            <Stack.Screen name='Communication' component={Communication} />
-            <Stack.Screen name='Notes' component={Notes} />
-            <Stack.Screen name='NoteDetail' component={NoteDetail} />
-            <Stack.Screen name="Payment" component={Payment} />
 
-          </>
+          !user ?
+            <>
+              <Stack.Screen name="GetStart" component={GetStart} />
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="SignUp" component={SignUp} />
+              <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+              <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} />
+
+
+
+            </>
+            :
+            <>
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name='Detail' component={Detail} />
+              <Stack.Screen name='Emergency' component={Emergency} />
+              <Stack.Screen name='Operational' component={Operational} />
+              <Stack.Screen name='Maintenances' component={Maintenances} />
+              <Stack.Screen name='EditProfile' component={EditProfile} />
+              <Stack.Screen name='Communication' component={Communication} />
+              <Stack.Screen name='Notes' component={Notes} />
+              <Stack.Screen name='NoteDetail' component={NoteDetail} />
+              <Stack.Screen name="Payment" component={Payment} />
+              <Stack.Screen name="PDFText" component={PDFText} />
+            </>
       }
     </Stack.Navigator>
   )

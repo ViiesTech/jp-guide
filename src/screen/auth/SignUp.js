@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CustomButton from '../../component/CustomButton'
 import colors from '../../constant/colors'
@@ -7,6 +7,8 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
 import Entypo from 'react-native-vector-icons/Entypo'
+import { ScrollView } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
@@ -16,8 +18,20 @@ const SignUp = ({ navigation }) => {
     const [userName, setUsername] = useState('')
     const [RetypePassword, setRetypePassword] = useState('')
     const [Check, setCheck] = useState(false)
+    const [deviceToken, setDeviceToken] = useState("")
 
 
+    useEffect(() => {
+        getToken()
+    }, [])
+
+    const getToken = async () => {
+        const DevToken = await AsyncStorage.getItem("FMCToken")
+        setDeviceToken(DevToken)
+    }
+
+
+    // console.log("ddddd Tokennn",deviceToken)
 
 
     const handleLogin = () => {
@@ -60,7 +74,8 @@ const SignUp = ({ navigation }) => {
                         .set({
                             Email: Email,
                             username: userName,
-                            Buy: ""
+                            Buy: "",
+                            DeviceToken: deviceToken,
                         })
                 })
                 .catch(error => {
@@ -86,7 +101,7 @@ const SignUp = ({ navigation }) => {
     }
 
     return (
-        <>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
                 <StatusBar
                     animated={true}
@@ -143,20 +158,20 @@ const SignUp = ({ navigation }) => {
                                 />
                             </View>
 
-                            <View style={{ flexDirection: 'row', marginTop:10, marginBottom:10 , alignItems:'center'}}>
-                                <TouchableOpacity onPress={()=> setCheck(true)} style={{ height: 25, width: 25, borderRadius:6, borderWidth:2, borderColor:'black', alignItems:'center', justifyContent:'center' }}>
+                            <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 10, alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => setCheck(true)} style={{ height: 25, width: 25, borderRadius: 6, borderWidth: 2, borderColor: 'black', alignItems: 'center', justifyContent: 'center' }}>
                                     {
                                         Check ?
-                                        <View style={{height:25, width: 25, backgroundColor:'black',borderRadius:6, alignItems:'center', justifyContent:'center'}}>
-                                            <Entypo name='check' size={15} color={'white'}/>
-                                        </View>
+                                            <View style={{ height: 25, width: 25, backgroundColor: 'black', borderRadius: 6, alignItems: 'center', justifyContent: 'center' }}>
+                                                <Entypo name='check' size={15} color={'white'} />
+                                            </View>
 
-                                        :
+                                            :
 
-                                        null
+                                            null
                                     }
                                 </TouchableOpacity>
-                                <Text  onPress={()=> setCheck(true)} style={{  color: 'black', marginLeft:5, fontSize:hp('1.4%') }}>Please Accept the <Text onPress={() => navigation.navigate('PrivacyPolicy')} style={{fontWeight:'bold', textDecorationLine:'underline', color:'blue'}}>Privacy Policy</Text></Text>
+                                <Text onPress={() => setCheck(true)} style={{ color: 'black', marginLeft: 5, fontSize: hp('1.4%') }}>Please Accept the <Text onPress={() => navigation.navigate('PrivacyPolicy')} style={{ fontWeight: 'bold', textDecorationLine: 'underline', color: 'blue' }}>Privacy Policy</Text></Text>
                             </View>
 
 
@@ -177,7 +192,7 @@ const SignUp = ({ navigation }) => {
                 </ImageBackground>
             </View>
             <Toast />
-        </>
+        </ScrollView>
     )
 }
 const styles = StyleSheet.create({

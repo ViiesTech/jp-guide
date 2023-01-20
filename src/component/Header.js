@@ -12,13 +12,15 @@ const Header = ({
     onPressButton,
     btnColor,
     profile,
-    Nav
+    Nav,
+    onchangeText,
+    value
 }) => {
     return (
         <View style={{ width: wp('90%'), flexDirection: 'row',justifyContent:'space-between'}}>
             
             <Image source={Logo} style={styles.Logo} resizeMode='contain' />
-            <TextInput  {...inputProps} style={styles.input} placeholder="search topics, flights, airports etc"/>
+            <TextInput  {...inputProps} style={styles.input} placeholder="search here" onChangeText={onchangeText} value={value}/>
             <CustomButton
                 buttonColor={btnColor}
                 title="Search"

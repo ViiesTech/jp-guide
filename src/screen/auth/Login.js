@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CustomButton from '../../component/CustomButton'
 import colors from '../../constant/colors'
-import auth from '@react-native-firebase/auth';
+import auth, { firebase } from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const Login = ({ navigation }) => {
@@ -16,7 +18,8 @@ const Login = ({ navigation }) => {
 
   console.log(Email, Password)
 
-  const handleLogin = () => {
+  const handleLogin = async() => {
+    const DevToken = await AsyncStorage.getItem("FMCToken")
 
     setLoading(true)
 
@@ -49,6 +52,18 @@ const Login = ({ navigation }) => {
         .then(() => {
           console.log('User account created & signed in!');
           setLoading(false)
+
+          const UID = auth().currentUser.uid
+
+          firestore()
+          .collection("Users")
+          .doc(UID)
+          .update({
+            DeviceToken : DevToken
+          }
+            )
+
+
 
         })
         .catch(error => {

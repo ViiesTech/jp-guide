@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>the_jp_guid</string>
+	<string>JP Guide</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -39,9 +39,13 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
 				<true/>
 			</dict>
 		</dict>
@@ -54,7 +58,7 @@
 	<string>We need access to photo library so that photos can be selected</string>
 	<key>NSCameraUsageDescription</key>
 	<string>My description about why I need this capability</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>  
+	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>My description about why I need this capability</string>
 	<key>UIAppFonts</key>
 	<array>

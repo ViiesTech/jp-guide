@@ -24,15 +24,14 @@ const EditProfile = ({ navigation }) => {
       .onSnapshot((text) => {
         // console.log(text.exists)
 
-        if(text?.exists === false)
-        {
+        if (text?.exists === false) {
           return null
-        }else{
+        } else {
           setDetail(text?.data())
         }
-      
+
         // console.log(text.data())
-  
+
       })
   }
 
@@ -41,17 +40,29 @@ const EditProfile = ({ navigation }) => {
   }, [])
 
   const Logout = () => {
-    auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
-  }
-  const saveChange = () => {
+    
     firestore()
     .collection('Users')
     .doc(UID)
     .update({
-      username: changeUsername
+
+      LoggedIn: false,
+
+
+    }).then(()=>{
+      auth()
+      .signOut()
+    
     })
+    
+  }
+  const saveChange = () => {
+    firestore()
+      .collection('Users')
+      .doc(UID)
+      .update({
+        username: changeUsername
+      })
     setModalVisible(!isModalVisible);
 
   }
@@ -86,20 +97,20 @@ const EditProfile = ({ navigation }) => {
         </View>
 
         <Modal isVisible={isModalVisible}>
-          <View style={{ flex: 0.2, backgroundColor: 'white', borderRadius: 20, padding: 20 , justifyContent:'space-between'}}>
+          <View style={{ flex: 0.2, backgroundColor: 'white', borderRadius: 20, padding: 20, justifyContent: 'space-between' }}>
 
-          <Text style={{fontSize:hp('2.5%',), fontWeight:'bold'}}>Change Username</Text>
+            <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold' }}>Change Username</Text>
             <TextInput
-            style={{height:70,  backgroundColor:"#c0c0c0", borderRadius:10, paddingHorizontal:20}}
-            placeholder={"Username here"}
-            placeholderTextColor={"black"}
-            onChangeText={(txt)=>{
-              setChangeUsername(txt)
-            }}
-            value={changeUsername}
+              style={{ height: 70, backgroundColor: "#c0c0c0", borderRadius: 10, paddingHorizontal: 20 }}
+              placeholder={"Username here"}
+              placeholderTextColor={"black"}
+              onChangeText={(txt) => {
+                setChangeUsername(txt)
+              }}
+              value={changeUsername}
             />
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop:30 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
 
               <TouchableOpacity onPress={() => toggleModal()} style={{ height: 50, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                 <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Close</Text>
@@ -112,6 +123,10 @@ const EditProfile = ({ navigation }) => {
 
           </View>
         </Modal>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Payment')} style={{ height: 100, backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center', borderRadius: 200, marginTop: 30 }}>
+          <Text style={{ color: "white", fontSize: hp('2.5%'), fontWeight: 'bold' }}>Upgrade Premium</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => Logout()} style={{ height: 60, backgroundColor: 'red', alignItems: 'center', justifyContent: 'center', borderRadius: 200, marginTop: 30 }}>
           <Text style={{ color: "white", fontSize: hp('2.5%'), fontWeight: 'bold' }}>Logout</Text>

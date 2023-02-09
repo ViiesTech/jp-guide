@@ -8,7 +8,7 @@ import Pdf from 'react-native-pdf';
 import Icon from 'react-native-vector-icons/AntDesign'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
-
+import { DocumentView, RNPdftron } from "react-native-pdftron";
 
 
 import Comment from '../../component/Comment'
@@ -20,6 +20,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Modal from "react-native-modal";
 import Entypo from 'react-native-vector-icons/Entypo'
 import colors from '../../constant/colors';
+
+import { Config } from 'react-native-pdftron';
 
 const PDFText = ({ navigation, route }) => {
 
@@ -116,20 +118,13 @@ const PDFText = ({ navigation, route }) => {
 
       <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
         <View >
-          <Pdf
-            source={source}
-            onLoadComplete={(numberOfPages, filePath) => {
-              console.log(`Number of pages: ${numberOfPages}`);
-            }}
-            onPageChanged={(page, numberOfPages) => {
-              console.log(`Current page: ${page}`);
-            }}
-            onError={(error) => {
-              console.log(error);
-            }}
-            onPressLink={(uri) => {
-              console.log(`Link pressed: ${uri}`);
-            }}
+          <DocumentView
+            source={pageUrl}
+            // disabledElements={[Config.AnnotationMenu]}
+            disabledTools={[Config.Buttons.addPageButton]}
+
+
+
             style={styles.pdf} />
 
 

@@ -10,6 +10,9 @@ target 'the_jp_guid' do
   # Flags change depending on the env values.
   flags = get_default_flags()
 
+  pod 'PDFNet', podspec: 'https://www.pdftron.com/downloads/ios/cocoapods/pdfnet/latest.podspec'
+
+
   use_react_native!(
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.

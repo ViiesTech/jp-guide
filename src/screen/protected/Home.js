@@ -242,6 +242,8 @@ const Home = ({ navigation }) => {
                 if (Search == "") {
                   return val
                 } else if (val.toLowerCase().includes(Search.toLowerCase())) {
+
+                  console.log("val....",val)
                   return val
                 }
               }).map((item, key) => {

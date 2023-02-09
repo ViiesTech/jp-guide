@@ -1,17 +1,39 @@
 import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native'
-import React from 'react'
+import React,{useEffect} from 'react'
 import Pdf from 'react-native-pdf'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Comment from './Comment'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { DocumentView, RNPdftron } from "react-native-pdftron";
+
+import { Config } from 'react-native-pdftron'
+
 
 
 const PdfData = (props) => {
+
+
+    console.log("Propss.......",props)
+
+    useEffect(() => {
+        RNPdftron.enableJavaScript(true);
+    }, [])
+
     return (
         <ScrollView>
 
-            <Pdf
-                source={props.URL}
-                style={styles.PDF} />
+            <DocumentView
+                document={props.URL.uri}
+                showLeadingNavButton={true}
+                disabledTools={[Config.Buttons.addPageButton, Config.Buttons.cropPageButton]}
+                leadingNavButtonIcon={
+                    Platform.OS === "ios"
+                        ? "ic_close_black_24px.png"
+                        : "ic_arrow_back_white_24dp"
+                } 
+                style={styles.PDF}
+                />
 
 
             <View style={{  width: wp('80%'), alignSelf: 'center',  padding: 20 }}>
@@ -24,9 +46,11 @@ const PdfData = (props) => {
 
 const styles = StyleSheet.create({
     PDF: {
-        minHeight: 500,
+        minHeight: 400,
         width: wp('80%'),
-        backgroundColor: 'transparent',
+
+        height:400
+        // backgroundColor: 'transparent',
 
     }
 })

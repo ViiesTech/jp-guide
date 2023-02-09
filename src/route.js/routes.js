@@ -21,6 +21,11 @@ import Payment from '../screen/protected/Payment';
 import PrivacyPolicy from '../screen/auth/PrivacyPolicy';
 import PDFText from '../screen/protected/PDFText';
 
+
+//PDF Tron
+
+import PDFTron from '../screen/protected/PDFTron';
+
 const Stack = createNativeStackNavigator();
 
 
@@ -73,6 +78,7 @@ const Routes = () => {
             </>
             :
             <>
+              {/* <Stack.Screen name="PDFTron" component={PDFTron} /> */}
               <Stack.Screen name="Home" component={Home} />
               <Stack.Screen name='Detail' component={Detail} />
               <Stack.Screen name='Emergency' component={Emergency} />
@@ -84,6 +90,7 @@ const Routes = () => {
               <Stack.Screen name='NoteDetail' component={NoteDetail} />
               <Stack.Screen name="Payment" component={Payment} />
               <Stack.Screen name="PDFText" component={PDFText} />
+
             </>
       }
     </Stack.Navigator>

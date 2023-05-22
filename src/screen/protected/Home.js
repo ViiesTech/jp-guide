@@ -13,8 +13,10 @@ import firestore from '@react-native-firebase/firestore';
 import { A, B, C, F, G, H, K, L, M, N, P, R, S, U, V, X, Y } from '../../arrayindex/Alphabet'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AwesomeAlert from 'react-native-awesome-alerts';
-
-
+import DarkMode from '../../component/DarkMode';
+import { ImageBackground } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux'
+import { setAllPdf } from '../../redux/PDFSlice';
 
 
 
@@ -23,6 +25,10 @@ const Home = ({ navigation }) => {
   const [Search, setSearch] = useState('')
   console.log("Search", Search)
 
+  const dispatch = useDispatch()
+
+
+
   const [isModalVisible, setModalVisible] = useState(true);
   const [Purchased, setPurchased] = useState(false)
   const [getData, setGetData] = useState()
@@ -30,6 +36,7 @@ const Home = ({ navigation }) => {
 
   const [showAlert, setShowAlert] = useState(false)
   const [otherToken, setOtherToken] = useState("")
+  const [ImageUrl, setImageUrl] = useState("")
 
   const UID = auth()?.currentUser?.uid
 
@@ -41,48 +48,46 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     console.log("Called")
+    getFirebasePDF()
     SaveToken()
     CallData()
+    pleaseGetData()
 
   }, [otherToken])
+
+
+  const getFirebasePDF = () => {
+    const Temp = []
+    firestore()
+      .collection("PDF")
+      .get()
+      .then((querySnapshot) => {
+        const allPdf = querySnapshot.docs.map((doc) => doc.data());
+        console.log("allPdf", allPdf);
+
+        const sort = allPdf.sort((a, b) => a.name.localeCompare(b.name));
+
+
+        dispatch(setAllPdf(sort));
+
+      })
+
+  }
 
 
   const ShowAlert = () => {
     setShowAlert(true)
   }
 
-  // const HideAlert = () => {
-  //   setShowAlert(false)
-  //   firestore()
-  //     .collection('Users')
-  //     .doc(UID)
-  //     .update({
-  //       OtherDevice: ""
-  //     })
-  // }
-
-  // const AcceptPermission = () => {
-
-  //   console.log("Accept token")
-
-  //   setShowAlert(false)
-  //   firestore()
-  //     .collection('Users')
-  //     .doc(UID)
-  //     .onSnapshot((doc) => {
-  //       // console.log(doc?.data())
-  //       if (doc?.data()?.OtherDevice) {
-  //         firestore()
-  //           .collection("Users")
-  //           .doc(UID)
-  //           .update({
-  //             DeviceToken: doc?.data()?.OtherDevice
-  //           }).then(() => {
-  //             auth().signOut()
-  //           })
-  //       }
-  //     })
-  // }
+  const pleaseGetData = () => {
+    firestore()
+      .collection("Users")
+      .doc(UID)
+      .onSnapshot((doc) => {
+        // console.log(doc.data().Image)
+        setImageUrl(doc?.data()?.Image)
+      })
+  }
 
   const SaveToken = async () => {
     const DevToken = await AsyncStorage.getItem("FMCToken")
@@ -92,9 +97,9 @@ const Home = ({ navigation }) => {
         .collection('Users')
         .doc(UID)
         .onSnapshot((doc) => {
-          if (doc?.data().DeviceToken === DevToken) {
-            
-          }else{
+          if (doc?.data()?.DeviceToken === DevToken) {
+
+          } else {
             auth().signOut()
           }
         })
@@ -105,7 +110,7 @@ const Home = ({ navigation }) => {
   const CallData = (Aplha) => {
 
 
-
+    console.log("........", Aplha)
 
     setCard(true)
     const Temp = []
@@ -195,6 +200,7 @@ const Home = ({ navigation }) => {
       .doc(UID)
       .onSnapshot((val) => {
         if (val?.exists) {
+
           if (val?.data()?.Buy) {
             console.log("hiiiiii")
             setPurchased(true)
@@ -210,34 +216,31 @@ const Home = ({ navigation }) => {
   const HEIGHT = StatusBar.currentHeight;
   const alphabet = ["Home", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   const cardDetail = [
-    { title: "Airports \nWorldwide", image: require('../../assets/images/card1.png'), color: 'rgba(252, 252, 252, 0.2)', nav: "Detail" },
-    { title: "Emergency \nProtocol", image: require('../../assets/images/emergency.png'), color: 'rgba(252, 252, 252, 0.2)', nav: "Emergency" },
-    { title: "Operational \nInformation", image: require('../../assets/images/operational.png'), color: 'rgba(252, 252, 252, 0.2)', nav: "Operational" },
-    { title: "Maintenance \nInformation", image: require('../../assets/images/setting.png'), color: 'rgba(252, 252, 252, 0.2)', nav: "Maintenances" },
-    { title: "Communications \nInformation", image: require('../../assets/images/communication.png'), color: 'rgba(252, 252, 252, 0.2)', nav: "Communication" },
-    { title: "General Notes", image: require('../../assets/images/notes.png'), color: 'rgba(252, 252, 252, 0.2)', nav: "Notes" }
+    { title: "SEARCH AIRPORTS", image: require('../../assets/images/card1.png'), imageBG: require('../../assets/images/searchair.png'), nav: "Detail" },
+    { title: "INTERNATIONAL SUPPLEMENT", image: require('../../assets/images/emergency.png'), imageBG: require('../../assets/images/sup.png'), nav: "Emergency" },
+    { title: "COMMUNICATIONS", image: require('../../assets/images/operational.png'), imageBG: require('../../assets/images/com.png'), nav: "Operational" },
+    { title: "GENERAL INTERNATIONAL\nINFORMATION", image: require('../../assets/images/genint.png'), imageBG: require('../../assets/images/genint.png'), nav: "Maintenances" },
+    { title: "OPERATIONAL INFORMATION", image: require('../../assets/images/communication.png'), imageBG: require('../../assets/images/Operationals.png'), nav: "Communication" },
+    { title: "GENERAL AIRCRAFT NOTES \nAND MAINTENANCE", image: require('../../assets/images/notes.png'), imageBG: require('../../assets/images/A:C.png'), nav: "Notes" }
   ]
 
   const RenderItem = () => {
 
   }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, }}>
+    <SafeAreaView style={{ flexGrow: 1 }}>
 
+      <ImageBackground source={require('../../assets/images/hi.jpeg')} style={{ flex: 1 }} resizeMode={'cover'}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-
-
-        <View style={{ marginTop: 20, alignSelf: 'center' }}>
-          <Header Logo={require('../../assets/images/logo1.png')} profile={require('../../assets/images/profile.png')} btnColor={colors.primary} Nav={navigation} onchangeText={(txt) => { setSearch(txt) }} value={Search} />
-        </View>
-
-
-
-        <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: wp('90'), height: hp('85%'), alignSelf: 'center', borderRadius: 20, top: 30 }}>
-          <View style={{ width: wp('10'), alignItems: 'center' }}>
+          <View style={{ marginTop: 20, alignSelf: 'center' }}>
+            <Header Logo={require('../../assets/images/profile.png')} QuickFind={"NO"} ImageUrl={ImageUrl} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
+          </View>
+          {/* <DarkMode/> */}
+          <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: wp('90'), alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30 }}>
+            {/* <View style={{ width: wp('10'), alignItems: 'center' }}>
             <Text style={{ fontSize: 20, color: colors.white, alignSelf: 'center', marginTop: 20 }}>Quick find</Text>
-            <ScrollView contentContainerStyle={{ flexGrow: 1, width: wp('10'), alignItems: 'center' }} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={{ flexGrow:1, width: wp('10'), alignItems: 'center', height:100}} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
               {alphabet.filter((val) => {
                 if (Search == "") {
                   return val
@@ -255,87 +258,88 @@ const Home = ({ navigation }) => {
                 )
               })}
             </ScrollView>
-          </View>
-          <View style={{ width: wp('80'), flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', justifyContent: 'center' }}>
-            <View style={{ width: wp('75'), marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+          </View> */}
+            <View style={{ width: wp('90'), flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', justifyContent: 'center' }}>
+              <View style={{ width: wp('75'), marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
 
 
-              {card == true ?
+                {card == true ?
 
-                getData.filter((val) => {
-                  if (Search == "") {
-                    return val
-                  } else if (val.name.toLowerCase().includes(Search.toLowerCase())) {
-                    return val
-                  }
-                }).map((item, key) => {
-                  console.log(item)
+                  getData.filter((val) => {
+                    if (Search == "") {
+                      return val
+                    } else if (val.name.toLowerCase().includes(Search.toLowerCase())) {
+                      return val
+                    }
+                  }).map((item, key) => {
+                    console.log(item)
 
-                  return (
-                    <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.Page, isSelected : item.name })} style={{ height: 60, width: wp('70%'), backgroundColor: 'rgba(252, 252, 252, 0.2)', borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20 }}>
-                      <Text style={{ color: 'white' }}>
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                })
+                    return (
+                      <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name })} style={{ height: 60, width: wp('70%'), backgroundColor: 'rgba(252, 252, 252, 0.2)', borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20 }}>
+                        <Text style={{ color: 'white' }}>
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  })
 
-                :
-                cardDetail.map((item, key) => {
-                  return (
-                    <Card background_Color={item.color} image={item.image} title={item.title} onPress={() => navigation.navigate(item.nav)} />
-                  )
-                })}
+                  :
+                  cardDetail.map((item, key) => {
+                    return (
+                      <Card background_Color={item.color} image={item.image} imageBG={item.imageBG} title={item.title} onPress={() => navigation.navigate(item.nav)} />
+                    )
+                  })}
+              </View>
             </View>
           </View>
-        </View>
-        <Modal isVisible={isModalVisible}>
-          <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, }}>
+          <Modal isVisible={isModalVisible}>
+            <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, }}>
 
-            <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold', alignSelf: 'center' }}>Buy Now</Text>
+              <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold', alignSelf: 'center' }}>Buy Now</Text>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 20 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 20 }}>
 
-              <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10, }}>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Monthly</Text>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>$9.99</Text>
+                <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10, }}>
+                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Monthly</Text>
+                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>$9.99</Text>
 
-              </TouchableOpacity>
+                </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Yearly</Text>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white", marginTop: 10 }}>$99.99</Text>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Yearly</Text>
+                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white", marginTop: 10 }}>$99.99</Text>
+                </TouchableOpacity>
+              </View>
+
+
+
             </View>
+          </Modal>
 
 
 
-          </View>
-        </Modal>
-
-
-
-        <AwesomeAlert
-          show={showAlert}
-          showProgress={false}
-          title="Someone is trying to loggin your account"
-          message="Do you want to accept the persmission and logout this account ?"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={true}
-          cancelText="Cancel"
-          confirmText="Accept"
-          confirmButtonColor="#DD6B55"
-          onCancelPressed={() => {
-            HideAlert()
-          }}
-          onConfirmPressed={() => {
-            // HideAlert()
-            AcceptPermission()
-          }}
-        />
-      </ScrollView>
+          <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title="Someone is trying to loggin your account"
+            message="Do you want to accept the persmission and logout this account ?"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Cancel"
+            confirmText="Accept"
+            confirmButtonColor="#DD6B55"
+            onCancelPressed={() => {
+              HideAlert()
+            }}
+            onConfirmPressed={() => {
+              // HideAlert()
+              AcceptPermission()
+            }}
+          />
+        </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   )
 }

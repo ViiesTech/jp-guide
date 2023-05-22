@@ -16,8 +16,8 @@ const GetStart = ({ navigation }) => {
         translucent={true} />
       <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
         <View style={{ width: wp('90%'), height: hp('90%'), justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ marginTop: hp('10') }}>
-            <Image style={styles.imageCenter} source={require('../../assets/images/logo1.png')} resizeMode='cover' />
+          <View style={{  }}>
+            <Image style={{height:hp('55%'), width:wp('55%')}} source={require('../../assets/images/profile.png')} resizeMode='contain' />
           </View>
           <View style={{ width: wp('70%') }}>
             <CustomButton
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
       fontSize: 42,
       lineHeight: 84,
       fontWeight: "bold",
-      textAlign: "center"
+      textAlign: "center",
     },
   }
 });

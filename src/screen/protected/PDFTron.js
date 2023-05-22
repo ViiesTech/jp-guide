@@ -1,13 +1,16 @@
 import { View, Text } from 'react-native'
 import React, { useEffect } from 'react'
-import { DocumentView, RNPdftron } from "react-native-pdftron";
+import { DocumentView, RNPdftron , PDFViewCtrl} from "react-native-pdftron";
 
 
-const PDFTron = () => {
+const PDFTron = async() => {
 
     useEffect(() => {
         RNPdftron.enableJavaScript(true);
     }, [])
+
+
+   
 
     const path =
     "https://customdemo.website/apps/JP-Guide/upload/AUA.pdf";

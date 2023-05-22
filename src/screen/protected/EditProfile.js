@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image, TextInput } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -7,6 +7,8 @@ import firestore from '@react-native-firebase/firestore';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Modal from "react-native-modal";
 import colors from '../../constant/colors';
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
 
 
 const EditProfile = ({ navigation }) => {
@@ -14,16 +16,26 @@ const EditProfile = ({ navigation }) => {
   const [Detail, setDetail] = useState('')
   const [isModalVisible, setModalVisible] = useState(false);
   const [changeUsername, setChangeUsername] = useState('')
+  const [ImageUrl, setImageUrl] = useState("")
+  const [Loader, setLoader] = useState("")
+
+  const [TakePfp, setTakePfp] = useState("")
 
 
-  const UID = auth().currentUser.uid
+  const UID = auth()?.currentUser?.uid
   const FetchData = () => {
+
+    // setLoader(true)
     firestore()
       .collection('Users')
       .doc(UID)
       .onSnapshot((text) => {
-        // console.log(text.exists)
-
+        // console.log(text.exists
+        
+        setTakePfp(text?.data()?.Image)
+        if(text?.data()?.Image != ""){
+          // setLoader(false)
+        }
         if (text?.exists === false) {
           return null
         } else {
@@ -40,21 +52,21 @@ const EditProfile = ({ navigation }) => {
   }, [])
 
   const Logout = () => {
-    
+
     firestore()
-    .collection('Users')
-    .doc(UID)
-    .update({
+      .collection('Users')
+      .doc(UID)
+      .update({
 
-      LoggedIn: false,
+        LoggedIn: false,
 
 
-    }).then(()=>{
-      auth()
-      .signOut()
-    
-    })
-    
+      }).then(() => {
+        auth()
+          .signOut()
+
+      })
+
   }
   const saveChange = () => {
     firestore()
@@ -71,6 +83,41 @@ const EditProfile = ({ navigation }) => {
     setModalVisible(!isModalVisible);
   };
 
+
+  const openGallary = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      console.log(image.path);
+
+      setImageUrl(image.path)
+      console.log(image.sourceURL)
+    });
+  }
+
+  const saveImage = async () => {
+
+    const rand = Math.floor(Math.random() * 1000000000);
+    await storage().ref(`${rand}`).putFile(ImageUrl);
+    const stickerDownloadUrl = await storage().ref(`${rand}`).getDownloadURL();
+
+    firestore()
+      .collection("Users")
+      .doc(UID)
+      .set({
+        Image: stickerDownloadUrl
+      }, {
+        merge: true
+      })
+    console.log(stickerDownloadUrl)
+  }
+
+
+
+
+
   return (
     <SafeAreaView>
       <View style={{ padding: 20 }}>
@@ -81,7 +128,44 @@ const EditProfile = ({ navigation }) => {
           </TouchableOpacity>
           <Text style={{ fontSize: hp('2.5%'), fontWeight: 'bold', color: "black", marginLeft: 20 }}>Settings</Text>
         </View>
-        <Image source={require('../../assets/images/headerLogo.png')} style={{ alignSelf: 'center', height: 200, width: 200 }} resizeMode={'contain'} />
+
+
+        <Image source={require('../../assets/images/profile.png')} style={{ alignSelf: 'center', height: 200, width: 200 }} resizeMode={'contain'} />
+
+        <TouchableOpacity onPress={() => openGallary()} style={{ height: 100, width: 100, borderRadius: 200, alignSelf: 'center' , backgroundColor:'red'}}>
+          {
+
+            Loader === true ? 
+
+            <ActivityIndicator size={'large'} color={"green"}/>
+
+            :
+
+
+            ImageUrl != "" ?
+
+              <Image source={{ uri: ImageUrl }} style={{ alignSelf: 'center', height: 100, width: 100, borderRadius: 200 }} />
+              :
+
+              TakePfp != "" ?
+
+                <Image source={{ uri: TakePfp }} style={{ alignSelf: 'center', height: 100, width: 100, borderRadius: 200 }} />
+
+                :
+
+                <Image source={require('../../assets/images/profile.png')} style={{ alignSelf: 'center', height: 100, width: 100 }} resizeMode={'contain'} />
+
+          }
+
+
+          <AntDesign name='edit' size={25} style={{ top: -20, right: -10, }} />
+
+
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => saveImage()} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: wp('20%'), backgroundColor: 'blue', alignSelf: 'center', borderRadius: 200, marginTop: 15 }}>
+          <Text style={{ color: 'white' }}>Save Image</Text>
+        </TouchableOpacity>
 
         <Text style={{ fontWeight: 'bold', color: 'black', marginTop: 20, fontSize: 20 }}>Email</Text>
         <View style={{ height: 60, borderRadius: 200, backgroundColor: '#c0c0c0', justifyContent: 'center', paddingHorizontal: 20, marginTop: 5 }}>
@@ -125,7 +209,7 @@ const EditProfile = ({ navigation }) => {
         </Modal>
 
         <TouchableOpacity onPress={() => navigation.navigate('Payment')} style={{ height: 100, backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center', borderRadius: 200, marginTop: 30 }}>
-          <Text style={{ color: "white", fontSize: hp('2.5%'), fontWeight: 'bold' }}>Upgrade Premium</Text>
+          <Text style={{ color: "white", fontSize: hp('2.5%'), fontWeight: 'bold' }}>plan</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => Logout()} style={{ height: 60, backgroundColor: 'red', alignItems: 'center', justifyContent: 'center', borderRadius: 200, marginTop: 30 }}>

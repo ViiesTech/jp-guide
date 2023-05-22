@@ -17,7 +17,7 @@ const Maintenances = ({ navigation }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
 
-  const UID = auth().currentUser.uid
+  const UID = auth()?.currentUser.uid
 
   const [isSelected, setIsSelected] = useState("Maintenance")
 
@@ -96,7 +96,7 @@ const Maintenances = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={{ marginTop: HEIGHT + hp('5'), alignSelf: 'center' }}>
-        <Header Logo={require('../../assets/images/logo1.png')} profile={require('../../assets/images/profile.png')} btnColor={colors.primary} Nav={navigation} />
+        <Header Logo={require('../../assets/images/profile.png')} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
       </View>
       <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: wp('90'), minHeight: hp('85%'), alignSelf: 'center', borderRadius: 20, top: 30 }}>
         <View style={{ padding: 30 }}>

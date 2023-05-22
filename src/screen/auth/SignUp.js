@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CustomButton from '../../component/CustomButton'
@@ -20,6 +20,8 @@ const SignUp = ({ navigation }) => {
     const [Check, setCheck] = useState(false)
     const [deviceToken, setDeviceToken] = useState("")
 
+    const [Loading, setLoading] = useState(false)
+
 
     useEffect(() => {
         getToken()
@@ -35,25 +37,29 @@ const SignUp = ({ navigation }) => {
 
 
     const handleLogin = () => {
+        setLoading(true)
         const Regix = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-
         if (Email == "") {
+            setLoading(false)
             Toast.show({
                 type: 'error',
                 text1: 'Please enter your email',
             });
         } else if (Password == "") {
+            setLoading(false)
             Toast.show({
                 type: 'error',
                 text1: 'Please enter your password',
             });
         } else if (!Email.match(Regix)) {
+            setLoading(false)
             Toast.show({
                 type: 'error',
                 text1: 'Please enter a valid email',
             });
         } else if (Password != RetypePassword) {
+            setLoading(false)
             Toast.show({
                 type: 'error',
                 text1: 'Your password is not matched',
@@ -66,7 +72,7 @@ const SignUp = ({ navigation }) => {
                 .createUserWithEmailAndPassword(Email, Password)
                 .then(() => {
                     console.log('User account created & signed in!');
-                    const UID = auth().currentUser.uid
+                    const UID = auth()?.currentUser?.uid
 
                     firestore()
                         .collection('Users')
@@ -76,10 +82,16 @@ const SignUp = ({ navigation }) => {
                             username: userName,
                             Buy: "",
                             DeviceToken: deviceToken,
+                            status: "User"
+                        }).then(() => {
+                            setLoading(false)
+                        }).catch((err) => {
+                            setLoading(false)
                         })
                 })
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {
+                        setLoading(false)
                         console.log('That email address is already in use!');
                         Toast.show({
                             type: 'error',
@@ -88,6 +100,7 @@ const SignUp = ({ navigation }) => {
                     }
 
                     if (error.code === 'auth/invalid-email') {
+                        setLoading(false)
                         console.log('That email address is invalid!');
                         Toast.show({
                             type: 'error',
@@ -96,23 +109,23 @@ const SignUp = ({ navigation }) => {
                     }
 
                     console.error(error);
+                    setLoading(false)
                 });
         }
     }
 
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-                <StatusBar
-                    animated={true}
-                    backgroundColor="transparent"
-                    translucent={true} />
+        <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
+            <StatusBar
+                animated={true}
+                backgroundColor="transparent"
+                translucent={true} />
+            <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 350 }} showsVerticalScrollIndicator={false} >
+                <View style={styles.container}>
 
-
-                <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
                     <View style={{ width: wp('90%'), height: hp('90%'), justifyContent: 'space-between', alignItems: 'center' }}>
-                        <View style={{ marginTop: hp('10') }}>
-                            <Image style={styles.imageCenter} source={require('../../assets/images/logo1.png')} />
+                        <View>
+                            <Image style={{ height: hp('30%'), width: wp('30%') }} source={require('../../assets/images/profile.png')} resizeMode='contain' />
                         </View>
                         <View style={{ width: wp('75%'), backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
                             <View style={{ width: wp('20'), paddingVertical: 10 }}>
@@ -177,7 +190,7 @@ const SignUp = ({ navigation }) => {
 
                             <CustomButton
                                 buttonColor={colors.primary}
-                                title="Sign Up"
+                                title={Loading === true ? <ActivityIndicator size={'large'} /> : "Sign Up"}
                                 buttonStyle={{ width: '100%', alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
                                 textStyle={{ fontSize: 20 }}
                                 onPress={() => handleLogin()}
@@ -189,10 +202,10 @@ const SignUp = ({ navigation }) => {
                             </View>
                         </View>
                     </View>
-                </ImageBackground>
-            </View>
+                </View>
+            </ScrollView>
             <Toast />
-        </ScrollView>
+        </ImageBackground>
     )
 }
 const styles = StyleSheet.create({

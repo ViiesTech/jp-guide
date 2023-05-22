@@ -14,7 +14,7 @@ import ShowingComments from '../../component/ShowingComments'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const NoteDetail = ({ route, navigation }) => {
-    const UID = auth().currentUser.uid
+    const UID = auth()?.currentUser?.uid
 
     const HEIGHT = StatusBar.currentHeight;
     const { detail, Title } = route.params
@@ -90,7 +90,7 @@ const NoteDetail = ({ route, navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{ marginTop: HEIGHT + hp('5'), alignSelf: 'center' }}>
-                <Header Logo={require('../../assets/images/logo1.png')} profile={require('../../assets/images/profile.png')} btnColor={colors.primary} Nav={navigation} />
+                <Header Logo={require('../../assets/images/profile.png')} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
             </View>
 
 

@@ -13,7 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 const Operational = ({ navigation }) => {
   const HEIGHT = StatusBar.currentHeight;
   
-  const UID = auth().currentUser.uid
+  const UID = auth()?.currentUser?.uid
 
   const data = [
     { title: "Climb for Terrain", des: "Location Diagram: AOM Home Page: Aircraft General, Emergency Equipment: Location Diagrams.", iamge: require('../../assets/images/airplan.png') },
@@ -108,7 +108,7 @@ const Operational = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={{ marginTop: HEIGHT + hp('5'), alignSelf: 'center' }}>
-        <Header Logo={require('../../assets/images/logo1.png')} profile={require('../../assets/images/profile.png')} btnColor={colors.primary} Nav={navigation} />
+        <Header Logo={require('../../assets/images/profile.png')} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
       </View>
       <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: wp('90'), height: hp('85'), alignSelf: 'center', borderRadius: 20, top: 30 }}>
         <View style={{ padding: 30 }}>

@@ -21,7 +21,7 @@ const Payment = ({ navigation }) => {
     //     console.log("Purchased")
     //     confirmPayment()
     // }
-    const UID = auth().currentUser.uid
+    const UID = auth()?.currentUser.uid
     const [isModalVisible, setModalVisible] = useState(false);
     const [Loading, setLoading] = useState(false)
     const [goBack, setBack] = useState(false)
@@ -49,7 +49,7 @@ const Payment = ({ navigation }) => {
         card: {
             number: '4242424242424242',
             exp_month: '02',
-            exp_year: '25',
+            exp_year: '26',
             cvc: '999',
             name: 'Billy Joe'
         }
@@ -70,14 +70,14 @@ const Payment = ({ navigation }) => {
                     .collection('Users')
                     .doc(UID)
                     .onSnapshot((data) => {
-                        if (data.exists == false) {
+                        if (data?.exists == false) {
                             Toast.show({
                                 type: 'error',
                                 text1: 'Please enter a valid detail!',
                             });
                             setLoading(false)
                         }
-                        if (data.data().Buy === "") {
+                        if (data?.data()?.Buy === "") {
                             setLoading(false)
                             Toast.show({
                                 type: 'error',
@@ -122,7 +122,7 @@ const Payment = ({ navigation }) => {
 
                         }
 
-                        <Text style={{ fontSize: hp('2.5%'), fontWeight: 'bold', color: "black", }}>Payemnt Method</Text>
+                        <Text style={{ fontSize: hp('2.5%'), fontWeight: 'bold', color: "black", }}>Payment Method</Text>
                     </View>
 
                     <TextInput

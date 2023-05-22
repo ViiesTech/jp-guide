@@ -18,7 +18,7 @@ const Login = ({ navigation }) => {
 
   console.log(Email, Password)
 
-  const handleLogin = async() => {
+  const handleLogin = async () => {
     const DevToken = await AsyncStorage.getItem("FMCToken")
 
     setLoading(true)
@@ -53,14 +53,14 @@ const Login = ({ navigation }) => {
           console.log('User account created & signed in!');
           setLoading(false)
 
-          const UID = auth().currentUser.uid
+          const UID = auth()?.currentUser?.uid
 
           firestore()
-          .collection("Users")
-          .doc(UID)
-          .update({
-            DeviceToken : DevToken
-          }
+            .collection("Users")
+            .doc(UID)
+            .update({
+              DeviceToken: DevToken
+            }
             )
 
 
@@ -97,17 +97,12 @@ const Login = ({ navigation }) => {
 
   }
   return (
-
-    <View style={{ flex: 1 }}>
-      <StatusBar
-        animated={true}
-        backgroundColor="transparent"
-        translucent={true} />
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
+    <>
+      <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
+        <ScrollView contentContainerStyle={{paddingBottom:400}}  showsVerticalScrollIndicator={false} >
           <View style={{ width: wp('90%'), height: hp('90%'), justifyContent: 'space-between', alignItems: 'center' }}>
-            <View style={{ marginTop: hp('10') }}>
-              <Image style={styles.imageCenter} source={require('../../assets/images/logo1.png')} />
+            <View style={{}}>
+              <Image style={{ height: hp('40%'), width: wp('40%') }} source={require('../../assets/images/profile.png')} resizeMode='contain' />
             </View>
             <View style={{ width: wp('75%'), backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
               <View style={{ width: wp('20'), paddingVertical: 10 }}>
@@ -153,11 +148,14 @@ const Login = ({ navigation }) => {
               </View>
             </View>
           </View>
-        </ImageBackground>
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
 
       <Toast />
-    </View>
+
+    </>
+
+
   )
 }
 const styles = StyleSheet.create({

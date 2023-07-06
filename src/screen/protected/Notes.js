@@ -1,56 +1,294 @@
-import { View, Text, StatusBar, TouchableOpacity, FlatList, Image, ScrollView } from 'react-native'
-import React from 'react'
-import Header from '../../component/Header'
+import { ImageBackground, View, Text, StyleSheet, StatusBar, ScrollView, SafeAreaView, TouchableOpacity, TextInput, FlatList, Alert, ActivityIndicator, Dimensions, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import Header from '../../component/Header';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import colors from '../../constant/colors'
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import TextInputComp from '../../component/TextInputComp';
+import colors from '../../constant/colors';
+import Card from '../../component/Card';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { StripeProvider } from '@stripe/stripe-react-native';
+import Modal from "react-native-modal";
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import DarkMode from '../../component/DarkMode';
+import DropDownPicker from 'react-native-dropdown-picker';
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { C, T } from '../../arrayindex/Alphabet';
+import { COLORS } from '../../utils/COLORS';
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import Entypo from 'react-native-vector-icons/Entypo'
+import Icon from 'react-native-vector-icons/AntDesign'
+import FastImage from 'react-native-fast-image'
 
 const Notes = ({ navigation }) => {
-  const HEIGHT = StatusBar.currentHeight;
-  const data = [
-    { title: "To Fly a Radial Outbound" , Note :  "1) Anchor the desired FIX into 1L \n2) Line select that FIX to scratch pad & insert radial to fly + 99: ex. FIX025/99 \n3) Select that to L2\n4) Select L2 to the scratch pad and then back to L1\n5) Select the radial displayed on 6R (great circle route)\n6) *As a check, enter the original fix into the FIX page and enter the desired radial on first line. A green dashed line will overlay the new proposed route.\n7) Execute" },
-    { title: "To see current Lat&Long Position", Note : "1) SelecttheINIT/REFINDEXpage \n2) Select2L(POS)andcurrentpositionwillbedisplayed" },
-    { title: "To enter an exact Lat&Long Fix", Note : "1) Enterthefollowingformat:N1234.5W06512.3(NoSpaces)intothescratchpad. \n2) LineselectthatpointintotheLegspage. \n3) Selectthatpointagaintothescratchpad. \n4) ThenselectthepointintotheFIXpage"},
-    { title: "To cross a fix at a given time", Note : "1) InsertdesiredfixintoRTApage.RTAwilldisplayanachievable“windowoftime”you can cross that fix. \n2) Select a time within that window and insert in 1R. FMC will display a Speed/Mach for VNAV to maintain in order to reach the fix at the desired time." },
-    { title: "To determine when you can achieve a given altitude", Note : "• Once level, in VNAV CRZ page, insert the altitude you want into 1R (STEP). A time and distance will display when you are able to make that altitude." },
-    { title: "For Drift Down info", Note : "• Engine Out function of FMC, when selected, will display the max drift down altitude and best speed." },
-    { title: "To slow in level flight", Note : "• At idle power, requires one mile to lose 10 Kts. of airspeed." }
-  ]
+  const [txt, setText] = useState("")
+  const [data, setData] = useState()
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [createNoteLoading, setCreateNoteLoading] = useState(false);
+
+
+  const [isDeleteModal, setDeleteModal] = useState(false)
+
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getPDFtoFirebaseDATA()
+    });
+    return unsubscribe;
+  }, [navigation])
+
+
+  const getPDFtoFirebaseDATA = () => {
+    firestore()
+      .collection('Notes')
+      .onSnapshot((doc) => {
+        const Temp = [];
+        doc?.docs?.forEach((note) => {
+          Temp.push({ ...note?.data(), id: note.id });
+        });
+
+        // Sort the Temp array in descending order based on createAt property
+        Temp?.sort((a, b) => {
+          const timeA = a?.createAt.seconds * 1000 + a?.createAt.nanoseconds / 1000000;
+          const timeB = b?.createAt.seconds * 1000 + b?.createAt.nanoseconds / 1000000;
+          return timeB - timeA;
+        });
+
+        setData(Temp);
+      });
+  };
+
+
+
+  const DeletePdf = (code) => {
+    setDeleteModal(true)
+    const documentRef = firestore().collection('Notes').doc(code);
+
+    documentRef.delete().then(() => {
+      setDeleteModal(false)
+      console.log('Document successfully deleted!');
+      getPDFtoFirebaseDATA()
+    }).catch((error) => {
+      setDeleteModal(false)
+      console.error('Error removing document: ', error);
+    });
+  }
+
+
+  console.log(txt)
+  const CreatePDF = () => {
+
+    setCreateNoteLoading(true)
+
+    if (txt !== "") {
+      firestore()
+        .collection("Notes")
+        .add({
+          createAt: new Date(),
+          NoteMsg: txt
+        }).then(() => {
+          console.log('successfully created')
+
+          setCreateNoteLoading(false)
+          setModalVisible(false)
+        }).catch((error) => {
+          console.log(error)
+
+          setCreateNoteLoading(false)
+        })
+
+    } else {
+
+      setCreateNoteLoading(false)
+    }
+  }
+
+
+
+  //Orientation
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+  const [screenResolution, setScreenResolution] = useState('')
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Orientation.addOrientationListener(updateDimensions);
+
+    return () => {
+      Orientation.removeOrientationListener(updateDimensions);
+    };
+  }, []);
+
+  useEffect(() => {
+
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
+
+  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow:1}}>
-      <View style={{ marginTop: HEIGHT + hp('5'), alignSelf: 'center' }}>
-        <Header Logo={require('../../assets/images/profile.png')} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
-      </View>
-      <View style={{ backgroundColor: colors.primary, width: wp('90'), height: hp('85'), alignSelf: 'center', borderRadius: 20, top: 30 }}>
-        <View style={{ padding: 30 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Icon name='arrow-back' color={'gray'} size={50} />
-            </TouchableOpacity>
-            <Text style={{ fontSize: 24, color: 'white', marginLeft: 20 }}>General Aircraft Notes</Text>
-          </View>
-          <View style={{ padding: 30, top: 20 }}>
-            <FlatList
-              data={data}
-              keyExtractor={item => item.id}
-              showsHorizontalScrollIndicator={false}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item, key }) => {
-                return (
-                  <TouchableOpacity onPress={() => navigation.navigate('NoteDetail',{detail:item, Title: item.title})} activeOpacity={0.5} style={{ backgroundColor: '#303071', height: hp('5'), justifyContent: 'center', paddingLeft: 20, marginVertical: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <View style={{ width: wp('55') }}>
-                      <Text style={{ color: 'white', fontSize: 22 }}>{item.title}</Text>
-                    </View>
-                    <Image source={require('../../assets/images/airplan.png')} style={{ width: wp(9), height: hp('2'), marginRight: 10 }} />
-                  </TouchableOpacity>
-                )
-              }}
-            />
-          </View>
+    <FastImage source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
+
+      <Image source={require('../../assets/images/profile.png')} style={{ height: 120, width: 120, alignSelf: 'center' }} resizeMode='contain' />
+      <View style={{ backgroundColor: colors.white, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1, }}>
+
+        <View style={{ width: screenWidth * 0.8, alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
+
+          <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ alignItems: 'center', justifyContent: 'center' }} >
+            <Icon name='back' color={'black'} size={30} />
+            <Text>Return to Home</Text>
+
+
+          </TouchableOpacity>
+
+          <Text style={{ alignSelf: 'center', color: COLORS.BLACK, fontSize: hp('2.5%'), fontWeight: 'bold', marginBottom: 20, marginTop: 10 }}>Notes</Text>
+   
+          <TouchableOpacity  style={{ alignItems: 'center', justifyContent: 'center' }} >
+            <Icon name='back' color={'white'} size={30} />
+            <Text style={{color:'white'}}>Return to Home</Text>
+
+
+          </TouchableOpacity>
         </View>
+
+
+        <TouchableOpacity onPress={() => setModalVisible(true)} style={{ backgroundColor: colors.primary, height: 60, width: 60, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+          <Entypo
+            name='plus'
+            size={hp('3%')}
+            color={colors.white}
+          />
+        </TouchableOpacity>
+
+        <FlatList
+          data={data}
+          renderItem={({ item }) => {
+            console.log('renderItem', item)
+
+
+
+            const milliseconds = item.createAt.seconds * 1000 + Math.floor(item.createAt.nanoseconds / 1000000);
+
+            const date = new Date(milliseconds);
+            const year = date.getFullYear();
+            const formattedDate = date.toLocaleString('en-US', { dateStyle: 'medium' });
+            const formattedTime = date.toLocaleTimeString('en-US', { timeStyle: 'short' });
+
+            console.log(formattedDate); // Output: Jun 23, 2023
+            console.log(formattedTime); // Output: 2:45 PM
+            console.log(year); // Output: 2023
+
+
+            return (
+              <View style={{ marginTop: 10 }}>
+                <TouchableOpacity style={{ minHeight: 60, backgroundColor: colors.primary, borderRadius: 10, justifyContent: 'center', padding: 20 }}>
+
+                  <Text style={{ color: colors.white, alignSelf: 'flex-end', marginBottom: 10 }}>{formattedDate}, {formattedTime}</Text>
+
+                  <Text style={{ fontSize: hp('1.7%'), color: COLORS.WHITE }}>{item.NoteMsg}</Text>
+
+
+                </TouchableOpacity>
+
+
+
+                <TouchableOpacity onPress={() => DeletePdf(item.id)} style={{ alignSelf: 'flex-end' }} >
+
+                  <AntDesign
+                    name='delete'
+                    size={35}
+                    color={"red"}
+                    style={{ alignSelf: 'flex-end', }}
+                  />
+                </TouchableOpacity>
+              </View>
+            )
+          }}
+
+        />
+
+
+
       </View>
-    </ScrollView>
+
+
+
+      <Modal isVisible={isModalVisible}>
+        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, width: screenWidth * 0.9 }}>
+
+          <TouchableOpacity onPress={() => setModalVisible(false)} style={{ marginBottom: 10 }} >
+            <AntDesign
+              name='closecircle'
+              size={hp('2.5%')}
+              color={'black'}
+
+            />
+          </TouchableOpacity>
+
+          <TextInput
+            placeholder='Type Notes'
+            placeholderTextColor='gray'
+            style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              padding: 10, // Adjust the padding value as needed
+              textAlignVertical: 'top', // Align the text to the top
+              height: hp('30%')
+            }}
+            multiline={true} // Enable multiline
+            numberOfLines={4} // Adjust the number of lines as needed
+
+            onChangeText={(txts) => {
+              setText(txts)
+            }}
+            value={txt}
+          />
+
+          <TouchableOpacity onPress={() => CreatePDF()} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: colors.white, fontSize: hp('2.5%'), fontWeight: 'bold' }}>{createNoteLoading ? <ActivityIndicator size={'small'} color={colors.white}/> : "Add Note"}</Text>
+          </TouchableOpacity>
+
+
+
+        </View>
+      </Modal>
+
+
+
+      <Modal isVisible={isDeleteModal}>
+        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, alignItems:'center', justifyContent:'center', height:150, width:150, alignSelf:'center' }}>
+
+              <ActivityIndicator size={'large'} color={'black'}/>
+              <Text style={{color:'black', fontWeight:'bold'}}>Deleting</Text>
+
+
+
+        </View>
+      </Modal>
+
+
+    </FastImage>
   )
 }
 

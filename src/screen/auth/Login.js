@@ -1,5 +1,5 @@
-import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, SafeAreaView, ScrollView, Dimensions } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CustomButton from '../../component/CustomButton'
 import colors from '../../constant/colors'
@@ -7,13 +7,54 @@ import auth, { firebase } from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import FastImage from 'react-native-fast-image'
 
 const Login = ({ navigation }) => {
 
   const [Email, setEmail] = useState('')
   const [Password, setPassword] = useState('')
   const [Loading, setLoading] = useState(false)
+
+
+  //Orientation
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+  const [screenResolution, setScreenResolution] = useState('')
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Orientation.addOrientationListener(updateDimensions);
+
+    return () => {
+      Orientation.removeOrientationListener(updateDimensions);
+    };
+  }, []);
+
+  useEffect(() => {
+
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
+
+  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
+
 
 
   console.log(Email, Password)
@@ -67,6 +108,8 @@ const Login = ({ navigation }) => {
 
         })
         .catch(error => {
+
+          console.log(error.code)
           if (error.code === 'auth/email-already-in-use') {
             Toast.show({
               type: 'error',
@@ -98,13 +141,13 @@ const Login = ({ navigation }) => {
   }
   return (
     <>
-      <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
-        <ScrollView contentContainerStyle={{paddingBottom:400}}  showsVerticalScrollIndicator={false} >
-          <View style={{ width: wp('90%'), height: hp('90%'), justifyContent: 'space-between', alignItems: 'center' }}>
+      <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={{ height: screenHeight, width: screenWidth }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 400, }} showsVerticalScrollIndicator={false} >
+          <View style={{ width: screenWidth * 0.9, height: hp('90%'), justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center' }}>
             <View style={{}}>
-              <Image style={{ height: hp('40%'), width: wp('40%') }} source={require('../../assets/images/profile.png')} resizeMode='contain' />
+              <FastImage style={{ height: hp('40%'), width: wp('40%') }} source={require('../../assets/images/profile.png')} resizeMode='contain' />
             </View>
-            <View style={{ width: wp('75%'), backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
+            <View style={{ width: screenWidth * 0.9, backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
               <View style={{ width: wp('20'), paddingVertical: 10 }}>
                 <Text style={styles.titleText}>Login to your Account</Text>
               </View>
@@ -138,18 +181,18 @@ const Login = ({ navigation }) => {
                 onPress={() => handleLogin()}
                 Loading={Loading}
               />
-              <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
+              <View style={{ flexDirection: 'row', paddingVertical: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                 <View style={[styles.bottmoButtom, { paddingRight: 10 }]}>
                   <Text style={[styles.titleText, { color: colors.white }]}>Don't have an account?</Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('SignUp')} activeOpacity={0.5} style={[styles.bottmoButtom, { backgroundColor: colors.secondery, alignItems: 'center', borderRadius: 10 }]}>
+                <TouchableOpacity onPress={() => navigation.navigate('SignUp')} activeOpacity={0.5} style={{ backgroundColor: colors.secondery, alignItems: 'center', borderRadius: 10, width: screenWidth * 0.3, height: hp('6'), justifyContent: 'center' }}>
                   <Text style={{ fontSize: 20, color: colors.white }}>Create an Account</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </ScrollView>
-      </ImageBackground>
+      </FastImage>
 
       <Toast />
 
@@ -176,8 +219,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textInput: {
-    backgroundColor: '#E9E9E9', marginVertical: 10, height: hp('6'), borderRadius: 10,
-    padding: 20
+    backgroundColor: '#E9E9E9',
+    marginVertical: 10,
+    height: 60,
+    borderRadius: 10,
+    paddingHorizontal: 20
   },
   bottmoButtom: {
     width: wp('35'),

@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CustomButton from '../../component/CustomButton'
@@ -9,6 +9,9 @@ import Toast from 'react-native-toast-message';
 import Entypo from 'react-native-vector-icons/Entypo'
 import { ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import FastImage from 'react-native-fast-image'
 
 
 
@@ -21,6 +24,46 @@ const SignUp = ({ navigation }) => {
     const [deviceToken, setDeviceToken] = useState("")
 
     const [Loading, setLoading] = useState(false)
+
+    //Orientation
+    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+    const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+    const [screenResolution, setScreenResolution] = useState('')
+
+    useEffect(() => {
+        const updateDimensions = () => {
+            const { width, height } = Dimensions.get('window');
+            setScreenWidth(width);
+            setScreenHeight(height);
+        };
+
+        Orientation.addOrientationListener(updateDimensions);
+
+        return () => {
+            Orientation.removeOrientationListener(updateDimensions);
+        };
+    }, []);
+
+    useEffect(() => {
+
+        const updateDimensions = () => {
+            const { width, height } = Dimensions.get('window');
+            setScreenWidth(width);
+            setScreenHeight(height);
+        };
+
+        Dimensions.addEventListener('change', updateDimensions);
+
+        return () => {
+            Dimensions.removeEventListener('change', updateDimensions);
+        };
+    }, []);
+
+    //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
+
+
+
 
 
     useEffect(() => {
@@ -115,19 +158,19 @@ const SignUp = ({ navigation }) => {
     }
 
     return (
-        <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
+        <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={{height: screenHeight, width: screenWidth}}>
             <StatusBar
                 animated={true}
                 backgroundColor="transparent"
                 translucent={true} />
             <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 350 }} showsVerticalScrollIndicator={false} >
-                <View style={styles.container}>
+                <View style={{height: screenHeight, width: screenWidth}}>
 
-                    <View style={{ width: wp('90%'), height: hp('90%'), justifyContent: 'space-between', alignItems: 'center' }}>
+                    <View style={{ width: screenWidth * 0.9, height: screenHeight * 0.9, justifyContent: 'space-between', alignItems: 'center', alignSelf:'center' }}>
                         <View>
-                            <Image style={{ height: hp('30%'), width: wp('30%') }} source={require('../../assets/images/profile.png')} resizeMode='contain' />
+                            <FastImage style={{ height: hp('30%'), width: wp('30%') }} source={require('../../assets/images/profile.png')} resizeMode='contain' />
                         </View>
-                        <View style={{ width: wp('75%'), backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
+                        <View style={{ width: screenWidth * 0.9, backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
                             <View style={{ width: wp('20'), paddingVertical: 10 }}>
                                 <Text style={styles.titleText}>Sign Up</Text>
                             </View>
@@ -205,7 +248,7 @@ const SignUp = ({ navigation }) => {
                 </View>
             </ScrollView>
             <Toast />
-        </ImageBackground>
+        </FastImage>
     )
 }
 const styles = StyleSheet.create({

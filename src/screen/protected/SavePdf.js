@@ -1,4 +1,4 @@
-import { ImageBackground, View, Text, StyleSheet, StatusBar, ScrollView, SafeAreaView, TouchableOpacity, TextInput, FlatList, Alert, ActivityIndicator } from 'react-native'
+import { ImageBackground, View, Text, StyleSheet, StatusBar, ScrollView, SafeAreaView, TouchableOpacity, TextInput, FlatList, Alert, ActivityIndicator, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../component/Header';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -18,10 +18,15 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { C, T } from '../../arrayindex/Alphabet';
 import { COLORS } from '../../utils/COLORS';
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import Icon from 'react-native-vector-icons/AntDesign'
+import FastImage from 'react-native-fast-image'
 
 const SavePdf = ({ navigation }) => {
     const [ImageUrl, setImageUrl] = useState("")
     const [data, setData] = useState()
+    const [isDeleteModal, setDeleteModal] = useState(false)
 
 
     useEffect(() => {
@@ -42,8 +47,8 @@ const SavePdf = ({ navigation }) => {
             .get()
             .then((doc) => {
 
-                doc.docs.forEach((doc) => {
-                    Temp.push(doc.data())
+                doc?.docs?.forEach((doc) => {
+                    Temp.push(doc?.data())
                 })
             }).then((doc) => {
 
@@ -56,12 +61,17 @@ const SavePdf = ({ navigation }) => {
 
 
     const DeletePdf = (code) => {
+        setDeleteModal(true)
         const documentRef = firestore().collection('SavedPDF').doc(code);
 
         documentRef.delete().then(() => {
             console.log('Document successfully deleted!');
+            setDeleteModal(false)
+
             getPDFtoFirebaseDATA()
         }).catch((error) => {
+            setDeleteModal(false)
+
             console.error('Error removing document: ', error);
         });
 
@@ -69,13 +79,70 @@ const SavePdf = ({ navigation }) => {
 
     }
 
+
+
+    //Orientation
+    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+    const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+    const [screenResolution, setScreenResolution] = useState('')
+
+    useEffect(() => {
+        const updateDimensions = () => {
+            const { width, height } = Dimensions.get('window');
+            setScreenWidth(width);
+            setScreenHeight(height);
+        };
+
+        Orientation.addOrientationListener(updateDimensions);
+
+        return () => {
+            Orientation.removeOrientationListener(updateDimensions);
+        };
+    }, []);
+
+    useEffect(() => {
+
+        const updateDimensions = () => {
+            const { width, height } = Dimensions.get('window');
+            setScreenWidth(width);
+            setScreenHeight(height);
+        };
+
+        Dimensions.addEventListener('change', updateDimensions);
+
+        return () => {
+            Dimensions.removeEventListener('change', updateDimensions);
+        };
+    }, []);
+
+    //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
+
     return (
-        <ImageBackground source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
-            <Header Logo={require('../../assets/images/profile.png')} QuickFind={"NO"} ImageUrl={ImageUrl} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
+        <FastImage source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
+            {/* <Header Logo={require('../../assets/images/profile.png')} QuickFind={"NO"} ImageUrl={ImageUrl} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} /> */}
+            <Image source={require('../../assets/images/profile.png')} style={{ height: 120, width: 120, alignSelf: 'center' }} resizeMode='contain' />
+            <View style={{ backgroundColor: colors.white, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1, }}>
 
-            <View style={{ backgroundColor: colors.white, width: wp('90'), alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1 }}>
 
-                <Text style={{ alignSelf: 'center', color: COLORS.BLACK, fontSize: hp('2.5%'), fontWeight: 'bold', marginBottom: 20, marginTop: 10 }}>My Saved Airports</Text>
+                <View style={{ width: screenWidth * 0.8, alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
+
+                    <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ alignItems: 'center', justifyContent: 'center' }} >
+                        <Icon name='back' color={'black'} size={30} />
+                        <Text style={{color:"black", }}>Return to Home</Text>
+
+
+                    </TouchableOpacity>
+
+                    <Text style={{ alignSelf: 'center', color: COLORS.BLACK, fontSize: hp('2.5%'), fontWeight: 'bold', marginBottom: 20, marginTop: 10 }}>My Saved Airports</Text>
+                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} >
+                        <Icon name='back' color={'white'} size={30} />
+                        <Text style={{color:"white", }}>Return to Home</Text>
+
+
+                    </TouchableOpacity>
+
+                </View>
 
                 <FlatList
                     data={data}
@@ -83,11 +150,11 @@ const SavePdf = ({ navigation }) => {
                     renderItem={({ item }) => {
                         console.log('renderItem', item)
                         return (
-                            <View style={{width:wp('20$')}}>
-                                <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.pdfURL, isSelected: item.code, Airport: item.AirportName })} style={{ height: 80, alignSelf: 'center', backgroundColor: colors.primary, borderRadius: 5, marginTop: 10, alignItems: 'center',  paddingHorizontal: 10, justifyContent: 'center', width: wp('16%'), marginLeft: 10 }}>
+                            <View style={{ width: wp('20%') }}>
+                                <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.pdfURL, isSelected: item.code, Airport: item.AirportName })} style={{ height: 80, alignSelf: 'center', backgroundColor: colors.primary, borderRadius: 5, marginTop: 10, alignItems: 'center', paddingHorizontal: 10, justifyContent: 'center', width: wp('16%'), marginLeft: 10 }}>
                                     <View style={{ flexDirection: 'row' }}>
 
-                                        <Text style={{ fontWeight: 'bold', fontSize: hp('2%'), color:COLORS.WHITE }}>{item.code}</Text>
+                                        <Text style={{ fontWeight: 'bold', fontSize: hp('2%'), color: COLORS.WHITE }}>{item.code}</Text>
 
                                         {/* <FontAwesome5
                                         style={{ marginRight: 20, marginLeft: 20 }}
@@ -113,7 +180,7 @@ const SavePdf = ({ navigation }) => {
                                         name='delete'
                                         size={35}
                                         color={"red"}
-                                        style={{alignSelf:'flex-end', left:10}}
+                                        style={{ alignSelf: 'flex-end', left: 10 }}
                                     />
                                 </TouchableOpacity>
                             </View>
@@ -127,9 +194,19 @@ const SavePdf = ({ navigation }) => {
             </View>
 
 
+            <Modal isVisible={isDeleteModal}>
+        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, alignItems:'center', justifyContent:'center', height:150, width:150, alignSelf:'center' }}>
+
+              <ActivityIndicator size={'large'} color={'black'}/>
+              <Text style={{color:'black', fontWeight:'bold'}}>Deleting</Text>
 
 
-        </ImageBackground>
+
+        </View>
+      </Modal>
+
+
+        </FastImage>
     )
 }
 

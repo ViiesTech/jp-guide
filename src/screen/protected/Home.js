@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, StatusBar, ScrollView, SafeAreaView, TouchableOpacity, TextInput, FlatList, Alert } from 'react-native'
+import { View, Text, StyleSheet, StatusBar, ScrollView, SafeAreaView, TouchableOpacity, TextInput, FlatList, Alert, Image, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../component/Header';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -17,17 +17,78 @@ import DarkMode from '../../component/DarkMode';
 import { ImageBackground } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import { setAllPdf } from '../../redux/PDFSlice';
-
-
+import Fontisto from 'react-native-vector-icons/Fontisto'
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import FastImage from 'react-native-fast-image'
 
 const Home = ({ navigation }) => {
 
+  //Orientation
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+  const [screenResolution, setScreenResolution] = useState('')
+
+
+  console.log('Orientation', screenResolution)
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Orientation.addOrientationListener(updateDimensions);
+
+    return () => {
+      Orientation.removeOrientationListener(updateDimensions);
+    };
+  }, []);
+
+  useEffect(() => {
+
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
+
+  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
+
+  useEffect(() => {
+    getCurrentOrientation()
+  }, [])
+
+  const getCurrentOrientation = () => {
+    const currentOrientation = Orientation.getOrientation((err, orientation) => {
+      if (err) {
+        console.log('Error getting current orientation:', setScreenResolution(err));
+      } else {
+        console.log('Current orientation:', setScreenResolution(orientation));
+      }
+    });
+
+    console.log("current org", currentOrientation)
+  };
+
+
+
+
+  //************************* getting current orientation */
+
   const [Search, setSearch] = useState('')
-  console.log("Search", Search)
 
   const dispatch = useDispatch()
-
-
 
   const [isModalVisible, setModalVisible] = useState(true);
   const [Purchased, setPurchased] = useState(false)
@@ -216,130 +277,160 @@ const Home = ({ navigation }) => {
   const HEIGHT = StatusBar.currentHeight;
   const alphabet = ["Home", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   const cardDetail = [
-    { title: "SEARCH AIRPORTS", image: require('../../assets/images/card1.png'), imageBG: require('../../assets/images/searchair.png'), nav: "Detail" },
-    { title: "INTERNATIONAL SUPPLEMENT", image: require('../../assets/images/emergency.png'), imageBG: require('../../assets/images/sup.png'), nav: "Emergency" },
-    { title: "COMMUNICATIONS", image: require('../../assets/images/operational.png'), imageBG: require('../../assets/images/com.png'), nav: "Operational" },
-    { title: "GENERAL INTERNATIONAL\nINFORMATION", image: require('../../assets/images/genint.png'), imageBG: require('../../assets/images/genint.png'), nav: "Maintenances" },
-    { title: "OPERATIONAL INFORMATION", image: require('../../assets/images/communication.png'), imageBG: require('../../assets/images/Operationals.png'), nav: "Communication" },
-    { title: "GENERAL AIRCRAFT NOTES \nAND MAINTENANCE", image: require('../../assets/images/notes.png'), imageBG: require('../../assets/images/A:C.png'), nav: "Notes" }
+    { name: "SEARCH AIRPORTS", title: "SEARCH AIRPORTS", image: require('../../assets/images/card1.png'), imageBG: require('../../assets/images/searchair.png'), nav: "Detail" },
+    { name: "INTERNATIONAL SUPPLEMENT", title: "INTERNATIONAL SUPPLEMENT", image: require('../../assets/images/emergency.png'), imageBG: require('../../assets/images/sup.png'), nav: "Operational" },
+    { name: "COMMUNICATIONS", title: "COMMUNICATIONS", image: require('../../assets/images/operational.png'), imageBG: require('../../assets/images/com.png'), nav: "Operational" },
+    { name: "GENERAL INTERNATIONAL \n INFORMATION", title: "GENERAL INTERNATIONAL INFORMATION", image: require('../../assets/images/genint.png'), imageBG: require('../../assets/images/genint.png'), nav: "Operational" },
+    { name: "OPERATIONAL INFORMATION", title: "OPERATIONAL INFORMATION", image: require('../../assets/images/communication.png'), imageBG: require('../../assets/images/Operationals.png'), nav: "Operational" },
+    { name: "GENERAL AIRCRAFT NOTES\n AND MAINTENANCE", title: "GENERAL AIRCRAFT NOTES AND MAINTENANCE", image: require('../../assets/images/notes.png'), imageBG: require('../../assets/images/A:C.png'), nav: "Operational" }
   ]
 
-  const RenderItem = () => {
 
-  }
   return (
     <SafeAreaView style={{ flexGrow: 1 }}>
 
-      <ImageBackground source={require('../../assets/images/hi.jpeg')} style={{ flex: 1 }} resizeMode={'cover'}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <OrientationLocker
+        orientation={'ALL_ORIENTATIONS_BUT_UPSIDE_DOWN'}
+        onChange={orientation => setScreenResolution(orientation)}
+        onDeviceChange={orientation => console.log('onDeviceChange', orientation)}
+      />
 
-          <View style={{ marginTop: 20, alignSelf: 'center' }}>
-            <Header Logo={require('../../assets/images/profile.png')} QuickFind={"NO"} ImageUrl={ImageUrl} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
-          </View>
-          {/* <DarkMode/> */}
-          <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: wp('90'), alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30 }}>
-            {/* <View style={{ width: wp('10'), alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, color: colors.white, alignSelf: 'center', marginTop: 20 }}>Quick find</Text>
-            <ScrollView contentContainerStyle={{ flexGrow:1, width: wp('10'), alignItems: 'center', height:100}} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-              {alphabet.filter((val) => {
-                if (Search == "") {
-                  return val
-                } else if (val.toLowerCase().includes(Search.toLowerCase())) {
+      <FastImage source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} resizeMode={'cover'}>
+        {/* <ScrollView contentContainerStyle={{ flexGrow: 1 }}> */}
 
-                  console.log("val....",val)
-                  return val
-                }
-              }).map((item, key) => {
-                return (
-                  <TouchableOpacity onPress={() => CallData(item)} key={key} style={{ paddingVertical: 20 }}>
+        {/* <View style={{ marginTop: 20, alignSelf: 'center', marginLeft: hp('4%') }}>
 
-                    <Text style={{ fontSize: 18, color: colors.white }}>{item}</Text>
-                  </TouchableOpacity>
-                )
-              })}
-            </ScrollView>
+            <Image source={require('../../assets/images/profile.png')} style={{ height: 100, width: 100, }} resizeMode='contain' />
           </View> */}
-            <View style={{ width: wp('90'), flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', justifyContent: 'center' }}>
-              <View style={{ width: wp('75'), marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+
+        <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, height: screenHeight * 0.92 }}>
+          <View style={{ padding: 10, marginLeft: 20, right: screenResolution === "PORTRAIT" ? 0 : -10 ,}}>
+
+            <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} style={{ alignItems: 'center', marginTop: 40 }}>
+
+              <Fontisto
+                name={"player-settings"}
+                color={'white'}
+                size={30}
+              />
+
+              <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold' }}>Settings</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => navigation.navigate('SavePdf')} style={{ alignItems: 'center', marginTop: 40, }}>
+
+              <Fontisto
+                name={"plane"}
+                color={'white'}
+                size={30}
+              />
+
+              <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold', textAlign: 'center' }} >Saved{'\n'}Airports</Text>
+            </TouchableOpacity>
 
 
-                {card == true ?
+            <TouchableOpacity onPress={() => navigation.navigate('Notes')} style={{ alignItems: 'center', marginTop: 40, }}>
 
-                  getData.filter((val) => {
-                    if (Search == "") {
-                      return val
-                    } else if (val.name.toLowerCase().includes(Search.toLowerCase())) {
-                      return val
-                    }
-                  }).map((item, key) => {
-                    console.log(item)
+              <SimpleLineIcons
+                name={"book-open"}
+                color={'white'}
+                size={30}
+              />
 
-                    return (
-                      <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name })} style={{ height: 60, width: wp('70%'), backgroundColor: 'rgba(252, 252, 252, 0.2)', borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20 }}>
-                        <Text style={{ color: 'white' }}>
-                          {item.name}
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                  })
+              <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold', textAlign: 'center' }} >Notes</Text>
+            </TouchableOpacity>
 
-                  :
-                  cardDetail.map((item, key) => {
-                    return (
-                      <Card background_Color={item.color} image={item.image} imageBG={item.imageBG} title={item.title} onPress={() => navigation.navigate(item.nav)} />
-                    )
-                  })}
-              </View>
+
+
+          </View>
+
+
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', justifyContent: 'center', }}>
+
+            <View style={{ width: screenWidth * 0.76, marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',}}>
+
+
+              {card == true ?
+
+                getData.filter((val) => {
+                  if (Search == "") {
+                    return val
+                  } else if (val.name.toLowerCase().includes(Search.toLowerCase())) {
+                    return val
+                  }
+                }).map((item, key) => {
+                  console.log(item)
+
+                  return (
+                    <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, pdfname: item.name })} style={{ height: 60, width: wp('70%'), backgroundColor: 'rgba(252, 252, 252, 0.2)', borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20 }}>
+                      <Text style={{ color: 'white' }}>
+                        {item.name}
+                      </Text>
+                    </TouchableOpacity>
+
+                  )
+                })
+
+                :
+                cardDetail.map((item, key) => {
+                  return (
+                    <>
+                      <Card screenWidth={screenWidth} screenHeight={screenHeight * 0.27} background_Color={item.color} image={item.image} imageBG={item.imageBG} title={item.name} onPress={() => navigation.navigate(item.nav, { pdfname: item.title })} />
+                    </>
+                  )
+                })}
             </View>
           </View>
-          <Modal isVisible={isModalVisible}>
-            <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, }}>
+        </View>
 
-              <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold', alignSelf: 'center' }}>Buy Now</Text>
+        <Modal isVisible={isModalVisible}>
+          <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, }}>
 
-              <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 20 }}>
+            <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold', alignSelf: 'center' }}>Buy Now</Text>
 
-                <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10, }}>
-                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Monthly</Text>
-                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>$9.99</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 20 }}>
 
-                </TouchableOpacity>
+              <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10, }}>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Monthly</Text>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>$9.99</Text>
 
-                <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Yearly</Text>
-                  <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white", marginTop: 10 }}>$99.99</Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
 
-
-
+              <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Yearly</Text>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white", marginTop: 10 }}>$99.99</Text>
+              </TouchableOpacity>
             </View>
-          </Modal>
 
 
 
-          <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title="Someone is trying to loggin your account"
-            message="Do you want to accept the persmission and logout this account ?"
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-            cancelText="Cancel"
-            confirmText="Accept"
-            confirmButtonColor="#DD6B55"
-            onCancelPressed={() => {
-              HideAlert()
-            }}
-            onConfirmPressed={() => {
-              // HideAlert()
-              AcceptPermission()
-            }}
-          />
-        </ScrollView>
-      </ImageBackground>
+          </View>
+        </Modal>
+
+
+
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title="Someone is trying to loggin your account"
+          message="Do you want to accept the persmission and logout this account ?"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Cancel"
+          confirmText="Accept"
+          confirmButtonColor="#DD6B55"
+          onCancelPressed={() => {
+            HideAlert()
+          }}
+          onConfirmPressed={() => {
+            // HideAlert()
+            AcceptPermission()
+          }}
+        />
+        {/* </ScrollView> */}
+      </FastImage>
     </SafeAreaView>
   )
 }

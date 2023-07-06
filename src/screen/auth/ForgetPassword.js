@@ -1,12 +1,14 @@
-import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StatusBar, ImageBackground, StyleSheet, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CustomButton from '../../component/CustomButton'
 import colors from '../../constant/colors'
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
 import { ScrollView } from 'react-native'
-
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import FastImage from 'react-native-fast-image'
 
 const ForgetPassword = ({ navigation }) => {
 
@@ -14,56 +16,94 @@ const ForgetPassword = ({ navigation }) => {
 
   const [email, setEmail] = useState('')
 
+  //Orientation
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+  const [screenResolution, setScreenResolution] = useState('')
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Orientation.addOrientationListener(updateDimensions);
+
+    return () => {
+      Orientation.removeOrientationListener(updateDimensions);
+    };
+  }, []);
+
+  useEffect(() => {
+
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
+
+  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
+
+
+
   const ResetPassword = () => {
-      if (email) {
-          auth().sendPasswordResetEmail(email)
-          .then(()=>{
+    if (email) {
+      auth().sendPasswordResetEmail(email)
+        .then(() => {
 
-              Toast.show({
-                  type: 'success',
-                  text1: 'Password reset email sent successfully',
-              });
-              setEmail("")
-              
-              
-              setTimeout(() => {
-                  navigation.navigate('Login')
-
-              }, 3000);
-          })
-              .catch((err) => {
-                  console.log(err)
-                  if (err.code == 'auth/user-not-found')
-                  {
-                      Toast.show({
-                          type: 'success',
-                          text1: 'Email not found',
-                      });
-                      setEmail("")
-                  }
-              })
-      } else {
           Toast.show({
-              type: 'error',
-              text1: 'Please Enter Your Email',
+            type: 'success',
+            text1: 'Password reset email sent successfully',
           });
-      }
+          setEmail("")
+
+
+          setTimeout(() => {
+            navigation.navigate('Login')
+
+          }, 3000);
+        })
+        .catch((err) => {
+          console.log(err)
+          if (err.code == 'auth/user-not-found') {
+            Toast.show({
+              type: 'success',
+              text1: 'Email not found',
+            });
+            setEmail("")
+          }
+        })
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Please Enter Your Email',
+      });
+    }
   }
-    
+
   return (
-    <ScrollView contentContainerStyle={{flexGrow:1}}>
-      <View style={styles.container}>
+    <View style={{height: screenHeight, width: screenWidth}}>
         <StatusBar
           animated={true}
           backgroundColor="transparent"
           translucent={true} />
-        <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
-          <View style={{ width: wp('90%'), height: hp('90%'), justifyContent: 'space-between', alignItems: 'center' }}>
+        <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom:350 }} showsVerticalScrollIndicator={false}>
+          <View style={{ width: screenWidth * 0.9, height: screenHeight * 0.9, justifyContent: 'space-between', alignItems: 'center' }}>
             <View style={{ marginTop: hp('10') }}>
-              <Image style={styles.imageCenter} source={require('../../assets/images/logo1.png')} />
+              <FastImage style={{height: screenHeight * 0.4, width:screenWidth * 0.4}} source={require('../../assets/images/profile.png')} resizeMode='contain'/>
             </View>
-            <View style={{ width: wp('75%'), backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
-            
+            <View style={{ width: screenWidth * 0.9, backgroundColor: 'rgba(252, 252, 252, 0.4)', padding: 20, borderRadius: 20 }}>
+
               <View style={{ marginTop: 10 }}>
                 <TextInput
                   style={styles.textInput}
@@ -74,7 +114,7 @@ const ForgetPassword = ({ navigation }) => {
                   value={email}
                 />
               </View>
-              
+
               <CustomButton
                 buttonColor={colors.primary}
                 title="Send"
@@ -83,20 +123,20 @@ const ForgetPassword = ({ navigation }) => {
                 onPress={() => ResetPassword()}
               />
 
-<CustomButton
+              <CustomButton
                 buttonColor={colors.secondery}
                 title="Back"
                 buttonStyle={{ width: '100%', alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
                 textStyle={{ fontSize: 20 }}
-                onPress={() => navigation.goBack    ()}
+                onPress={() => navigation.goBack()}
               />
-            
+
             </View>
           </View>
-        </ImageBackground>
-      </View>
-      <Toast />
     </ScrollView>
+        </FastImage>
+        <Toast />
+      </View>
   )
 }
 const styles = StyleSheet.create({
@@ -110,8 +150,8 @@ const styles = StyleSheet.create({
   },
   imageCenter: {
     color: "white",
-    fontSize: 42,
-    lineHeight: 84,
+    fontSize: 20,
+    // lineHeight: 84,
     fontWeight: "bold",
     textAlign: "center"
   },

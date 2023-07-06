@@ -44,6 +44,7 @@ import SavePdf from '../screen/protected/SavePdf';
 import AllPdf from '../screen/AdminScreens/AllPdf';
 import PDF from '../screen/AdminScreens/PDF';
 import { COLORS } from '../utils/COLORS';
+import EditMainPdf from '../screen/AdminScreens/EditMainPdf';
 
 
 const Stack = createNativeStackNavigator();
@@ -91,10 +92,13 @@ export const MyTabs = () => {
         tabBarIcon: (({ focused }) => {
           return (
             <View style={{ height: 40, width: 100, alignItems: 'center', justifyContent: 'center',  }}>
-              <View style={{borderWidth:2, borderColor: focused ? "white" :  colors.secondery, borderRadius:200}}>
 
-              <Image source={{uri : Pfp }}  style={{height:40, width:40, borderRadius:200}}/>
-              </View>
+              <Fontisto
+              name='player-settings'
+              color={!focused ? colors.secondery : "white"}
+              size={30}
+
+              />
 
 
               <Text style={{ color: focused ? 'white' :  colors.secondery  , marginTop: 10 }}>Settings</Text>
@@ -180,17 +184,21 @@ const Routes = () => {
 
 
               <Stack.Screen name="AdminHome" component={AdminHome} />
+              <Stack.Screen name="EditMainPdf" component={EditMainPdf} />
+
               <Stack.Screen name="AllPdf" component={AllPdf} />
               <Stack.Screen name="PDF" component={PDF} />
 
 
               <>
-                <Stack.Screen name="Home" component={MyTabs} />
+                <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name='Detail' component={Detail} />
                 <Stack.Screen name='Emergency' component={Emergency} />
                 <Stack.Screen name='Operational' component={Operational} />
                 <Stack.Screen name='Maintenances' component={Maintenances} />
                 <Stack.Screen name='EditProfile' component={EditProfile} />
+                <Stack.Screen name='SavePdf' component={SavePdf} />
+
                 <Stack.Screen name='Communication' component={Communication} />
                 <Stack.Screen name='Notes' component={Notes} />
                 <Stack.Screen name='NoteDetail' component={NoteDetail} />

@@ -1,42 +1,88 @@
-import { View, Text, StyleSheet, ImageBackground, StatusBar, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, ImageBackground, StatusBar, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
+import React,{useState, useEffect} from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CustomButton from '../../component/CustomButton';
 import colors from '../../constant/colors';
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import FastImage from 'react-native-fast-image'
+
 
 const GetStart = ({ navigation }) => {
+  //Orientation
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+  const [screenResolution, setScreenResolution] = useState('')
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Orientation.addOrientationListener(updateDimensions);
+
+    return () => {
+      Orientation.removeOrientationListener(updateDimensions);
+    };
+  }, []);
+
+  useEffect(() => {
+
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
+
+  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
+
+
   const handleLogin = () => {
     navigation.navigate('Login')
   }
   return (
-    <View style={styles.container}>
+    <View style={{height:screenHeight, width:screenWidth}}>
       <StatusBar
         animated={true}
         backgroundColor="transparent"
         translucent={true} />
-      <ImageBackground source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
-        <View style={{ width: wp('90%'), height: hp('90%'), justifyContent: 'space-between', alignItems: 'center' }}>
+      <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={{height:screenHeight , width: screenWidth, alignItems:'center', justifyContent:'center', padding:20}}>
+        {/* <ScrollView contentContainerStyle={{flexGrow:1}} showsVerticalScrollIndicator={false}> */}
+
+        <View style={{ width: screenWidth * 0.9, height: screenHeight * 0.9, justifyContent: 'space-between', alignItems: 'center' }}>
           <View style={{  }}>
-            <Image style={{height:hp('55%'), width:wp('55%')}} source={require('../../assets/images/profile.png')} resizeMode='contain' />
+            <Image style={{height:screenHeight * 0.5,width:screenWidth * 0.5}} source={require('../../assets/images/profile.png')} resizeMode='contain' />
           </View>
-          <View style={{ width: wp('70%') }}>
+          <View style={{ width: screenWidth * 0.9}}>
             <CustomButton
               buttonColor={colors.primary}
               title="Login"
-              buttonStyle={{ width: '100%', alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
+              buttonStyle={{ width: screenWidth * 0.9 , alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
               textStyle={{ fontSize: 20 }}
               onPress={() => handleLogin()}
             />
             <CustomButton
               buttonColor={colors.secondery}
               title="Create an Account"
-              buttonStyle={{ width: '100%', alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
+              buttonStyle={{ width: screenWidth * 0.9, alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
               textStyle={{ fontSize: 20 }}
               onPress={() => navigation.navigate('SignUp')}
             />
           </View>
         </View>
-      </ImageBackground>
+        {/* </ScrollView> */}
+
+      </FastImage>
     </View>
   )
 }

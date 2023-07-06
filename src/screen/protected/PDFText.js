@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking, } from 'react-native'
 import React from 'react'
 import axios from 'axios';
 import RenderHtml from 'react-native-render-html';
@@ -28,6 +28,8 @@ import { T, V } from '../../arrayindex/Alphabet';
 import { COLORS } from '../../utils/COLORS';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Toast from 'react-native-toast-message';
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 
 const PDFText = ({ navigation, route }) => {
 
@@ -267,15 +269,80 @@ const PDFText = ({ navigation, route }) => {
   };
 
 
+  //Orientation
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+
+  const [screenResolution, setScreenResolution] = useState('')
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Orientation.addOrientationListener(updateDimensions);
+
+    return () => {
+      Orientation.removeOrientationListener(updateDimensions);
+    };
+  }, []);
+
+  useEffect(() => {
+
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
+
+  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
+
 
   return (
     <View style={{ backgroundColor: 'white', }}>
-
+      {/* 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: wp('90%'), alignSelf: 'center', marginTop: 20 }}>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ height: 60, }}>
+
+
+
+
+      </View> */}
+
+
+      <View style={{ height: 60, borderRadius: 500, alignItems: 'center', justifyContent: 'center', marginTop: 20, flexDirection: 'row', width: screenWidth * 0.9, justifyContent: 'space-between', alignSelf: 'center' }}>
+
+
+        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ alignItems: 'center', justifyContent: 'center' }} >
           <Icon name='back' color={'black'} size={30} />
+          <Text style={{color:'black', fontWeight:'bold'}}>Return to Home</Text>
         </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+          <Text style={{ color: colors.primary, fontWeight: 'bold', fontSize: hp('2%') }}>Is this airport information correct?</Text>
+
+
+          <View style={{ flexDirection: 'row', marginLeft: 20 }}>
+
+            <TouchableOpacity onPress={() => LikePdf()} style={{ backgroundColor: colors.primary, height: 50, width: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
+              <MaterialCommunityIcons name='thumb-up' size={30} color={Like === "Like" ? "blue" : "white"} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => DisLikePdf()} style={{ marginLeft: 20, backgroundColor: colors.primary, height: 50, width: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }} >
+              <MaterialCommunityIcons name='thumb-down' size={30} color={Like === "DisLike" ? "blue" : "white"} />
+            </TouchableOpacity>
+
+          </View>
+        </View>
 
 
 
@@ -287,25 +354,7 @@ const PDFText = ({ navigation, route }) => {
           />
           <Text style={{ fontWeight: 'bold' }}>Save This Airport</Text>
         </TouchableOpacity>
-
       </View>
-
-
-      <TouchableOpacity onPress={() => toggleModal()} style={{ height: 60, backgroundColor: colors.primary, alignSelf: 'center', borderRadius: 500, alignItems: 'center', justifyContent: 'center', marginTop: 10, flexDirection: 'row', width: wp('90%'), paddingHorizontal: 20, marginTop: 20 }}>
-        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2%') }}>Is this airport information correct?</Text>
-
-
-        <View style={{ flexDirection: 'row', marginLeft:20 }}>
-
-          <TouchableOpacity onPress={() => LikePdf()} >
-            <Fontisto name='like' size={30} color={Like === "Like" ? "blue" : "white"} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => DisLikePdf()} style={{ marginLeft: 20 }}>
-            <Fontisto name='dislike' size={30} color={Like === "DisLike" ? "blue" : "white"} />
-          </TouchableOpacity>
-
-        </View>
-      </TouchableOpacity>
 
 
 
@@ -314,17 +363,12 @@ const PDFText = ({ navigation, route }) => {
       <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}>Likes {TotalLike.length}</Text>
 
       <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
-        <View >
+        <View style={{ alignSelf: 'center' }} >
           <DocumentView
             source={pageUrl}
             // disabledElements={[Config.AnnotationMenu]}
             disabledTools={[Config.Buttons.addPageButton]}
-
-
-
-            style={styles.pdf} />
-
-
+            style={{ height: hp('100%'), width: screenWidth }} />
 
         </View>
 

@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, FlatList, TouchableOpacity, StyleSheet, Image, ScrollView, TextInput } from 'react-native'
+import { View, Text, StatusBar, FlatList, TouchableOpacity, StyleSheet, Image, ScrollView, TextInput, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../component/Header'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -19,7 +19,8 @@ import Modal from "react-native-modal";
 import Entypo from 'react-native-vector-icons/Entypo'
 import { COLORS } from '../../utils/COLORS'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import Orientation from 'react-native-orientation-locker';
+import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 
 const Detail = ({ navigation }) => {
 
@@ -46,7 +47,8 @@ const Detail = ({ navigation }) => {
   const [search, setSearch] = useState("");
 
 
-  const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+  const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",];
+  const alphabets = ["N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -55,154 +57,43 @@ const Detail = ({ navigation }) => {
   const HEIGHT = StatusBar.currentHeight;
 
 
+  //Orientation
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
 
+  const [screenResolution, setScreenResolution] = useState('')
 
+  useEffect(() => {
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
 
-  // const source = { uri: `https://customdemo.website/apps/JP-Guide/upload/Airports/${isSelected}.pdf`, caches: true };
+    Orientation.addOrientationListener(updateDimensions);
 
-  // const sources = { uri: `https://customdemo.website/apps/JP-Guide/upload/${isSelected}.pdf`, caches: true };
+    return () => {
+      Orientation.removeOrientationListener(updateDimensions);
+    };
+  }, []);
 
-  // const data = [
-  //   { title: "ABQ", },
-  //   { title: "AUS", },
-  //   { title: "ATL", },
+  useEffect(() => {
 
-  //   { title: "AUA", },
-  //   { title: "ANU", },
+    const updateDimensions = () => {
+      const { width, height } = Dimensions.get('window');
+      setScreenWidth(width);
+      setScreenHeight(height);
+    };
 
+    Dimensions.addEventListener('change', updateDimensions);
 
-  //   { title: "BDL", },
-  //   { title: "BNA", },
-  //   { title: "BOS", },
-  //   { title: "BWI", },
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
 
-  //   { title: "BAQ", },
-  //   { title: "BDA", },
-  //   { title: "BGI", },
-  //   { title: "BOG", },
-  //   { title: "BZE", },
+  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
 
-  //   { title: "CLE", },
-  //   { title: "CLT", },
-
-  //   { title: "CAP", },
-  //   { title: "CCS", },
-  //   { title: "CLO", },
-  //   { title: "CUN", },
-  //   { title: "CUR", },
-  //   { title: "CZM", },
-
-
-  //   { title: "DCA", },
-  //   { title: "DEN", },
-  //   { title: "DFW", },
-  //   { title: "DTW", },
-
-  //   { title: "EWR", },
-
-  //   { title: "FLL", },
-
-  //   { title: "FDF", },
-
-
-  //   { title: "GCM", },
-  //   { title: "GDL", },
-  //   { title: "GEO", },
-  //   { title: "GND", },
-  //   { title: "GUA", },
-  //   { title: "Gye", },
-
-
-  //   { title: "GSO", },
-
-  //   { title: "HAV", },
-  //   { title: "HOG", },
-
-
-  //   { title: "IAD", },
-  //   { title: "IAH", },
-
-  //   { title: "JFK", },
-
-  //   { title: "KIN", },
-
-  //   { title: "LAS", },
-  //   { title: "LAX", },
-  //   { title: "LGA", },
-
-  //   { title: "LIR", },
-
-
-  //   { title: "MCI", },
-  //   { title: "MCO", },
-  //   { title: "MEM", },
-  //   { title: "MIA", },
-  //   { title: "MSP", },
-
-  //   { title: "MAR", },
-  //   { title: "MBJ", },
-  //   { title: "MDE", },
-  //   { title: "MEX", },
-  //   { title: "MGA", },
-
-  //   { title: "NAS", },
-
-  //   { title: "OMA", },
-  //   { title: "ORD", },
-
-  //   { title: "PBI", },
-  //   { title: "PHL", },
-  //   { title: "PHX", },
-
-  //   { title: "PAP", },
-  //   { title: "PLS", },
-  //   { title: "POP", },
-  //   { title: "POS", },
-  //   { title: "PTY", },
-  //   { title: "PUJ", },
-  //   { title: "PVR", },
-
-  //   { title: "RDU", },
-  //   { title: "RSW", },
-
-  //   { title: "RTB", },
-
-  //   { title: "SAN", },
-  //   { title: "SAT", },
-  //   { title: "SFO", },
-  //   { title: "SMF", },
-  //   { title: "STL", },
-
-  //   { title: "SAL", },
-  //   { title: "SAP", },
-  //   { title: "SDQ", },
-  //   { title: "SJO", },
-  //   { title: "SJU", },
-  //   { title: "SKB", },
-  //   { title: "SNU", },
-  //   { title: "STI", },
-  //   { title: "STT", },
-  //   { title: "STX", },
-  //   { title: "SXM", },
-
-  //   { title: "TPA", },
-  //   { title: "TUL", },
-  //   { title: "TUS", },
-
-  //   { title: "UIO", },
-  //   { title: "UVF", },
-
-  //   { title: "VRA", },
-
-  //   { title: "XPL", },
-
-  //   { title: "YUL", },
-  //   { title: "YYZ", },
-
-
-
-
-  // ]
 
 
   useEffect(() => {
@@ -257,15 +148,7 @@ const Detail = ({ navigation }) => {
       })
   }
 
-  // const onDeleteComment = (chatID) => {
-
-  //   firestore()
-  //     .collection('Comments')
-  //     .doc(isSelected)
-  //     .collection("Comments")
-  //     .doc(chatID)
-  //     .delete()
-  // }
+ 
 
   useEffect(() => {
 
@@ -410,9 +293,9 @@ const Detail = ({ navigation }) => {
 
   const goToPDFPage = (item) => {
 
-    console.log("iiiiiiiiiii",item)
+    console.log("iiiiiiiiiii", item)
 
-    navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name , Airport: item.Airport})
+    navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, Airport: item.Airport })
     toggleModal()
   }
 
@@ -422,7 +305,10 @@ const Detail = ({ navigation }) => {
     <View>
       <Modal isVisible={isModalVisible}>
 
-        <View style={{ flex: 1, backgroundColor: 'white', padding: 20, borderRadius: 20 }}>
+        <View style={{ flex: 1, backgroundColor: 'white', padding: 20, borderRadius: 20, width:screenWidth * 0.9 }}>
+
+
+
 
           <TouchableOpacity onPress={() => { navigation.goBack() }}>
 
@@ -431,7 +317,7 @@ const Detail = ({ navigation }) => {
 
 
           <TextInput
-            style={{ height: 60, width: wp('80%'), backgroundColor: 'white', alignSelf: 'center', borderRadius: 10, marginTop: 10, borderWidth: 1, paddingHorizontal: 20 }}
+            style={{ height: 60, width: screenWidth * 0.8, backgroundColor: 'white', alignSelf: 'center', borderRadius: 10, marginTop: 10, borderWidth: 1, paddingHorizontal: 20 }}
             placeholder="Enter City / Country Name"
             onChangeText={(txt) => {
               setSearch(txt)
@@ -444,8 +330,10 @@ const Detail = ({ navigation }) => {
           />
 
 
-          {/* <Text style={{ alignSelf: 'center', fontWeight: 'bold', color: 'black' }}>Airport Code By Aplhabets</Text> */}
-          <View style={{ borderRadius: 10, padding: 20, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+
+
+          <Text style={{ alignSelf: 'center', color: 'black', fontSize: hp('3%'), marginTop: 20, fontWeight:'bold' }}>Select First Letter of Airport Code</Text>
+          <View style={{ borderRadius: 10,  flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth * 0.8 , alignSelf:'center' }} tot>
 
             {
               alphabet?.map((item) => {
@@ -453,26 +341,46 @@ const Detail = ({ navigation }) => {
                 console.log(".,................................", item)
                 return (
                   <>
-                    <TouchableOpacity onPress={() => CallData(item)} style={{ height: 70, width: 70, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, marginLeft: 10 }}>
-                      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2.5%') }}>{item}</Text>
+                    <TouchableOpacity onPress={() => CallData(item)} style={{ height: 40, width: 40, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
+                      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2%') }}>{item}</Text>
                     </TouchableOpacity>
 
                   </>
                 )
               })
+
+
             }
 
 
-            <TouchableOpacity >
 
-            </TouchableOpacity>
+
+          </View>
+
+          <View style={{ borderRadius: 10,flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth * 0.8, alignSelf:'center'}} >
+
+          
+          {
+            alphabets?.map((item) => {
+
+              console.log(".,................................", item)
+              return (
+                <>
+                  <TouchableOpacity onPress={() => CallData(item)} style={{ height: 40, width: 40, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2%') }}>{item}</Text>
+                  </TouchableOpacity>
+
+                </>
+              )
+            })
+          }
           </View>
           {/* <Text style={{ color: 'black', alignSelf: 'center', fontSize: hp('2.5%') }}>Airport Code for {CurrentAplhabet}</Text> */}
           {
             getData?.length === 0 || getData === undefined ?
 
               // <Text style={{ color: 'black', fontSize: hp("2.5%"), alignSelf: 'center' }}>Nothing found</Text>
-              <View/>
+              <View />
 
 
 
@@ -483,122 +391,85 @@ const Detail = ({ navigation }) => {
           {
             console.log('Airport Code for {CurrentAplhabet', getData)
           }
-          <ScrollView>
-            {
 
-              search === "" ?
+          <Text style={{ alignSelf: 'center', fontSize: hp('3%',), fontWeight: 'bold', marginTop: 20 }}>Airports</Text>
+          <ScrollView style={{alignSelf:'center'}}>
+            <ScrollView horizontal scrollEnabled={false} contentContainerStyle={{ flexWrap: 'wrap', width: screenWidth * 0.8, alignSelf:'center',  }}>
 
-                AlphabetPdfs?.filter((val) => {
+              {
 
-                  console.log(val)
-                  if (search === "") {
-                    return val
-                  } else if (AlphabetPdfs?.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
-                    return val
-                  }
-                }).map((item, key) => {
-                  console.log("item", item)
+                search === "" ?
 
+                  AlphabetPdfs?.filter((val) => {
 
-                  return (
-                    <>
-
-
-
-                      <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'center' }}>
-
-                        {/* <TouchableOpacity style={{ height: 40, width: 40, backgroundColor: COLORS.WHITE, borderWidth: 1, borderRadius: 200, borderColor: COLORS.BLACK, position: 'absolute', zIndex: 100, top: -10, right: -10 , alignItems:'center', justifyContent:'center'}}>
-                          <TouchableOpacity >
-                            <MaterialIcons
-                              name='save'
-                              color={COLORS.BLACK}
-                              size={25}
-                            />
-
-                          </TouchableOpacity>
-                        </TouchableOpacity> */}
-
-                        <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
-                          {item.name}
-                        </Text>
-                        {/* {
-                        item?.Domestic ?
-                        <Text style={{alignSelf:'center', fontSize:hp('1%'),color:'white', fontWeight:'bold'}}>Domestic Airport</Text>
-
-                        :
-                        <Text style={{alignSelf:'center', fontSize:hp('1%'),color:'white', fontWeight:'bold'}}>International Airport</Text>
+                    console.log(val)
+                    if (search === "") {
+                      return val
+                    } else if (AlphabetPdfs?.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
+                      return val
+                    }
+                  }).map((item, key) => {
+                    console.log("item", item)
 
 
-                      } */}
-                      </TouchableOpacity>
-
-                      <Text style={{ alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold', marginTop: 5 }}>{item?.Airport}</Text>
-                    </>
-                  )
-                })
-
-                :
-
-                allPdf?.filter((val) => {
-
-                  console.log("itemmmmmmmmm", val)
-                  if (search === "") {
-                    return val
-                  } else if (val.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
-                    return val
-                  }
-                }).map((item, key) => {
-                  console.log("item", item)
-
-
-                  return (
-                    <>
-                      <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'center', padding: item?.Domestic ? 10 : 0 }}>
-                        {/* <TouchableOpacity style={{ height: 40, width: 40, backgroundColor: COLORS.WHITE, borderWidth: 1, borderRadius: 200, borderColor: COLORS.BLACK, position: 'absolute', zIndex: 100, top: -10, right: -10 , alignItems:'center', justifyContent:'center'}}>
-                          <TouchableOpacity >
-                            <MaterialIcons
-                              name='save'
-                              color={COLORS.BLACK}
-                              size={25}
-                            />
-
-                          </TouchableOpacity>
-                        </TouchableOpacity> */}
-
-                        <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
-                          {item.name}
-                        </Text>
-                        {/* 
-                      {
-                        item?.Domestic ?
-                        <Text style={{alignSelf:'center', fontSize:hp('1%'),color:'white', fontWeight:'bold'}}>Domestic Airport</Text>
-
-                        :
-                        <Text style={{alignSelf:'center', fontSize:hp('1%'),color:'white', fontWeight:'bold'}}>International Airport</Text>
-
-
-                      } */}
-
-                      </TouchableOpacity>
-                      {/* 
-                      {
-                        item?.Domestic ?
-                          <>
-                            <Text style={{alignSelf:'center', fontSize:hp('2.5%')}}>Domestic Airports</Text>
-                          </>
-                          :
-
-                          null
-                      } */}
-
-                      <Text style={{ alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold', marginTop: 5 }}>{item?.Airport}</Text>
-                    </>
-                  )
-                })
+                    return (
+                      <View style={{ marginLeft: 20 }}>
 
 
 
-            }
+                        <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 50, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', width: 50, alignSelf: 'center',marginRight:10,}}>
+
+
+
+                          <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
+                            {item.name}
+                          </Text>
+
+                        </TouchableOpacity>
+
+
+                      </View>
+                    )
+                  })
+
+                  :
+
+                  allPdf?.filter((val) => {
+
+                    console.log("itemmmmmmmmm", val)
+                    if (search === "") {
+                      return val
+                    } else if (val.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
+                      return val
+                    }
+                  }).map((item, key) => {
+                    console.log("item", item)
+
+
+                    return (
+                      <View style={{ marginLeft: 20 }}>
+
+
+
+                        <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 50, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', width: 50, alignSelf: 'center', marginRight:10 }}>
+
+
+
+                          <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
+                            {item.name}
+                          </Text>
+
+                        </TouchableOpacity>
+
+
+                      </View>
+                    )
+                  })
+
+
+
+              }
+            </ScrollView>
           </ScrollView>
 
         </View>

@@ -109,7 +109,7 @@ const Header = ({
 
             }
             <TouchableOpacity onPress={() => Nav.navigate('Home')}>
-                <Image source={Logo ? Logo : require('../assets/images/OldPic.png')} style={[styles.Logo, { marginLeft: QuickFind ? 90 : 0 }]} resizeMode='contain' />
+                <Image source={Logo ? Logo : require('../assets/images/OldPic.png')} style={[styles.Logo, { marginLeft: QuickFind ? 50 : 0 }]} resizeMode='contain' />
             </TouchableOpacity>
             {/* {
                 QuickFind ?
@@ -170,9 +170,12 @@ const Header = ({
 
                         </TouchableOpacity>
                     </View>
+                    {
+                        console.log(".............................!!**...", getData === undefined)
+                    }
                     {/* <Text style={{ color: 'black', alignSelf: 'center', fontSize: hp('2.5%') }}>Airport Code for {CurrentAplhabet}</Text> */}
                     {
-                        getData?.length === 0 || getData === undefined ?
+                        getData === undefined ?
 
                             <Text style={{ color: 'black', fontSize: hp("2.5%"), alignSelf: 'center' }}>Nothing found</Text>
 
@@ -180,10 +183,8 @@ const Header = ({
 
                             <View />
                     }
-                    {
-                        console.log('Airport Code for {CurrentAplhabet', getData)
-                    }
-                    <ScrollView>
+                 
+                    <ScrollView >
                         {
 
                             search === "" ?

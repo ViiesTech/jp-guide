@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    allPdf: []
+    allPdf: [],
+    Dark : false
 }
 
 export const counterSlice = createSlice({
@@ -12,10 +13,17 @@ export const counterSlice = createSlice({
 
             state.allPdf = action.payload
         },
+        setDark : (state, action) => {
+            state.Dark = true
+        },
+        setLight: (state) => {
+            state.Dark = false
+        }
+        
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setAllPdf } = counterSlice.actions
+export const { setAllPdf, setDark, setLight } = counterSlice.actions
 
 export default counterSlice.reducer

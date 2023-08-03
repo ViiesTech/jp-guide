@@ -76,7 +76,7 @@ const Loading = ({ navigation }) => {
                 useNativeDriver: true  // To make use of native driver for performance
             }
         ).start(({ finished }) => {
-            console.log("fasdfkasdlk", finished)
+            // console.log("fasdfkasdlk", finished)
             if (finished == true) {
                 setRotateTo('-30deg')
                 setRoteFrom('30deg')
@@ -95,7 +95,7 @@ const Loading = ({ navigation }) => {
                 useNativeDriver: true  // To make use of native driver for performance
             }
         ).start(({ finished }) => {
-            console.log("fasdfkasdlk", finished)
+            // console.log("fasdfkasdlk", finished)
             if (finished == true) {
                 setRotateTo('0deg')
                 setRoteFrom('-30deg')
@@ -113,7 +113,7 @@ const Loading = ({ navigation }) => {
                 useNativeDriver: true  // To make use of native driver for performance
             }
         ).start(({ finished }) => {
-            console.log("fasdfkasdlk", finished)
+            // console.log("fasdfkasdlk", finished)
             if (finished == true) {
                 // navigation.replace("GetStart")
                 console.log("Finished")
@@ -127,7 +127,7 @@ const Loading = ({ navigation }) => {
         inputRange: [0, 1],
         outputRange: [RotateFrom, _rotateTo]
     })
-    console.log(_rotateTo, RotateFrom)
+    // console.log(_rotateTo, RotateFrom)
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Lottie

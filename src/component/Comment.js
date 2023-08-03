@@ -2,6 +2,7 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { COLORS } from '../utils/COLORS'
 const Comment = (props) => {
     return (
 
@@ -21,7 +22,7 @@ const Comment = (props) => {
                     value={props.val}
                 />
 
-                <TouchableOpacity onPress={props.onSendComment} style={{ backgroundColor: 'white', borderRadius: 100, alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}>
+                <TouchableOpacity onPress={props.onSendComment} style={{ backgroundColor: COLORS.WHITE, borderRadius: 100, alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}>
                     <Ionicons name='send' color={'black'} size={40} />
                 </TouchableOpacity>
             </View>

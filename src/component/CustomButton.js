@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { COLORS } from '../utils/COLORS';
 
 const CustomButton = ({
   title,
@@ -22,7 +23,7 @@ const CustomButton = ({
       onPress={onPress}>
       {
         Loading == true ?
-          <ActivityIndicator size={'small'} color={'white'} />
+          <ActivityIndicator size={'small'} color={COLORS.WHITE} />
           :
           <Text
             style={{ ...styles.title, ...textStyle, color: titleColor || '#fff' }}>

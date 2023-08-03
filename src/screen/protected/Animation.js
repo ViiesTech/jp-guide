@@ -2,8 +2,54 @@ import { View, Text, Animated, Easing, _Text, ActivityIndicator, StyleSheet } fr
 import React, { useEffect, useRef, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Lottie from 'lottie-react-native';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setDark, setLight } from '../../redux/PDFSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Animation = ({navigation}) => {
+
+
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+      checkDarkMode()
+    },[])
+  
+    const checkDarkMode = async() => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('DarkMode');
+  
+        if(jsonValue != null ){
+          const val = JSON.parse(jsonValue)
+          if(val === true){
+            
+            dispatch(setDark())
+            console.log("trueeeeee")
+          }else{
+            dispatch(setLight())
+            console.log("falseeeeee")
+
+          }
+          
+        }else{
+          null
+        }
+        // console.log(typeofjsonValue)
+  
+      } catch (e) {
+        // error reading value
+      }
+    }
+
+
+    const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
+    Text : color === true ?  "#FFFFFF" :"#000000"
+
+  }
+    
     spinValue = new Animated.Value(0);
     const [_rotateTo, setRotateTo] = useState('30deg')
     const [RotateFrom, setRoteFrom] = useState('0deg')
@@ -28,7 +74,7 @@ const Animation = ({navigation}) => {
                 useNativeDriver: true  // To make use of native driver for performance
             }
         ).start(({ finished }) => {
-            console.log("fasdfkasdlk", finished)
+            // console.log("fasdfkasdlk", finished)
             if (finished == true) {
                 setRotateTo('-30deg')
                 setRoteFrom('30deg')
@@ -47,7 +93,7 @@ const Animation = ({navigation}) => {
                 useNativeDriver: true  // To make use of native driver for performance
             }
         ).start(({ finished }) => {
-            console.log("fasdfkasdlk", finished)
+            // console.log("fasdfkasdlk", finished)
             if (finished == true) {
                 setRotateTo('0deg')
                 setRoteFrom('-30deg')
@@ -65,7 +111,7 @@ const Animation = ({navigation}) => {
                 useNativeDriver: true  // To make use of native driver for performance
             }
         ).start(({ finished }) => {
-            console.log("fasdfkasdlk", finished)
+            // console.log("fasdfkasdlk", finished)
             if (finished == true) {
                 // navigation.replace("GetStart")
                 console.log("Finished")
@@ -79,9 +125,9 @@ const Animation = ({navigation}) => {
         inputRange: [0, 1],
         outputRange: [RotateFrom, _rotateTo]
     })
-    console.log(_rotateTo, RotateFrom)
+    // console.log(_rotateTo, RotateFrom)
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
             <Lottie
                 source={require('../../assets/images/96634-circle-loader-black.json')}
                 progress={animationProgress.current}

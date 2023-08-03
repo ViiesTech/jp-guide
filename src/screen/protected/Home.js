@@ -10,7 +10,7 @@ import { StripeProvider } from '@stripe/stripe-react-native';
 import Modal from "react-native-modal";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { A, B, C, F, G, H, K, L, M, N, P, R, S, U, V, X, Y } from '../../arrayindex/Alphabet'
+import { A, B, C, F, G, H, K, L, M, N, P, R, S, T, U, V, X, Y } from '../../arrayindex/Alphabet'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DarkMode from '../../component/DarkMode';
@@ -32,9 +32,39 @@ const Home = ({ navigation }) => {
   const [screenResolution, setScreenResolution] = useState('')
 
 
-  console.log('Orientation', screenResolution)
+  useEffect(() => {
+
+      Orientation.unlockAllOrientations();
+
+  }, [navigation]);
+
+
+
 
   useEffect(() => {
+    checkDarkMode()
+  }, [])
+  const checkDarkMode = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('DarkMode');
+      console.log("dark mode ?", jsonValue)
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  }
+
+  const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE: color === true ? "#000000" : "#FFFFFF",
+    Text: color === true ? "#FFFFFF" : "#000000"
+
+  }
+
+  useEffect(() => {
+
     const updateDimensions = () => {
       const { width, height } = Dimensions.get('window');
       setScreenWidth(width);
@@ -67,7 +97,10 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     getCurrentOrientation()
+
   }, [])
+
+
 
   const getCurrentOrientation = () => {
     const currentOrientation = Orientation.getOrientation((err, orientation) => {
@@ -101,9 +134,19 @@ const Home = ({ navigation }) => {
 
   const UID = auth()?.currentUser?.uid
 
-  const goToPayment = () => {
+  const goToPayment = (price) => {
     setModalVisible(false);
-    navigation.navigate('Payment')
+    firestore()
+    .collection('Users')
+    .doc(UID)
+    .update({
+      Plan : price
+    }).then(()=>{
+
+      navigation.navigate('Payment')
+    }).catch((e)=>{
+      console.log(e)
+    })
 
   };
 
@@ -124,7 +167,7 @@ const Home = ({ navigation }) => {
       .get()
       .then((querySnapshot) => {
         const allPdf = querySnapshot.docs.map((doc) => doc.data());
-        console.log("allPdf", allPdf);
+        // console.log("allPdf", allPdf);
 
         const sort = allPdf.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -171,7 +214,7 @@ const Home = ({ navigation }) => {
   const CallData = (Aplha) => {
 
 
-    console.log("........", Aplha)
+    // console.log("........", Aplha)
 
     setCard(true)
     const Temp = []
@@ -285,17 +328,109 @@ const Home = ({ navigation }) => {
     { name: "GENERAL AIRCRAFT NOTES\n AND MAINTENANCE", title: "GENERAL AIRCRAFT NOTES AND MAINTENANCE", image: require('../../assets/images/notes.png'), imageBG: require('../../assets/images/A:C.png'), nav: "Operational" }
   ]
 
+  const goToTabsPdf = async (item) => {
+
+
+    await AsyncStorage.getItem(item?.title).then((doc) => {
+
+      if (doc !== null) {
+        navigation.navigate(item.nav, { pdfname: doc, })
+
+        console.log("Innnnnn")
+
+      } else {
+
+        console.log("Outtttttt")
+
+        if (item.title === "INTERNATIONAL SUPPLEMENT") {
+
+          // getSaveFirestore("IS")
+          firestore()
+            .collection("TabsPdf")
+            .doc('IS')
+            .onSnapshot((doc) => {
+
+              console.log(doc?.data()?.PDF,)
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+
+            })
+
+
+        } else if (item.title === "GENERAL AIRCRAFT NOTES AND MAINTENANCE") {
+          firestore()
+            .collection("TabsPdf")
+            .doc('GANAM')
+            .onSnapshot((doc) => {
+
+              console.log(doc?.data()?.PDF,)
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+
+            })
+          // getSaveFirestore("GANAM")
+
+
+        } else if (item.title === "COMMUNICATIONS") {
+          firestore()
+            .collection("TabsPdf")
+            .doc('CM')
+            .onSnapshot((doc) => {
+
+              console.log(doc?.data()?.PDF,)
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+
+            })
+          // getSaveFirestore("CM")
+
+
+        } else if (item.title === "GENERAL INTERNATIONAL INFORMATION") {
+          firestore()
+            .collection("TabsPdf")
+            .doc('GII')
+            .onSnapshot((doc) => {
+
+              console.log(doc?.data()?.PDF,)
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+
+            })
+          // getSaveFirestore("GII")
+
+
+        } else if (item.title === "OPERATIONAL INFORMATION") {
+          firestore()
+            .collection("TabsPdf")
+            .doc('OI')
+            .onSnapshot((doc) => {
+
+              console.log(doc?.data()?.PDF,)
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+
+            })
+          // getSaveFirestore("OI")
+        } else if (item.title === "SEARCH AIRPORTS") {
+          navigation.navigate(item.nav)
+
+        } else {
+
+        }
+
+
+      }
+
+    })
+
+
+  }
 
   return (
     <SafeAreaView style={{ flexGrow: 1 }}>
 
       <OrientationLocker
-        orientation={'ALL_ORIENTATIONS_BUT_UPSIDE_DOWN'}
+        orientation={'UNLOCK'}
         onChange={orientation => setScreenResolution(orientation)}
         onDeviceChange={orientation => console.log('onDeviceChange', orientation)}
       />
 
-      <FastImage source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} resizeMode={'cover'}>
+      <FastImage source={color === true ? require('../../assets/images/hidark.png') : require('../../assets/images/hi.jpeg')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} resizeMode={'cover'}>
         {/* <ScrollView contentContainerStyle={{ flexGrow: 1 }}> */}
 
         {/* <View style={{ marginTop: 20, alignSelf: 'center', marginLeft: hp('4%') }}>
@@ -303,8 +438,12 @@ const Home = ({ navigation }) => {
             <Image source={require('../../assets/images/profile.png')} style={{ height: 100, width: 100, }} resizeMode='contain' />
           </View> */}
 
-        <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, height: screenHeight * 0.92 }}>
-          <View style={{ padding: 10, marginLeft: 20, right: screenResolution === "PORTRAIT" ? 0 : -10 ,}}>
+        {/* 
+        {
+          color === true ? 
+          
+        <ImageBackground source={require('../../assets/images/boxdarkbg.png')} style={{ flexDirection: 'row',  width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, height: screenHeight * 0.92,  }} >
+          <View style={{ padding: 10, marginLeft: 20, right: screenResolution === "PORTRAIT" ? 0 : -10, }}>
 
             <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} style={{ alignItems: 'center', marginTop: 40 }}>
 
@@ -347,7 +486,7 @@ const Home = ({ navigation }) => {
 
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', justifyContent: 'center', }}>
 
-            <View style={{ width: screenWidth * 0.76, marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',}}>
+            <View style={{ width: screenWidth * 0.76, marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', }}>
 
 
               {card == true ?
@@ -363,7 +502,7 @@ const Home = ({ navigation }) => {
 
                   return (
                     <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, pdfname: item.name })} style={{ height: 60, width: wp('70%'), backgroundColor: 'rgba(252, 252, 252, 0.2)', borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20 }}>
-                      <Text style={{ color: 'white' }}>
+                      <Text style={{ color: COLORS.WHITE }}>
                         {item.name}
                       </Text>
                     </TouchableOpacity>
@@ -381,24 +520,113 @@ const Home = ({ navigation }) => {
                 })}
             </View>
           </View>
+        </ImageBackground>
+
+        : */}
+
+        <View style={{ flexDirection: 'row', backgroundColor: color === true ? 'rgba(252, 252, 252, 0.1)' : colors.primary, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, height: screenHeight * 0.92, borderWidth: 1, borderColor: color === true ? 'white' : colors.primary }}>
+          <View style={{ padding: 10, marginLeft: 20, right: screenResolution === "PORTRAIT" ? 0 : -10, }}>
+
+            <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} style={{ alignItems: 'center', marginTop: 40 }}>
+
+              <Fontisto
+                name={"player-settings"}
+                color={'white'}
+                size={30}
+              />
+
+              <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold' }}>Settings</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => navigation.navigate('SavePdf')} style={{ alignItems: 'center', marginTop: 40, }}>
+
+              {/* <View style={{height:20, width:20, backgroundColor:'red', borderRadius:200, position:'absolute', zIndex:100, right:5, top:-10, alignItems:'center', justifyContent:'center'}}>
+                <Text style={{color:'white' , fontWeight:'bold'}}>0</Text>
+              </View> */}
+              <Fontisto
+                name={"plane"}
+                color={'white'}
+                size={30}
+              />
+
+              <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold', textAlign: 'center' }} >Saved{'\n'}Airports</Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity onPress={() => navigation.navigate('Notes')} style={{ alignItems: 'center', marginTop: 40, }}>
+              {/* <View style={{height:20, width:20, backgroundColor:'red', borderRadius:200, position:'absolute', zIndex:100, right:5, top:-10, alignItems:'center', justifyContent:'center'}}>
+                <Text style={{color:'white' , fontWeight:'bold'}}>0</Text>
+              </View> */}
+              <SimpleLineIcons
+                name={"book-open"}
+                color={'white'}
+                size={30}
+              />
+
+              <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold', textAlign: 'center' }} >Notes</Text>
+            </TouchableOpacity>
+
+
+
+          </View>
+
+
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', justifyContent: 'center', }}>
+
+            <View style={{ width: screenWidth * 0.76, marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', }}>
+
+
+              {card == true ?
+
+                getData.filter((val) => {
+                  if (Search == "") {
+                    return val
+                  } else if (val.name.toLowerCase().includes(Search.toLowerCase())) {
+                    return val
+                  }
+                }).map((item, key) => {
+                  console.log(item)
+
+                  return (
+                    <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, pdfname: item.name })} style={{ height: 60, width: wp('70%'), backgroundColor: 'rgba(252, 252, 252, 0.2)', borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20 }}>
+                      <Text style={{ color: COLORS.WHITE }}>
+                        {item.name}
+                      </Text>
+                    </TouchableOpacity>
+
+                  )
+                })
+
+                :
+                cardDetail.map((item, key) => {
+                  return (
+                    <>
+                      <Card screenWidth={screenWidth} screenHeight={screenHeight * 0.27} background_Color={item.color} image={item.image} imageBG={item.imageBG} title={item.name} onPress={() => goToTabsPdf(item)} />
+                    </>
+                  )
+                })}
+            </View>
+          </View>
         </View>
+        {/* }  */}
+
 
         <Modal isVisible={isModalVisible}>
-          <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, }}>
+          <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 20, padding: 20, }}>
 
             <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold', alignSelf: 'center' }}>Buy Now</Text>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 20 }}>
 
-              <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10, }}>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Monthly</Text>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>$9.99</Text>
+              <TouchableOpacity onPress={() => goToPayment("5.99")} style={{ height: 100, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10, }}>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white' }}>Monthly</Text>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white' }}>$5.99</Text>
 
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => goToPayment()} style={{ height: 100, width: wp('39%'), backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white" }}>Yearly</Text>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: "white", marginTop: 10 }}>$99.99</Text>
+              <TouchableOpacity onPress={() => goToPayment('70.00')} style={{ height: 100, width: wp('39%'), backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white' }}>Yearly</Text>
+                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white', marginTop: 10 }}>$70.00</Text>
               </TouchableOpacity>
             </View>
 

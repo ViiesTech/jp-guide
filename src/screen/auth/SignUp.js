@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 import FastImage from 'react-native-fast-image'
+import { COLORS } from '../../utils/COLORS'
+import { useSelector, useDispatch } from 'react-redux'
 
 
 
@@ -24,6 +26,16 @@ const SignUp = ({ navigation }) => {
     const [deviceToken, setDeviceToken] = useState("")
 
     const [Loading, setLoading] = useState(false)
+
+
+  const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
+    Text : color === true ?  "#FFFFFF" :"#000000"
+
+  }
 
     //Orientation
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
@@ -125,7 +137,8 @@ const SignUp = ({ navigation }) => {
                             username: userName,
                             Buy: "",
                             DeviceToken: deviceToken,
-                            status: "User"
+                            status: "User",
+                            Plan:"",
                         }).then(() => {
                             setLoading(false)
                         }).catch((err) => {
@@ -219,7 +232,7 @@ const SignUp = ({ navigation }) => {
                                     {
                                         Check ?
                                             <View style={{ height: 25, width: 25, backgroundColor: 'black', borderRadius: 6, alignItems: 'center', justifyContent: 'center' }}>
-                                                <Entypo name='check' size={15} color={'white'} />
+                                                <Entypo name='check' size={15} color={COLORS.WHITE} />
                                             </View>
 
                                             :
@@ -240,7 +253,7 @@ const SignUp = ({ navigation }) => {
                             />
                             <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
                                 <TouchableOpacity onPress={() => navigation.navigate('Login')} style={[styles.bottmoButtom, { paddingRight: 10 }]}>
-                                    <Text style={[styles.titleText, { color: colors.white }]}>Already have an account?</Text>
+                                    <Text style={[styles.titleText, { color: COLORS.WHITE }]}>Already have an account?</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

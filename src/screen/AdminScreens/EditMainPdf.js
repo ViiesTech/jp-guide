@@ -64,7 +64,7 @@ const EditMainPdf = ({ route, navigation }) => {
         type: [DocumentPicker.types.pdf],
       })
 
-      console.log(result)
+      // console.log(result)
 
 
       setImageUrl(result[0].uri)
@@ -138,13 +138,13 @@ const EditMainPdf = ({ route, navigation }) => {
 
 
       <TouchableOpacity onPress={() => pickDocument()} style={{ height: 60, width: wp('50%'), backgroundColor: colors.primary, alignSelf: 'center', borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
-        <Text style={{ color: 'white', fontSize: hp('2%') }}>{ImageName ? ImageName : "Add And Delete"} </Text>
+        <Text style={{ color: COLORS.WHITE, fontSize: hp('2%') }}>{ImageName ? ImageName : "Add And Delete"} </Text>
       </TouchableOpacity>
 
       {
         ImageName ?
           <TouchableOpacity onPress={() => saveImage()} style={{ padding: 20, backgroundColor: colors.primary, alignSelf: 'center', borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
-            <Text style={{ color: 'white', fontSize: hp('2%'), fontWeight: 'bold' }}>{Loading ? <ActivityIndicator size={'large'} /> : "Save"}</Text>
+            <Text style={{ color: COLORS.WHITE, fontSize: hp('2%'), fontWeight: 'bold' }}>{Loading ? <ActivityIndicator size={'large'} /> : "Save"}</Text>
           </TouchableOpacity>
           :
           null

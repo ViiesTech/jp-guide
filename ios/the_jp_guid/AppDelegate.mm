@@ -1,5 +1,7 @@
 #import <Firebase.h>
 #import "AppDelegate.h"
+#import "AnyOrientationViewController.h"
+
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -35,6 +37,13 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   return [Orientation getOrientation];
 }
 
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+  // Disable screenshot preview
+  UIBackgroundTaskIdentifier taskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+    [[UIApplication sharedApplication] endBackgroundTask:taskId];
+  }];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   
@@ -63,7 +72,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
+  AnyOrientationViewController *rootViewController = [AnyOrientationViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
@@ -143,3 +152,5 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 #endif
 
 @end
+
+

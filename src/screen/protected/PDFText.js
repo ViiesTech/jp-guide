@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking, } from 'react-native'
-import React from 'react'
+import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking, _View, ActivityIndicator, } from 'react-native'
+import React, { useRef } from 'react'
 import axios from 'axios';
 import RenderHtml from 'react-native-render-html';
 import { useEffect } from 'react';
@@ -8,9 +8,9 @@ import Pdf from 'react-native-pdf';
 import Icon from 'react-native-vector-icons/AntDesign'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { DocumentView, RNPdftron } from "react-native-pdftron";
+import { DocumentView, RNPdftron, PDFViewCtrl, } from "react-native-pdftron";
 import { openComposer } from "react-native-email-link";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import Comment from '../../component/Comment'
@@ -24,14 +24,20 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import colors from '../../constant/colors';
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Config } from 'react-native-pdftron';
-import { T, V } from '../../arrayindex/Alphabet';
+import { A, T, V } from '../../arrayindex/Alphabet';
 import { COLORS } from '../../utils/COLORS';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Toast from 'react-native-toast-message';
 import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import { useSelector, useDispatch } from 'react-redux'
 
 const PDFText = ({ navigation, route }) => {
+
+
+
+  const _viewer = useRef()
+
 
 
   const [LikedModel, setLikedModel] = useState(false);
@@ -53,10 +59,45 @@ const PDFText = ({ navigation, route }) => {
   const [TotalLike, setTotalLike] = useState([])
   const [isModalVisible, setModalVisible] = useState(false);
 
+  const [pdfDocPath, setPDFDocPAth] = useState("")
+
+  const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE: color === true ? "#000000" : "#FFFFFF",
+    Text: color === true ? "#FFFFFF" : "#000000"
+
+  }
+
+
+
 
   useEffect(() => {
     FetchComment()
   }, [])
+
+    //Set Dark mode in pdf 
+
+
+    const SetMode = () => {
+
+
+
+        if(color === true){
+
+          _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.NightMode);
+        }else{
+          _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.GradientMap);
+
+        }
+    }
+
+    //Set Dark mode in pdf 
+
+    
+
+
 
   const sendComment = () => {
 
@@ -90,6 +131,7 @@ const PDFText = ({ navigation, route }) => {
 
 
   const FetchComment = () => {
+   
 
     firestore()
       .collection('Comments')
@@ -114,7 +156,7 @@ const PDFText = ({ navigation, route }) => {
 
         })
 
-        console.log("Temp", Temp.length)
+
         setTotalLike(Temp)
         //   console.log("docer",)
 
@@ -306,13 +348,41 @@ const PDFText = ({ navigation, route }) => {
 
   //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
 
+  const saveDoc = () => {
+
+    // console.log( "this.view",  _viewer)
+
+
+    _viewer.current.saveDocument().then(async (filePath) => {
+
+
+      await AsyncStorage.setItem(`${isSelected}`, filePath).then(() => {
+        navigation.navigate('Home')
+      })
+    });
+
+  }
+
+
+
+
+
+
+
+
+
+
+
 
   return (
-    <View style={{ backgroundColor: 'white', }}>
+    <View style={{ backgroundColor: COLORS.WHITE, }}>
+
+
+
       {/* 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: wp('90%'), alignSelf: 'center', marginTop: 20 }}>
 
-
+    
 
 
 
@@ -322,14 +392,14 @@ const PDFText = ({ navigation, route }) => {
       <View style={{ height: 60, borderRadius: 500, alignItems: 'center', justifyContent: 'center', marginTop: 20, flexDirection: 'row', width: screenWidth * 0.9, justifyContent: 'space-between', alignSelf: 'center' }}>
 
 
-        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ alignItems: 'center', justifyContent: 'center' }} >
-          <Icon name='back' color={'black'} size={30} />
-          <Text style={{color:'black', fontWeight:'bold'}}>Return to Home</Text>
+        <TouchableOpacity onPress={() => saveDoc()} style={{ alignItems: 'center', justifyContent: 'center' }} >
+          <Icon name='back' color={COLORS.Text} size={30} />
+          <Text style={{ color: COLORS.Text, fontWeight: 'bold' }}>Return to Home</Text>
         </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-          <Text style={{ color: colors.primary, fontWeight: 'bold', fontSize: hp('2%') }}>Is this airport information correct?</Text>
+          <Text style={{ color: color === true ? 'white' : colors.primary, fontWeight: 'bold', fontSize: hp('2%') }}>Is this airport information correct?</Text>
 
 
           <View style={{ flexDirection: 'row', marginLeft: 20 }}>
@@ -337,6 +407,7 @@ const PDFText = ({ navigation, route }) => {
             <TouchableOpacity onPress={() => LikePdf()} style={{ backgroundColor: colors.primary, height: 50, width: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
               <MaterialCommunityIcons name='thumb-up' size={30} color={Like === "Like" ? "blue" : "white"} />
             </TouchableOpacity>
+
             <TouchableOpacity onPress={() => DisLikePdf()} style={{ marginLeft: 20, backgroundColor: colors.primary, height: 50, width: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }} >
               <MaterialCommunityIcons name='thumb-down' size={30} color={Like === "DisLike" ? "blue" : "white"} />
             </TouchableOpacity>
@@ -349,10 +420,10 @@ const PDFText = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => savePDFtoFirebase()} style={{ alignItems: 'center', justifyContent: 'center' }} >
           <Ionicons
             name='airplane'
-            color={COLORS.BLACK}
+            color={COLORS.Text}
             size={35}
           />
-          <Text style={{ fontWeight: 'bold' }}>Save This Airport</Text>
+          <Text style={{ fontWeight: 'bold', color: COLORS.Text }}>Save This Airport</Text>
         </TouchableOpacity>
       </View>
 
@@ -364,11 +435,44 @@ const PDFText = ({ navigation, route }) => {
 
       <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
         <View style={{ alignSelf: 'center' }} >
-          <DocumentView
-            source={pageUrl}
-            // disabledElements={[Config.AnnotationMenu]}
-            disabledTools={[Config.Buttons.addPageButton]}
-            style={{ height: hp('100%'), width: screenWidth }} />
+
+
+
+
+
+
+          {
+            pageUrl !== null ?
+
+              <DocumentView
+
+                document={pageUrl}
+                ref={_viewer}
+                onLoadComplete = {(path) => { 
+                  console.log('The document has finished loading:', path); 
+                  SetMode()
+                }}
+                //
+                bottomToolbarEnabled={false}
+
+                showLeadingNavButton={true}
+              //
+                followSystemDarkMode={false}
+                forceAppTheme={color === true ? Config.ThemeOptions.ThemeDark : Config.ThemeOptions.ThemeLight}
+                autoSaveEnabled={true}
+                hideTopAppNavBar={true}
+                style={{ height: hp('100%'), width: screenWidth }}
+
+              />
+
+              :
+              <ActivityIndicator size={25} />
+          }
+
+
+
+
+
 
         </View>
 
@@ -463,13 +567,20 @@ const PDFText = ({ navigation, route }) => {
         animationOut={'fadeOut'}
         animationIn={'fadeIn'}
       >
-        <View style={{ backgroundColor: 'white', borderRadius: 10, padding: 30, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
-          <Text style={{ fontSize: hp('2%'), fontWeight: 'bold' }}>What information has changed?</Text>
+        <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 10, padding: 30, alignSelf: 'center', borderWidth: 1, borderColor: 'white' }}>
+          <TouchableOpacity onPress={() => setDislikeModal(false)} style={{}}>
+            <Entypo
+              name='cross'
+              size={30}
+              color={COLORS.Text}
+            />
+          </TouchableOpacity>
+          <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', alignSelf: 'center', color: COLORS.Text }}>What information has changed?</Text>
 
           <TextInput
             placeholder='Type here'
             placeholderTextColor={'gray'}
-            style={{ height: 100, width: wp('90%'), borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10, paddingTop: 10, marginTop: 15 }}
+            style={{ height: 100, width: wp('90%'), borderWidth: 1, borderColor: COLORS.Text, borderRadius: 10, padding: 10, paddingTop: 10, marginTop: 15, color: COLORS.Text }}
             numberOfLines={3}
             multiline={true}
             onChangeText={(txt) => {
@@ -485,6 +596,7 @@ const PDFText = ({ navigation, route }) => {
         </View>
         <Toast />
       </Modal>
+
 
 
     </View>

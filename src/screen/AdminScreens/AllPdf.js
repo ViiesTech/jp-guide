@@ -28,7 +28,7 @@ const AllPdf = ({ navigation }) => {
 
 
     const handleConfirm = (item) => {
-        console.log(item); // do something with the selected item
+        // console.log(item); // do something with the selected item
 
         const firstLatter = item.name.charAt(0).toUpperCase()
 
@@ -99,12 +99,12 @@ const AllPdf = ({ navigation }) => {
                 <View style={{ flexDirection: 'row', width: wp('70%'), justifyContent: 'space-between', marginBottom: 20 }}>
 
                     <TouchableOpacity onPress={() => navigation.goBack()} style={{ height: 60, padding: 10 }}>
-                        <Icon name='back' color={'white'} size={30} />
+                        <Icon name='back' color={COLORS.WHITE} size={30} />
                     </TouchableOpacity>
 
                     <TextInput
                         placeholder='Search'
-                        style={{ height: 60, width: wp('50%'), backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 10 }}
+                        style={{ height: 60, width: wp('50%'), backgroundColor: COLORS.WHITE, borderRadius: 10, paddingHorizontal: 10 }}
                         onChangeText={(txt) => {
                             setSearch(txt)
                             // CallData(txt.charAt(0))

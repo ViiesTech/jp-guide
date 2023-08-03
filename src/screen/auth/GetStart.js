@@ -6,6 +6,7 @@ import colors from '../../constant/colors';
 import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 import FastImage from 'react-native-fast-image'
+import { useSelector, useDispatch } from 'react-redux'
 
 
 const GetStart = ({ navigation }) => {
@@ -14,6 +15,16 @@ const GetStart = ({ navigation }) => {
   const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
 
   const [screenResolution, setScreenResolution] = useState('')
+
+
+  const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
+    Text : color === true ?  "#FFFFFF" :"#000000"
+
+  }
 
   useEffect(() => {
     const updateDimensions = () => {

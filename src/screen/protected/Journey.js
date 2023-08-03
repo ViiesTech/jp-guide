@@ -18,6 +18,7 @@ import { ImageBackground } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { COLORS } from '../../utils/COLORS';
 const Journey = ({ navigation }) => {
     const [ImageUrl, setImageUrl] = useState("")
     const [open, setOpen] = useState(false);
@@ -271,20 +272,20 @@ const Journey = ({ navigation }) => {
             <View style={{ backgroundColor: colors.primary, width: wp('90'), alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1 }}>
 
                 <View style={{ flexDirection: 'row', height: 100, width: wp('80%'), justifyContent: 'space-between', alignSelf: 'center', marginTop: 20 }}>
-                    <TouchableOpacity onPress={() => toggleModal("Departure")} style={{ padding: 20, width: wp('30%'), backgroundColor: 'white', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => toggleModal("Departure")} style={{ padding: 20, width: wp('30%'), backgroundColor: COLORS.WHITE, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
                         <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'black' }} numberOfLines={1}>{Plan.Departure ? Plan.Departure : "Departure"}</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => toggleModal("Destination")} style={{ padding: 20, width: wp('30%'), backgroundColor: 'white', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => toggleModal("Destination")} style={{ padding: 20, width: wp('30%'), backgroundColor: COLORS.WHITE, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
                         <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'black' }} numberOfLines={1}>{Plan.Destination ? Plan.Destination : "Destination"}</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => CreatePlan()} style={{ height: 60, width: wp('20%'), backgroundColor: colors.secondery, alignSelf: 'center', borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
-                    <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: colors.white }}>{Loader ? <ActivityIndicator size={'small'} color={'white'} /> : "Create"}</Text>
+                    <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: COLORS.WHITE }}>{Loader ? <ActivityIndicator size={'small'} color={COLORS.WHITE} /> : "Create"}</Text>
                 </TouchableOpacity>
 
 
-                <View style={{ flex: 1, width: wp('80%'), borderRadius: 10, backgroundColor: colors.white, alignSelf: 'center', marginTop: 10, padding: 20 }}>
+                <View style={{ flex: 1, width: wp('80%'), borderRadius: 10, backgroundColor: COLORS.WHITE, alignSelf: 'center', marginTop: 10, padding: 20 }}>
 
                     <Text style={{ fontSize: hp('2.5%'), fontWeight: 'bold' }}>My Travel Plans</Text>
 
@@ -308,10 +309,10 @@ const Journey = ({ navigation }) => {
                                         <FontAwesome5
                                             name={'plane-departure'}
                                             size={25}
-                                            color={colors.white}
+                                            color={COLORS.WHITE}
                                         />
 
-                                        <Text style={{ marginLeft: 10, fontSize: hp('1.5%'), color: colors.white, width: wp('25%') }}>{item.Departure}</Text>
+                                        <Text style={{ marginLeft: 10, fontSize: hp('1.5%'), color: COLORS.WHITE, width: wp('25%') }}>{item.Departure}</Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity onPress={() => goToPDF(item.Destination, item.DestinationURL)} style={{ flexDirection: 'row', alignItems: 'center', width: wp('35%'), backgroundColor: colors.primary, minHeight: 60, borderRadius: 10, justifyContent: 'center' }}>
@@ -319,10 +320,10 @@ const Journey = ({ navigation }) => {
                                         <FontAwesome5
                                             name={'plane-arrival'}
                                             size={25}
-                                            color={colors.white}
+                                            color={COLORS.WHITE}
                                         />
 
-                                        <Text style={{ marginLeft: 10, fontSize: hp('1.5%'), color: colors.white, width: wp('25%') }}>{item.Destination}</Text>
+                                        <Text style={{ marginLeft: 10, fontSize: hp('1.5%'), color: COLORS.WHITE, width: wp('25%') }}>{item.Destination}</Text>
                                     </TouchableOpacity>
                                 </View>
                             )
@@ -337,7 +338,7 @@ const Journey = ({ navigation }) => {
 
             <Modal isVisible={isModalVisible}>
 
-                <View style={{ flex: 1, backgroundColor: 'white', padding: 20, borderRadius: 20 }}>
+                <View style={{ flex: 1, backgroundColor: COLORS.WHITE, padding: 20, borderRadius: 20 }}>
 
                     <TouchableOpacity onPress={() => { toggleModal() }}>
 
@@ -348,7 +349,7 @@ const Journey = ({ navigation }) => {
 
 
                     <TextInput
-                        style={{ height: 60, width: wp('80%'), backgroundColor: 'white', alignSelf: 'center', borderRadius: 10, marginTop: 10, borderWidth: 1, paddingHorizontal: 20 }}
+                        style={{ height: 60, width: wp('80%'), backgroundColor: COLORS.WHITE, alignSelf: 'center', borderRadius: 10, marginTop: 10, borderWidth: 1, paddingHorizontal: 20 }}
                         placeholder="Enter City / Country Name"
                         onChangeText={(txt) => {
                             setSearch(txt)
@@ -370,7 +371,7 @@ const Journey = ({ navigation }) => {
                                 return (
                                     <>
                                         <TouchableOpacity onPress={() => CallData(item)} style={{ height: 70, width: 70, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, marginLeft: 10 }}>
-                                            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2.5%') }}>{item}</Text>
+                                            <Text style={{ color: COLORS.WHITE, fontWeight: 'bold', fontSize: hp('2.5%') }}>{item}</Text>
                                         </TouchableOpacity>
 
                                     </>
@@ -411,16 +412,16 @@ const Journey = ({ navigation }) => {
                                     return (
                                         <>
                                             <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'center' }}>
-                                                <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
+                                                <Text style={{ color: COLORS.WHITE, alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
                                                     {item.name}
                                                 </Text>
 
                                                 {
                                                     item?.Domestic ?
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>Domestic Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>Domestic Airport</Text>
 
                                                         :
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>International Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>International Airport</Text>
 
 
                                                 }
@@ -448,15 +449,15 @@ const Journey = ({ navigation }) => {
                                     return (
                                         <>
                                             <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'center' }}>
-                                                <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
+                                                <Text style={{ color: COLORS.WHITE, alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
                                                     {item.name}
                                                 </Text>
                                                 {
                                                     item?.Domestic ?
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>Domestic Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>Domestic Airport</Text>
 
                                                         :
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>International Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>International Airport</Text>
 
 
                                                 }

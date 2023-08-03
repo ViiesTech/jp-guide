@@ -23,6 +23,7 @@ import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, Ori
 import Entypo from 'react-native-vector-icons/Entypo'
 import Icon from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image'
+import { useDispatch, useSelector } from 'react-redux';
 
 const Notes = ({ navigation }) => {
   const [txt, setText] = useState("")
@@ -32,6 +33,15 @@ const Notes = ({ navigation }) => {
 
 
   const [isDeleteModal, setDeleteModal] = useState(false)
+
+  const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE: color === true ? "#000000" : "#FFFFFF",
+    Text: color === true ? "#FFFFFF" : "#000000"
+
+  }
 
 
 
@@ -148,25 +158,25 @@ const Notes = ({ navigation }) => {
   //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
 
   return (
-    <FastImage source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
+    <FastImage source={color === true ? require('../../assets/images/hidark.png') : require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
 
-      <Image source={require('../../assets/images/profile.png')} style={{ height: 120, width: 120, alignSelf: 'center' }} resizeMode='contain' />
-      <View style={{ backgroundColor: colors.white, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1, }}>
+      <Image source={color === true ? require('../../assets/images/logodark.png') : require('../../assets/images/profile.png')} style={{ height: 120, width: 120, alignSelf: 'center' }} resizeMode='contain' />
+      <View style={{ backgroundColor: color === true ? 'rgba(252, 252, 252, 0.1)' : 'white', width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1, }}>
 
         <View style={{ width: screenWidth * 0.8, alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
 
           <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='back' color={'black'} size={30} />
-            <Text>Return to Home</Text>
+            <Icon name='back' color={COLORS.Text} size={30} />
+            <Text style={{color:COLORS.Text}}>Return to Home</Text>
 
 
           </TouchableOpacity>
 
-          <Text style={{ alignSelf: 'center', color: COLORS.BLACK, fontSize: hp('2.5%'), fontWeight: 'bold', marginBottom: 20, marginTop: 10 }}>Notes</Text>
-   
-          <TouchableOpacity  style={{ alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='back' color={'white'} size={30} />
-            <Text style={{color:'white'}}>Return to Home</Text>
+          <Text style={{ alignSelf: 'center', color: COLORS.Text, fontSize: hp('2.5%'), fontWeight: 'bold', marginBottom: 20, marginTop: 10 }}>Notes</Text>
+
+          <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', width:40 }} >
+            {/* <Icon name='back' color={color === true ? 'black' : 'white'} size={30} />
+            <Text style={{ color: color === true ? 'black' : 'white'}}>Return to Home</Text> */}
 
 
           </TouchableOpacity>
@@ -206,7 +216,7 @@ const Notes = ({ navigation }) => {
 
                   <Text style={{ color: colors.white, alignSelf: 'flex-end', marginBottom: 10 }}>{formattedDate}, {formattedTime}</Text>
 
-                  <Text style={{ fontSize: hp('1.7%'), color: COLORS.WHITE }}>{item.NoteMsg}</Text>
+                  <Text style={{ fontSize: hp('1.7%'), color: 'white' }}>{item.NoteMsg}</Text>
 
 
                 </TouchableOpacity>
@@ -266,7 +276,7 @@ const Notes = ({ navigation }) => {
           />
 
           <TouchableOpacity onPress={() => CreatePDF()} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ color: colors.white, fontSize: hp('2.5%'), fontWeight: 'bold' }}>{createNoteLoading ? <ActivityIndicator size={'small'} color={colors.white}/> : "Add Note"}</Text>
+            <Text style={{ color: colors.white, fontSize: hp('2.5%'), fontWeight: 'bold' }}>{createNoteLoading ? <ActivityIndicator size={'small'} color={colors.white} /> : "Add Note"}</Text>
           </TouchableOpacity>
 
 
@@ -277,10 +287,10 @@ const Notes = ({ navigation }) => {
 
 
       <Modal isVisible={isDeleteModal}>
-        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, alignItems:'center', justifyContent:'center', height:150, width:150, alignSelf:'center' }}>
+        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, alignItems: 'center', justifyContent: 'center', height: 150, width: 150, alignSelf: 'center' }}>
 
-              <ActivityIndicator size={'large'} color={'black'}/>
-              <Text style={{color:'black', fontWeight:'bold'}}>Deleting</Text>
+          <ActivityIndicator size={'large'} color={'black'} />
+          <Text style={{ color: 'black', fontWeight: 'bold' }}>Deleting</Text>
 
 
 

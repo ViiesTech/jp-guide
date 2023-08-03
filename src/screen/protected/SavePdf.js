@@ -22,11 +22,21 @@ import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 import Icon from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image'
+import { useDispatch, useSelector } from 'react-redux';
 
 const SavePdf = ({ navigation }) => {
     const [ImageUrl, setImageUrl] = useState("")
     const [data, setData] = useState()
     const [isDeleteModal, setDeleteModal] = useState(false)
+
+    const color = useSelector(state => state.pdf.Dark)
+
+
+    const COLORS = {
+      WHITE : color === true ?  "#000000" : "#FFFFFF" ,
+      Text : color === true ?  "#FFFFFF" :"#000000"
+  
+    }
 
 
     useEffect(() => {
@@ -119,27 +129,24 @@ const SavePdf = ({ navigation }) => {
     //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
 
     return (
-        <FastImage source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
+        <FastImage source={color === true ?  require('../../assets/images/hidark.png') : require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
             {/* <Header Logo={require('../../assets/images/profile.png')} QuickFind={"NO"} ImageUrl={ImageUrl} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} /> */}
-            <Image source={require('../../assets/images/profile.png')} style={{ height: 120, width: 120, alignSelf: 'center' }} resizeMode='contain' />
-            <View style={{ backgroundColor: colors.white, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1, }}>
+            <Image source={color === true ? require('../../assets/images/logodark.png') : require('../../assets/images/profile.png')} style={{ height: 120, width: 120, alignSelf: 'center' }} resizeMode='contain' />
+            <View style={{ backgroundColor: color === true ?  'rgba(252, 252, 252, 0.1)' : 'white', width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, padding: 20, flex: 1, }}>
 
 
                 <View style={{ width: screenWidth * 0.8, alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
 
                     <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ alignItems: 'center', justifyContent: 'center' }} >
-                        <Icon name='back' color={'black'} size={30} />
-                        <Text style={{color:"black", }}>Return to Home</Text>
+                        <Icon name='back' color={COLORS.Text} size={30} />
+                        <Text style={{color:COLORS.Text, }}>Return to Home</Text>
 
 
                     </TouchableOpacity>
 
-                    <Text style={{ alignSelf: 'center', color: COLORS.BLACK, fontSize: hp('2.5%'), fontWeight: 'bold', marginBottom: 20, marginTop: 10 }}>My Saved Airports</Text>
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} >
-                        <Icon name='back' color={'white'} size={30} />
-                        <Text style={{color:"white", }}>Return to Home</Text>
-
-
+                    <Text style={{ alignSelf: 'center', color: COLORS.Text, fontSize: hp('2.5%'), fontWeight: 'bold', marginBottom: 20, marginTop: 10 }}>My Saved Airports</Text>
+                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', width:40 }} >
+       
                     </TouchableOpacity>
 
                 </View>
@@ -154,7 +161,7 @@ const SavePdf = ({ navigation }) => {
                                 <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.pdfURL, isSelected: item.code, Airport: item.AirportName })} style={{ height: 80, alignSelf: 'center', backgroundColor: colors.primary, borderRadius: 5, marginTop: 10, alignItems: 'center', paddingHorizontal: 10, justifyContent: 'center', width: wp('16%'), marginLeft: 10 }}>
                                     <View style={{ flexDirection: 'row' }}>
 
-                                        <Text style={{ fontWeight: 'bold', fontSize: hp('2%'), color: COLORS.WHITE }}>{item.code}</Text>
+                                        <Text style={{ fontWeight: 'bold', fontSize: hp('2%'), color: 'white' }}>{item.code}</Text>
 
                                         {/* <FontAwesome5
                                         style={{ marginRight: 20, marginLeft: 20 }}
@@ -195,7 +202,7 @@ const SavePdf = ({ navigation }) => {
 
 
             <Modal isVisible={isDeleteModal}>
-        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 20, alignItems:'center', justifyContent:'center', height:150, width:150, alignSelf:'center' }}>
+        <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 20, padding: 20, alignItems:'center', justifyContent:'center', height:150, width:150, alignSelf:'center' }}>
 
               <ActivityIndicator size={'large'} color={'black'}/>
               <Text style={{color:'black', fontWeight:'bold'}}>Deleting</Text>

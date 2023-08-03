@@ -10,6 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 import FastImage from 'react-native-fast-image'
+import { COLORS } from '../../utils/COLORS'
+import { useSelector, useDispatch } from 'react-redux'
 
 const Login = ({ navigation }) => {
 
@@ -17,6 +19,12 @@ const Login = ({ navigation }) => {
   const [Password, setPassword] = useState('')
   const [Loading, setLoading] = useState(false)
 
+  const color = useSelector(state => state.pdf.Dark)
+
+  const COLORS = {
+    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
+    Text : color === true ?  "#FFFFFF" :"#000000"
+  }
 
   //Orientation
   const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
@@ -183,10 +191,10 @@ const Login = ({ navigation }) => {
               />
               <View style={{ flexDirection: 'row', paddingVertical: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                 <View style={[styles.bottmoButtom, { paddingRight: 10 }]}>
-                  <Text style={[styles.titleText, { color: colors.white }]}>Don't have an account?</Text>
+                  <Text style={[styles.titleText, { color: 'white' }]}>Don't have an account?</Text>
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate('SignUp')} activeOpacity={0.5} style={{ backgroundColor: colors.secondery, alignItems: 'center', borderRadius: 10, width: screenWidth * 0.3, height: hp('6'), justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 20, color: colors.white }}>Create an Account</Text>
+                  <Text style={{ fontSize: 20, color: 'white' }}>Create an Account</Text>
                 </TouchableOpacity>
               </View>
             </View>

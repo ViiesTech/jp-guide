@@ -9,6 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import { useSelector, useDispatch } from 'react-redux'
+import { COLORS } from '../utils/COLORS'
 
 const Header = ({
     placeHolder,
@@ -138,7 +139,7 @@ const Header = ({
 
 
                     <TextInput
-                        style={{ height: 60, width: wp('80%'), backgroundColor: 'white', alignSelf: 'center', borderRadius: 10, marginTop: 10, borderWidth: 1, paddingHorizontal: 20 }}
+                        style={{ height: 60, width: wp('80%'), backgroundColor: COLORS.WHITE, alignSelf: 'center', borderRadius: 10, marginTop: 10, borderWidth: 1, paddingHorizontal: 20 }}
                         placeholder="Enter City / Country Name"
                         onChangeText={(txt) => {
                             setSearch(txt)
@@ -157,7 +158,7 @@ const Header = ({
                                 return (
                                     <>
                                         <TouchableOpacity onPress={() => CallData(item)} style={{ height: 70, width: 70, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, marginLeft: 10 }}>
-                                            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2.5%') }}>{item}</Text>
+                                            <Text style={{ color: COLORS.WHITE, fontWeight: 'bold', fontSize: hp('2.5%') }}>{item}</Text>
                                         </TouchableOpacity>
 
                                     </>
@@ -170,9 +171,7 @@ const Header = ({
 
                         </TouchableOpacity>
                     </View>
-                    {
-                        console.log(".............................!!**...", getData === undefined)
-                    }
+                
                     {/* <Text style={{ color: 'black', alignSelf: 'center', fontSize: hp('2.5%') }}>Airport Code for {CurrentAplhabet}</Text> */}
                     {
                         getData === undefined ?
@@ -191,7 +190,7 @@ const Header = ({
 
                                 AlphabetPdfs?.filter((val) => {
 
-                                    console.log(val)
+                                    // console.log(val)
                                     if (search === "") {
                                         return val
                                     } else if (AlphabetPdfs?.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
@@ -201,16 +200,16 @@ const Header = ({
                                     return (
                                         <>
                                             <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'center' }}>
-                                                <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
+                                                <Text style={{ color: COLORS.WHITE, alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
                                                     {item.name}
                                                 </Text>
 
                                                 {
                                                     item?.Domestic ?
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>Domestic Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>Domestic Airport</Text>
 
                                                         :
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>International Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>International Airport</Text>
 
 
                                                 }
@@ -225,28 +224,28 @@ const Header = ({
 
                                 allPdf?.filter((val) => {
 
-                                    console.log(val)
+                                    // console.log(val)
                                     if (search === "") {
                                         return val
                                     } else if (val.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
                                         return val
                                     }
                                 }).map((item, key) => {
-                                    console.log("item.....", item.Domestic)
+                                    // console.log("item.....", item.Domestic)
 
 
                                     return (
                                         <>
                                             <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'center' }}>
-                                                <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
+                                                <Text style={{ color: COLORS.WHITE, alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold' }}>
                                                     {item.name}
                                                 </Text>
                                                 {
                                                     item?.Domestic ?
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>Domestic Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>Domestic Airport</Text>
 
                                                         :
-                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: 'white', fontWeight: 'bold' }}>International Airport</Text>
+                                                        <Text style={{ alignSelf: 'center', fontSize: hp('1%'), color: COLORS.WHITE, fontWeight: 'bold' }}>International Airport</Text>
 
 
                                                 }

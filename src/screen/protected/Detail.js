@@ -17,12 +17,24 @@ import { A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, R, S, T, U, V, X, Y, gl
 import { useSelector, useDispatch } from 'react-redux'
 import Modal from "react-native-modal";
 import Entypo from 'react-native-vector-icons/Entypo'
-import { COLORS } from '../../utils/COLORS'
+// import { COLORS } from '../../utils/COLORS'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
+import FastImage from 'react-native-fast-image'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Detail = ({ navigation }) => {
+
+
+  const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
+    Text : color === true ?  "#FFFFFF" :"#000000"
+
+  }
 
   const UID = auth()?.currentUser?.uid
 
@@ -40,7 +52,7 @@ const Detail = ({ navigation }) => {
 
   const allPdf = useSelector(state => state.pdf.allPdf);
 
-  console.log("$$$$$$$$$$$$", allPdf)
+  // console.log("$$$$$$$$$$$$", allPdf)
 
 
 
@@ -187,138 +199,63 @@ const Detail = ({ navigation }) => {
 
         // console.log("AlphabetPDF",sort)
       })
-
-    // const Temp = []
-    // if (Aplha === "A") {
-    //   A.forEach((item) => {
-    //     console.log(",..............", item)
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "B") {
-    //   B.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "C") {
-    //   C.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "D") {
-    //   D.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "E") {
-    //   E.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "F") {
-    //   F.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "G") {
-    //   G.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "H") {
-    //   H.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "I") {
-    //   I.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "J") {
-    //   J.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "K") {
-    //   K.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "L") {
-    //   L.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "M") {
-    //   M.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "N") {
-    //   N.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "O") {
-    //   O.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "P") {
-    //   P.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "R") {
-    //   R.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "S") {
-    //   S.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "T") {
-    //   T.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "U") {
-    //   U.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "V") {
-    //   V.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "X") {
-    //   X.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else if (Aplha === "Y") {
-    //   Y.forEach((item) => {
-    //     Temp.push(item)
-    //   })
-    // } else {
-
-    // }
-
-    // setGetData(Temp)
   }
 
 
 
-  const goToPDFPage = (item) => {
+  const goToPDFPage = async(item) => {
 
-    console.log("iiiiiiiiiii", item)
+    // console.log("iiiiiiiiiii", item)
 
-    navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, Airport: item.Airport })
+    // navigation.navigate('PDFViewerDelete')
+
+
+
+
+      await AsyncStorage.getItem(item.name).then((doc) => {
+        console.log("docer;;';';';';';';';';';';';';';", doc)
+        // setPDFDocPAth(doc)
+
+        if(doc !== null){
+          navigation.navigate('PDFText', { pageUrl: doc, isSelected: item.name, Airport: item.Airport })
+
+        }else{
+          navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, Airport: item.Airport })
+
+        }
+  
+      })
+
+
+  
+      // console.log("Gettting version.......", doc)
+  
+
+
     toggleModal()
   }
 
 
 
   return (
-    <View>
+    <FastImage source={color === true ?  require('../../assets/images/hidark.png'): require('../../assets/images/hi.jpeg')}  style={{ flex:1}}>
       <Modal isVisible={isModalVisible}>
 
-        <View style={{ flex: 1, backgroundColor: 'white', padding: 20, borderRadius: 20, width:screenWidth * 0.9 }}>
+        <View style={{ flex: 1, backgroundColor: color === true ?  'rgba(252, 252, 252, 0.1)'  : 'white', padding: 20, borderRadius: 20, width:screenWidth * 0.9 }}>
 
 
 
 
           <TouchableOpacity onPress={() => { navigation.goBack() }}>
 
-            <AntDesign name='closecircleo' size={25} />
+            <AntDesign name='closecircleo' size={25} color={COLORS.Text}/>
           </TouchableOpacity>
 
 
           <TextInput
             style={{ height: 60, width: screenWidth * 0.8, backgroundColor: 'white', alignSelf: 'center', borderRadius: 10, marginTop: 10, borderWidth: 1, paddingHorizontal: 20 }}
             placeholder="Enter City / Country Name"
+            placeholderTextColor={'gray'}
             onChangeText={(txt) => {
               setSearch(txt)
               // CallData(txt.charAt(0))
@@ -332,13 +269,13 @@ const Detail = ({ navigation }) => {
 
 
 
-          <Text style={{ alignSelf: 'center', color: 'black', fontSize: hp('3%'), marginTop: 20, fontWeight:'bold' }}>Select First Letter of Airport Code</Text>
+          <Text style={{ alignSelf: 'center', color: COLORS.Text, fontSize: hp('3%'), marginTop: 20, fontWeight:'bold' }}>Select First Letter of Airport Code</Text>
           <View style={{ borderRadius: 10,  flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth * 0.8 , alignSelf:'center' }} tot>
 
             {
               alphabet?.map((item) => {
 
-                console.log(".,................................", item)
+                // console.log(".,................................", item)
                 return (
                   <>
                     <TouchableOpacity onPress={() => CallData(item)} style={{ height: 40, width: 40, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
@@ -363,11 +300,11 @@ const Detail = ({ navigation }) => {
           {
             alphabets?.map((item) => {
 
-              console.log(".,................................", item)
+              // console.log(".,................................", item)
               return (
                 <>
                   <TouchableOpacity onPress={() => CallData(item)} style={{ height: 40, width: 40, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2%') }}>{item}</Text>
+                    <Text style={{ color:'white', fontWeight: 'bold', fontSize: hp('2%') }}>{item}</Text>
                   </TouchableOpacity>
 
                 </>
@@ -388,11 +325,9 @@ const Detail = ({ navigation }) => {
 
               <View />
           }
-          {
-            console.log('Airport Code for {CurrentAplhabet', getData)
-          }
+  
 
-          <Text style={{ alignSelf: 'center', fontSize: hp('3%',), fontWeight: 'bold', marginTop: 20 }}>Airports</Text>
+          <Text style={{ alignSelf: 'center', fontSize: hp('3%',), fontWeight: 'bold', marginTop: 20, color:COLORS.Text }}>Airports</Text>
           <ScrollView style={{alignSelf:'center'}}>
             <ScrollView horizontal scrollEnabled={false} contentContainerStyle={{ flexWrap: 'wrap', width: screenWidth * 0.8, alignSelf:'center',  }}>
 
@@ -402,14 +337,14 @@ const Detail = ({ navigation }) => {
 
                   AlphabetPdfs?.filter((val) => {
 
-                    console.log(val)
+                    // console.log(val)
                     if (search === "") {
                       return val
                     } else if (AlphabetPdfs?.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
                       return val
                     }
                   }).map((item, key) => {
-                    console.log("item", item)
+                    // console.log("item", item)
 
 
                     return (
@@ -421,7 +356,7 @@ const Detail = ({ navigation }) => {
 
 
 
-                          <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
+                          <Text style={{ color: "white", alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
                             {item.name}
                           </Text>
 
@@ -436,14 +371,14 @@ const Detail = ({ navigation }) => {
 
                   allPdf?.filter((val) => {
 
-                    console.log("itemmmmmmmmm", val)
+                    // console.log("itemmmmmmmmm", val)
                     if (search === "") {
                       return val
                     } else if (val.Airport && val.Airport.toLowerCase().includes(search.toLowerCase())) {
                       return val
                     }
                   }).map((item, key) => {
-                    console.log("item", item)
+                    // console.log("item", item)
 
 
                     return (
@@ -455,7 +390,7 @@ const Detail = ({ navigation }) => {
 
 
 
-                          <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
+                          <Text style={{ color: "white", alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
                             {item.name}
                           </Text>
 
@@ -474,7 +409,7 @@ const Detail = ({ navigation }) => {
 
         </View>
       </Modal>
-    </View>
+    </FastImage>
     // <ScrollView >
     //   <View style={{ marginTop: HEIGHT + hp('5'), alignSelf: 'center' }}>
     //     <Header Logo={require('../../assets/images/profile.png')} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />

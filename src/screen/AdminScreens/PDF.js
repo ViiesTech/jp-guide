@@ -243,7 +243,7 @@ const PDF = ({ navigation, route }) => {
 
 
   return (
-    <View style={{ backgroundColor: 'white', }}>
+    <View style={{ backgroundColor: COLORS.WHITE, }}>
 
 
 

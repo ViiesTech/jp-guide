@@ -2,6 +2,7 @@ import { View, Text, Touchable, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState, useRef } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { DocumentView, PDFViewCtrl, RNPdftron, } from "react-native-pdftron";
+import { COLORS } from '../utils/COLORS';
 
 const DarkMode = (props) => {
 
@@ -16,7 +17,7 @@ const DarkMode = (props) => {
     if (pdfViewCtrl) {
       const style = isDarkMode ? 'DarkMode' : 'Default';
       pdfViewCtrl.setToolStyle(style);
-      console.log(style)
+      // console.log(style)
     }
 
 
@@ -47,11 +48,11 @@ const DarkMode = (props) => {
 
   return (
     <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 20 }}>
-      <TouchableOpacity onPress={() => storeData("Yes")} style={{ height: 60, width: 100, borderRadius: 10, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'white' }}>
-        <Text style={{ color: 'white' }}>Dark</Text>
+      <TouchableOpacity onPress={() => storeData("Yes")} style={{ height: 60, width: 100, borderRadius: 10, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: COLORS.WHITE }}>
+        <Text style={{ color: COLORS.WHITE }}>Dark</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => storeData("No")} style={{ height: 60, width: 100, borderRadius: 10, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', marginLeft: 10, borderWidth: 1, borderColor: 'black' }}>
+      <TouchableOpacity onPress={() => storeData("No")} style={{ height: 60, width: 100, borderRadius: 10, backgroundColor: COLORS.WHITE, alignItems: 'center', justifyContent: 'center', marginLeft: 10, borderWidth: 1, borderColor: 'black' }}>
         <Text style={{ color: 'black' }}>Light</Text>
       </TouchableOpacity>
     </View>

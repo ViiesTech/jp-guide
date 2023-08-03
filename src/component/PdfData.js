@@ -14,7 +14,7 @@ import { Config } from 'react-native-pdftron'
 const PdfData = (props) => {
 
 
-    console.log("Propss.......",props)
+    // console.log("Propss.......",props)
 
     useEffect(() => {
         RNPdftron.enableJavaScript(true);

@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground } from
 import React from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import FastImage from 'react-native-fast-image'
+import { COLORS } from '../utils/COLORS'
 
 const Card = ({
     container,
@@ -15,7 +16,7 @@ const Card = ({
 }) => {
     return (
         <View>
-            <Text style={{ fontSize: hp('1.4%'), color: 'white', fontWeight: 'bold', opacity: 1, marginTop:30, position:'absolute', zIndex:200, alignSelf:'center', textAlign:'center' }}>{title}</Text>
+            <Text style={{ fontSize: hp('1.4%'), color: COLORS.WHITE, fontWeight: 'bold', opacity: 1, marginTop:30, position:'absolute', zIndex:200, alignSelf:'center', textAlign:'center' }}>{title}</Text>
             <TouchableOpacity onPress={onPress} style={{ opacity: 0.6 }}>
                 <FastImage source={imageBG}
                     style={{

@@ -11,6 +11,7 @@ import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore';
 import ShowingComments from '../../component/ShowingComments'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { COLORS } from '../../utils/COLORS'
 
 
 const Communication = ({ navigation }) => {
@@ -105,7 +106,7 @@ const Communication = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Icon name='arrow-back' color={'gray'} size={50} />
             </TouchableOpacity>
-            <Text style={{ fontSize: 24, color: 'white', marginLeft: 20 }}>CommunicationsACARS</Text>
+            <Text style={{ fontSize: 24, color: COLORS.WHITE, marginLeft: 20 }}>CommunicationsACARS</Text>
           </View>
           <View style={{ marginTop: 10 }}>
             <FlatList
@@ -117,14 +118,14 @@ const Communication = ({ navigation }) => {
                 return (
                   <View style={{ margin: 15 }} key={key}>
                     <TouchableOpacity onPress={() => setSelected(item.title)} style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 10, padding: 20, height: hp('7'), justifyContent: 'center', backgroundColor: item.title == isSelected ? "#8383AA" : null }}>
-                      <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold', textAlign: 'center' }}>{item.title}</Text>
+                      <Text style={{ fontSize: 20, color: COLORS.WHITE, fontWeight: 'bold', textAlign: 'center' }}>{item.title}</Text>
                     </TouchableOpacity>
                   </View>
                 )
               }}
             />
           </View>
-          <View style={{ backgroundColor: 'white', marginTop: 20, borderRadius: 10, }}>
+          <View style={{ backgroundColor: COLORS.WHITE, marginTop: 20, borderRadius: 10, }}>
             <View style={{ padding: 30 }}>
               {
                 isSelected == "ACARS" ?

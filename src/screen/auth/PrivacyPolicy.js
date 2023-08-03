@@ -3,9 +3,20 @@ import React from 'react'
 import RenderHtml from 'react-native-render-html';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import { useSelector, useDispatch } from 'react-redux'
 
 
 const PrivacyPolicy = ({navigation}) => {
+
+
+  const color = useSelector(state => state.pdf.Dark)
+
+
+  const COLORS = {
+    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
+    Text : color === true ?  "#FFFFFF" :"#000000"
+
+  }
 
     const source = {
         html: `

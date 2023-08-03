@@ -45,6 +45,7 @@ import AllPdf from '../screen/AdminScreens/AllPdf';
 import PDF from '../screen/AdminScreens/PDF';
 import { COLORS } from '../utils/COLORS';
 import EditMainPdf from '../screen/AdminScreens/EditMainPdf';
+import PDFViewerDelete from '../screen/protected/PDFViewerDelete';
 
 
 const Stack = createNativeStackNavigator();
@@ -161,7 +162,7 @@ const Routes = () => {
 
 
   return (
-    <Stack.Navigator initialRouteName='GetStart' screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName='GetStart' screenOptions={{ headerShown: false, gestureEnabled : false }}>
       {
         Loader == true ?
 
@@ -180,30 +181,31 @@ const Routes = () => {
             :
             <>
 
-              <Stack.Screen name="Loading" component={Loading} />
+              <Stack.Screen name="Loading" component={Loading} options={{gestureEnabled : false}}/>
+              <Stack.Screen name="AdminHome" component={AdminHome} options={{gestureEnabled : false}}/>
+              <Stack.Screen name="EditMainPdf" component={EditMainPdf} options={{gestureEnabled : false}}/>
 
-
-              <Stack.Screen name="AdminHome" component={AdminHome} />
-              <Stack.Screen name="EditMainPdf" component={EditMainPdf} />
-
-              <Stack.Screen name="AllPdf" component={AllPdf} />
-              <Stack.Screen name="PDF" component={PDF} />
+              <Stack.Screen name="AllPdf" component={AllPdf} options={{gestureEnabled : false}}/>
+              <Stack.Screen name="PDF" component={PDF} options={{gestureEnabled : false}}/>
 
 
               <>
-                <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name='Detail' component={Detail} />
-                <Stack.Screen name='Emergency' component={Emergency} />
-                <Stack.Screen name='Operational' component={Operational} />
-                <Stack.Screen name='Maintenances' component={Maintenances} />
-                <Stack.Screen name='EditProfile' component={EditProfile} />
-                <Stack.Screen name='SavePdf' component={SavePdf} />
+                <Stack.Screen name="Home" component={Home} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='Detail' component={Detail} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='Emergency' component={Emergency} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='Operational' component={Operational} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='Maintenances' component={Maintenances} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='EditProfile' component={EditProfile} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='SavePdf' component={SavePdf} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='Communication' component={Communication} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='Notes' component={Notes} options={{gestureEnabled : false}}/>
+                <Stack.Screen name='NoteDetail' component={NoteDetail} options={{gestureEnabled : false}}/>
+                <Stack.Screen name="Payment" component={Payment} options={{gestureEnabled : false}}/>
+                <Stack.Screen name="PDFText" component={PDFText} options={{gestureEnabled : false}}/>
 
-                <Stack.Screen name='Communication' component={Communication} />
-                <Stack.Screen name='Notes' component={Notes} />
-                <Stack.Screen name='NoteDetail' component={NoteDetail} />
-                <Stack.Screen name="Payment" component={Payment} />
-                <Stack.Screen name="PDFText" component={PDFText} />
+
+                <Stack.Screen name='PDFViewerDelete' component={PDFViewerDelete} />
+
               </>
 
 

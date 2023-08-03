@@ -46,6 +46,7 @@ const AdminHome = ({ navigation }) => {
         type: [DocumentPicker.types.pdf],
       })
 
+      // console.log("result....",result)
       setImageUrl(result[0].uri)
       setImageName(result[0].name)
 
@@ -61,11 +62,11 @@ const AdminHome = ({ navigation }) => {
 
   // auth().signOut()
 
-  console.log(value)
+  // console.log(value)
 
   const firstLatter = data.Code.charAt(0).toUpperCase()
 
-  console.log("latter", firstLatter)
+  // console.log("latter", firstLatter)
 
   const saveImage = async () => {
 
@@ -108,7 +109,7 @@ const AdminHome = ({ navigation }) => {
             .doc(data.Code)
             .get()
             .then((doc) => {
-              console.log(doc.exists)
+              // console.log(doc.exists)
 
               if (doc.exists === true) {
 
@@ -188,7 +189,7 @@ const AdminHome = ({ navigation }) => {
         <AntDesign
           name='edit'
           size={25}
-          color={'white'}
+          color={COLORS.WHITE}
           style={{ alignSelf:'flex-end'}}
         />
         <Text style={styles.TextStyle}>{item.name}</Text>
@@ -205,14 +206,14 @@ const AdminHome = ({ navigation }) => {
           </TouchableOpacity>
           <View style={{ backgroundColor: colors.primary, width: wp('90'), alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, alignItems: 'center', justifyContent: 'center' }}>
 
-            <Text style={{ color: 'white', alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold', marginTop: 20 }}>Upload pdf</Text>
+            <Text style={{ color: COLORS.WHITE, alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold', marginTop: 20 }}>Upload pdf</Text>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', width: wp('80%'), justifyContent: 'space-between', marginTop: 20, marginBottom: 20 }}>
 
               <TextInput
                 placeholder='Code AUA / etc'
                 placeholderTextColor={"gray"}
-                style={{ height: 60, backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 10, width: wp('25%') }}
+                style={{ height: 60, backgroundColor: COLORS.WHITE, borderRadius: 10, paddingHorizontal: 10, width: wp('25%') }}
                 onChangeText={(txt) => {
                   setData({ ...data, Code: txt });
 
@@ -223,7 +224,7 @@ const AdminHome = ({ navigation }) => {
               <TextInput
                 placeholder='(St. Johns, Antigua)'
                 placeholderTextColor={"gray"}
-                style={{ height: 60, backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 10, width: wp('50%') }}
+                style={{ height: 60, backgroundColor: COLORS.WHITE, borderRadius: 10, paddingHorizontal: 10, width: wp('50%') }}
                 onChangeText={(txt) => {
                   setData({ ...data, CodeDetail: txt });
                 }}
@@ -233,7 +234,7 @@ const AdminHome = ({ navigation }) => {
             </View>
 
 
-            <TouchableOpacity onPress={() => pickDocument()} style={{ height: hp('10%'), width: wp('30%'), backgroundColor: colors.white, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+            <TouchableOpacity onPress={() => pickDocument()} style={{ height: hp('10%'), width: wp('30%'), backgroundColor: COLORS.WHITE, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
               {
                 ImageUrl !== "" ?
 
@@ -260,7 +261,7 @@ const AdminHome = ({ navigation }) => {
 
 
             <TouchableOpacity onPress={() => saveImage()} style={{ height: 60, width: wp("80%"), backgroundColor: colors.secondery, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 20, marginTop: 20 }}>
-              <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: hp('2%') }}>{Loading === true ? <ActivityIndicator size={'small'} color={"white"} /> : "Upload"}</Text>
+              <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: hp('2%') }}>{Loading === true ? <ActivityIndicator size={'small'} color={COLORS.WHITE} /> : "Upload"}</Text>
             </TouchableOpacity>
 
           </View>

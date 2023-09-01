@@ -70,6 +70,9 @@ const Login = ({ navigation }) => {
   const handleLogin = async () => {
     const DevToken = await AsyncStorage.getItem("FMCToken")
 
+
+    console.log("device token :" + DevToken) 
+
     setLoading(true)
 
     const Regix = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -149,7 +152,7 @@ const Login = ({ navigation }) => {
   }
   return (
     <>
-      <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={{ height: screenHeight, width: screenWidth }}>
+      <FastImage source={require('../../assets/images/hi.jpeg')} resizeMode="cover" style={{ height: screenHeight, width: screenWidth }}>
         <ScrollView contentContainerStyle={{ paddingBottom: 400, }} showsVerticalScrollIndicator={false} >
           <View style={{ width: screenWidth * 0.9, height: hp('90%'), justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center' }}>
             <View style={{}}>
@@ -163,6 +166,7 @@ const Login = ({ navigation }) => {
                 <TextInput
                   style={styles.textInput}
                   placeholder="Email"
+                  placeholderTextColor={'gray'}
                   onChangeText={(text) => {
                     setEmail(text)
                   }}
@@ -171,6 +175,8 @@ const Login = ({ navigation }) => {
                 <TextInput
                   style={styles.textInput}
                   placeholder="Password"
+                  placeholderTextColor={'gray'}
+
                   onChangeText={(txt) => {
                     setPassword(txt)
                   }}
@@ -179,7 +185,7 @@ const Login = ({ navigation }) => {
                 />
               </View>
               <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
-                <Text style={{ alignSelf: 'flex-end', color: '#fff', fontWeight: 'bold' }}>Forgot password?</Text>
+                <Text style={{ alignSelf: 'flex-end', color: 'black', fontWeight: 'bold', fontSize:hp('1.5%') }}>Forgot password?</Text>
               </TouchableOpacity>
               <CustomButton
                 buttonColor={colors.primary}
@@ -191,9 +197,9 @@ const Login = ({ navigation }) => {
               />
               <View style={{ flexDirection: 'row', paddingVertical: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                 <View style={[styles.bottmoButtom, { paddingRight: 10 }]}>
-                  <Text style={[styles.titleText, { color: 'white' }]}>Don't have an account?</Text>
+                  <Text style={[styles.titleText, { color: 'black' }]}>Don't have an account?</Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('SignUp')} activeOpacity={0.5} style={{ backgroundColor: colors.secondery, alignItems: 'center', borderRadius: 10, width: screenWidth * 0.3, height: hp('6'), justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => navigation.navigate('SignUp')} activeOpacity={0.5} style={{ backgroundColor: colors.secondery, alignItems: 'center', borderRadius: 10, width: screenWidth * 0.3, height: 60, justifyContent: 'center' }}>
                   <Text style={{ fontSize: 20, color: 'white' }}>Create an Account</Text>
                 </TouchableOpacity>
               </View>

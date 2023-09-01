@@ -35,6 +35,10 @@ import { useSelector, useDispatch } from 'react-redux'
 const PDFText = ({ navigation, route }) => {
 
 
+  const [Loader, setLoader] = useState(true)
+
+
+
 
   const _viewer = useRef()
 
@@ -73,29 +77,34 @@ const PDFText = ({ navigation, route }) => {
 
 
 
+
+
   useEffect(() => {
     FetchComment()
   }, [])
 
-    //Set Dark mode in pdf 
+  //Set Dark mode in pdf 
 
 
-    const SetMode = () => {
+  const SetMode = () => {
 
 
 
-        if(color === true){
+    if (color === true) {
+      // _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.None)
 
-          _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.NightMode);
-        }else{
-          _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.GradientMap);
+      _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.NightMode);
+    } else {
+      // _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.GradientMap);
+      _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.None)
 
-        }
+
     }
+  }
 
-    //Set Dark mode in pdf 
+  //Set Dark mode in pdf 
 
-    
+
 
 
 
@@ -131,7 +140,7 @@ const PDFText = ({ navigation, route }) => {
 
 
   const FetchComment = () => {
-   
+
 
     firestore()
       .collection('Comments')
@@ -318,6 +327,10 @@ const PDFText = ({ navigation, route }) => {
   const [screenResolution, setScreenResolution] = useState('')
 
   useEffect(() => {
+
+
+
+
     const updateDimensions = () => {
       const { width, height } = Dimensions.get('window');
       setScreenWidth(width);
@@ -391,11 +404,20 @@ const PDFText = ({ navigation, route }) => {
 
       <View style={{ height: 60, borderRadius: 500, alignItems: 'center', justifyContent: 'center', marginTop: 20, flexDirection: 'row', width: screenWidth * 0.9, justifyContent: 'space-between', alignSelf: 'center' }}>
 
+        {
+          Loader === true ?
+            <View>
+            <ActivityIndicator size={ COLORS.Text} color={COLORS.Text} />
+            <Text style={{color: COLORS.Text, fontWeight:'bold', marginTop:10}}>Saving</Text>
+            </View>
 
-        <TouchableOpacity onPress={() => saveDoc()} style={{ alignItems: 'center', justifyContent: 'center' }} >
-          <Icon name='back' color={COLORS.Text} size={30} />
-          <Text style={{ color: COLORS.Text, fontWeight: 'bold' }}>Return to Home</Text>
-        </TouchableOpacity>
+            :
+            <TouchableOpacity onPress={() => saveDoc()} style={{ alignItems: 'center', justifyContent: 'center' }} >
+              <Icon name='back' color={COLORS.Text} size={30} />
+              <Text style={{ color: COLORS.Text, fontWeight: 'bold' }}>Return to Home</Text>
+            </TouchableOpacity>
+        }
+
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
@@ -448,15 +470,29 @@ const PDFText = ({ navigation, route }) => {
 
                 document={pageUrl}
                 ref={_viewer}
-                onLoadComplete = {(path) => { 
-                  console.log('The document has finished loading:', path); 
+
+
+                onLoadComplete={(path) => {
+                  console.log('The document has finished loading:', path);
                   SetMode()
+                  setLoader(false)
+                }}
+
+                onDocumentError={(error) => {
+                  console.log('Error occured during document opening:', error);
+                  setLoader(false)
+
+                }}
+                onError={(error) => {
+                  console.log('Error occured during document opening:', error);
+                  setLoader(false)
+
                 }}
                 //
                 bottomToolbarEnabled={false}
 
                 showLeadingNavButton={true}
-              //
+                //
                 followSystemDarkMode={false}
                 forceAppTheme={color === true ? Config.ThemeOptions.ThemeDark : Config.ThemeOptions.ThemeLight}
                 autoSaveEnabled={true}
@@ -596,6 +632,11 @@ const PDFText = ({ navigation, route }) => {
         </View>
         <Toast />
       </Modal>
+
+
+
+
+
 
 
 

@@ -13,7 +13,6 @@
 		4EED9560E8CC3D4BCB3FBB05 /* Pods_the_jp_guid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33372449F3A9768F349E773E /* Pods_the_jp_guid.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		FA074AF92A78735F008091D5 /* AnyOrientationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA074AF82A78735F008091D5 /* AnyOrientationViewController.m */; };
-		FA13AEB5292EBE9800A87918 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA13AEB4292EBE9700A87918 /* GoogleService-Info.plist */; };
 		FA13AECF292EF03900A87918 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AEBF292EF03800A87918 /* Entypo.ttf */; };
 		FA13AED0292EF03900A87918 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AEC0292EF03800A87918 /* MaterialCommunityIcons.ttf */; };
 		FA13AED1292EF03900A87918 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AEC1292EF03800A87918 /* Feather.ttf */; };
@@ -30,6 +29,7 @@
 		FA13AEDC292EF03900A87918 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AECC292EF03900A87918 /* Octicons.ttf */; };
 		FA13AEDD292EF03900A87918 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AECD292EF03900A87918 /* FontAwesome5_Brands.ttf */; };
 		FA13AEDE292EF03900A87918 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AECE292EF03900A87918 /* AntDesign.ttf */; };
+		FAB8CEC52A953AB90092B093 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAB8CEC42A953AB90092B093 /* GoogleService-Info.plist */; };
 		FADEA4E42937F69100DAA21B /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = FADEA4E32937F69100DAA21B /* main.jsbundle */; };
 /* End PBXBuildFile section */
 
@@ -52,7 +52,6 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FA074AF12A786D2F008091D5 /* AnyOrientationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnyOrientationViewController.h; sourceTree = "<group>"; };
 		FA074AF82A78735F008091D5 /* AnyOrientationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AnyOrientationViewController.m; path = the_jp_guid/AnyOrientationViewController.m; sourceTree = "<group>"; };
-		FA13AEB4292EBE9700A87918 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA13AEBF292EF03800A87918 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
 		FA13AEC0292EF03800A87918 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		FA13AEC1292EF03800A87918 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -69,6 +68,8 @@
 		FA13AECC292EF03900A87918 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		FA13AECD292EF03900A87918 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
 		FA13AECE292EF03900A87918 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AntDesign.ttf; sourceTree = "<group>"; };
+		FAB8CEC12A93E87B0092B093 /* the_jp_guid.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = the_jp_guid.entitlements; path = the_jp_guid/the_jp_guid.entitlements; sourceTree = "<group>"; };
+		FAB8CEC42A953AB90092B093 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FADEA4E32937F69100DAA21B /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +105,8 @@
 		13B07FAE1A68108700A75B9A /* the_jp_guid */ = {
 			isa = PBXGroup;
 			children = (
+				FAB8CEC42A953AB90092B093 /* GoogleService-Info.plist */,
+				FAB8CEC12A93E87B0092B093 /* the_jp_guid.entitlements */,
 				FADEA4E32937F69100DAA21B /* main.jsbundle */,
 				FA13AEBE292EEE3300A87918 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -112,7 +115,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				FA13AEB4292EBE9700A87918 /* GoogleService-Info.plist */,
 				FA074AF12A786D2F008091D5 /* AnyOrientationViewController.h */,
 				FA074AF82A78735F008091D5 /* AnyOrientationViewController.m */,
 			);
@@ -256,7 +258,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FADEA4E42937F69100DAA21B /* main.jsbundle in Resources */,
-				FA13AEB5292EBE9800A87918 /* GoogleService-Info.plist in Resources */,
 				FA13AED5292EF03900A87918 /* FontAwesome.ttf in Resources */,
 				FA13AED8292EF03900A87918 /* FontAwesome5_Regular.ttf in Resources */,
 				FA13AEDE292EF03900A87918 /* AntDesign.ttf in Resources */,
@@ -265,6 +266,7 @@
 				FA13AED0292EF03900A87918 /* MaterialCommunityIcons.ttf in Resources */,
 				FA13AEDC292EF03900A87918 /* Octicons.ttf in Resources */,
 				FA13AED1292EF03900A87918 /* Feather.ttf in Resources */,
+				FAB8CEC52A953AB90092B093 /* GoogleService-Info.plist in Resources */,
 				FA13AED2292EF03900A87918 /* EvilIcons.ttf in Resources */,
 				FA13AEDA292EF03900A87918 /* Zocial.ttf in Resources */,
 				FA13AEDB292EF03900A87918 /* MaterialIcons.ttf in Resources */,
@@ -407,6 +409,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = the_jp_guid/the_jp_guid.entitlements;
 				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = 576BWVKQG6;
 				ENABLE_BITCODE = NO;
@@ -422,8 +425,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = "com.the-jp-guid";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-jp-guid";
 				PRODUCT_NAME = the_jp_guid;
 				SWIFT_OBJC_BRIDGING_HEADER = "the_jp_guid-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -439,6 +441,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = the_jp_guid/the_jp_guid.entitlements;
 				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = 576BWVKQG6;
 				INFOPLIST_FILE = the_jp_guid/Info.plist;
@@ -453,8 +456,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = "com.the-jp-guid";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-jp-guid";
 				PRODUCT_NAME = the_jp_guid;
 				SWIFT_OBJC_BRIDGING_HEADER = "the_jp_guid-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

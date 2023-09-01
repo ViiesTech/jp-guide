@@ -17,6 +17,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Operational = ({ route, navigation }) => {
+  const [Loader, setLoader] = useState(true)
+
+
   const _viewer = useRef()
 
   const HEIGHT = StatusBar.currentHeight;
@@ -139,13 +142,14 @@ const Operational = ({ route, navigation }) => {
 
   const SetMode = () => {
 
+    console.log(COLORS.Text)
 
 
     if (color === true) {
 
       _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.NightMode);
     } else {
-      _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.GradientMap);
+      _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.None);
 
     }
   }
@@ -154,18 +158,30 @@ const Operational = ({ route, navigation }) => {
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: COLORS.WHITE }}>
       <View style={{ alignSelf: 'center', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth * 0.9, marginTop: 10, backgroundColor: COLORS.WHITE }}>
 
-        <TouchableOpacity onPress={() => saveDoc()} style={{ alignItems: 'center', justifyContent: 'center' }}>
+        {
+          Loader === true ?
 
-          <AntDesign
-            name='back'
-            size={35}
-            color={COLORS.Text}
-          />
-          <Text style={{ color: COLORS.Text }}>Return to Home</Text>
-        </TouchableOpacity>
+            <View>
+              <ActivityIndicator size={25} color={COLORS.Text} />
+              <Text style={{color:COLORS.Text}}>Saving</Text>
+            </View>
+            :
+            <TouchableOpacity onPress={() => saveDoc()} style={{ alignItems: 'center', justifyContent: 'center' , }}>
+
+              <AntDesign
+                name='back'
+                size={35}
+                color={COLORS.Text}
+              />
+              <Text style={{ color: COLORS.Text }}>Return to Home</Text>
+            </TouchableOpacity>
+        }
+
+
+
         <Image source={color === true ? require('../../assets/images/logodark.png') : require('../../assets/images/profile.png')} style={{ height: 100, width: 100 }} resizeMode='contain' />
 
-        <View style={{ height: 10, width: 10 }} />
+        <View style={{ height: 40, width: wp('10%'), }} />
       </View>
 
 
@@ -176,8 +192,19 @@ const Operational = ({ route, navigation }) => {
         onLoadComplete={(path) => {
           console.log('The document has finished loading:', path);
           SetMode()
+          setLoader(false)
         }}
         //
+        onDocumentError={(error) => {
+          console.log('Error occured during document opening:', error);
+          setLoader(false)
+        }}
+
+        onError={(error) => {
+          console.log('Error occured during document opening:', error);
+          setLoader(false)
+        }}
+
         bottomToolbarEnabled={false}
 
         showLeadingNavButton={true}

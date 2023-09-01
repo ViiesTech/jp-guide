@@ -108,7 +108,7 @@ const ForgetPassword = ({ navigation }) => {
           animated={true}
           backgroundColor="transparent"
           translucent={true} />
-        <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={styles.image}>
+        <FastImage source={require('../../assets/images/hi.jpeg')} resizeMode="cover" style={styles.image}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom:350 }} showsVerticalScrollIndicator={false}>
           <View style={{ width: screenWidth * 0.9, height: screenHeight * 0.9, justifyContent: 'space-between', alignItems: 'center' }}>
             <View style={{ marginTop: hp('10') }}>
@@ -120,6 +120,8 @@ const ForgetPassword = ({ navigation }) => {
                 <TextInput
                   style={styles.textInput}
                   placeholder="Email"
+                  placeholderTextColor={'gray'}
+
                   onChangeText={(text) => {
                     setEmail(text)
                   }}

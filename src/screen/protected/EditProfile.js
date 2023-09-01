@@ -175,17 +175,17 @@ const EditProfile = ({ navigation }) => {
                 onValueChange={handleToggleSwitch}
                 value={isDarkMode}
                 style={{
-                  transform: [{ scaleX: 2 }, { scaleY: 2 }], alignSelf: 'center' // Adjust the scale values as per your requirement
+                  transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }], alignSelf: 'center' // Adjust the scale values as per your requirement
                 }}
               />
 
               <View style={{ backgroundColor: colors.primary, marginTop: 25, alignSelf: 'center', padding: 10, borderRadius: 10, flexDirection: 'row' }}>
 
                 <Text style={{ color: 'white', fontSize: hp('1.5%'), color: color === false ? 'green' : 'white' }}>
-                  Light Mode
+                  Light
                 </Text>
                 <Text style={{ color: 'white', fontSize: hp('1.5%'), color: 'white' }}>  / </Text>
-                <Text style={{ color: 'white', fontSize: hp('1.5%'), color: color === true ? 'green' : 'white' }}> Dark Mode</Text>
+                <Text style={{ color: 'white', fontSize: hp('1.5%'), color: color === true ? 'green' : 'white' }}> Dark</Text>
 
               </View>
 
@@ -229,12 +229,12 @@ const EditProfile = ({ navigation }) => {
               console.log("Detailsss////......", Detail)
             }
             <Text style={{ fontWeight: 'bold', color: COLORS.Text, marginTop: 20, fontSize: 20 }}>Email</Text>
-            <View style={{ height: 60, borderRadius: 200, backgroundColor: COLORS.WHITE, justifyContent: 'center', paddingHorizontal: 20, marginTop: 5 }}>
+            <View style={{ height: 50, borderRadius: 200, backgroundColor: COLORS.WHITE, justifyContent: 'center', paddingHorizontal: 20, marginTop: 5 }}>
               <Text style={{ fontSize: hp('1.5%'), fontWeight: 'bold', color: COLORS.Text, }}>{Detail?.Email}</Text>
             </View>
 
             <Text style={{ fontWeight: 'bold', color: COLORS.Text, marginTop: 20, fontSize: 20 }}>Username</Text>
-            <View style={{ height: 60, borderRadius: 200, backgroundColor: COLORS.WHITE, paddingHorizontal: 20, marginTop: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ height: 50, borderRadius: 200, backgroundColor: COLORS.WHITE, paddingHorizontal: 20, marginTop: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={{ fontSize: hp('1.5%'), fontWeight: 'bold', color: COLORS.Text, }}>{Detail?.username}</Text>
               <TouchableOpacity onPress={() => toggleModal()}>
                 <AntDesign name='edit' size={25} color={COLORS.Text} />
@@ -269,13 +269,13 @@ const EditProfile = ({ navigation }) => {
               </View>
             </Modal>
 
-            <TouchableOpacity onPress={() => navigation.navigate('Payment')} style={{ height: 100, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 200, marginTop: 30 }}>
-              <Text style={{ color: "white", fontSize: hp('2.5%'), fontWeight: 'bold' }}>plan</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity onPress={() => Logout()} style={{ height: 60, backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 200, marginTop: 30 }}>
               <Text style={{ color: "white", fontSize: hp('2.5%'), fontWeight: 'bold' }}>Logout</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Payment')} style={{ height: 60, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 200, marginTop: 30 }}>
+              <Text style={{ color: "white", fontSize: hp('2.5%'), fontWeight: 'bold' }}>plan</Text>
+            </TouchableOpacity>
+
           </View>
         </ScrollView>
       </FastImage>

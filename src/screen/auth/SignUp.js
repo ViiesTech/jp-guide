@@ -171,7 +171,7 @@ const SignUp = ({ navigation }) => {
     }
 
     return (
-        <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={{height: screenHeight, width: screenWidth}}>
+        <FastImage source={require('../../assets/images/hi.jpeg')}  resizeMode="cover" style={{height: screenHeight, width: screenWidth}}>
             <StatusBar
                 animated={true}
                 backgroundColor="transparent"
@@ -194,6 +194,8 @@ const SignUp = ({ navigation }) => {
                                 <TextInput
                                     style={styles.textInput}
                                     placeholder="Username"
+                                    placeholderTextColor={'gray'}
+
                                     onChangeText={(text) => {
                                         setUsername(text)
                                     }}
@@ -202,6 +204,8 @@ const SignUp = ({ navigation }) => {
                                 <TextInput
                                     style={styles.textInput}
                                     placeholder="Email"
+                                    placeholderTextColor={'gray'}
+
                                     onChangeText={(text) => {
                                         setEmail(text)
                                     }}
@@ -210,6 +214,8 @@ const SignUp = ({ navigation }) => {
                                 <TextInput
                                     style={styles.textInput}
                                     placeholder="Password"
+                                    placeholderTextColor={'gray'}
+
                                     onChangeText={(txt) => {
                                         setPassword(txt)
                                     }}
@@ -219,6 +225,8 @@ const SignUp = ({ navigation }) => {
                                 <TextInput
                                     style={styles.textInput}
                                     placeholder="Re-Type Password"
+                                    placeholderTextColor={'gray'}
+
                                     onChangeText={(txt) => {
                                         setRetypePassword(txt)
                                     }}
@@ -253,7 +261,7 @@ const SignUp = ({ navigation }) => {
                             />
                             <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
                                 <TouchableOpacity onPress={() => navigation.navigate('Login')} style={[styles.bottmoButtom, { paddingRight: 10 }]}>
-                                    <Text style={[styles.titleText, { color: COLORS.WHITE }]}>Already have an account?</Text>
+                                    <Text style={[styles.titleText, { color: 'black' }]}>Already have an account?</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

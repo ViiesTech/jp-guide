@@ -67,7 +67,7 @@ const GetStart = ({ navigation }) => {
         animated={true}
         backgroundColor="transparent"
         translucent={true} />
-      <FastImage source={require('../../assets/images/backgroung.png')} resizeMode="cover" style={{height:screenHeight , width: screenWidth, alignItems:'center', justifyContent:'center', padding:20}}>
+      <FastImage source={require('../../assets/images/hi.jpeg')} resizeMode="cover" style={{height:screenHeight , width: screenWidth, alignItems:'center', justifyContent:'center', padding:20}}>
         {/* <ScrollView contentContainerStyle={{flexGrow:1}} showsVerticalScrollIndicator={false}> */}
 
         <View style={{ width: screenWidth * 0.9, height: screenHeight * 0.9, justifyContent: 'space-between', alignItems: 'center' }}>

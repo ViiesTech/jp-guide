@@ -40,7 +40,7 @@ export default CustomButton;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#512DA8',
-    height: hp('6'),
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },

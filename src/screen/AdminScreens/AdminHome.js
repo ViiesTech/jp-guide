@@ -12,6 +12,8 @@ import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
 import { COLORS } from '../../utils/COLORS'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios'
 
 const AdminHome = ({ navigation }) => {
 
@@ -182,15 +184,52 @@ const AdminHome = ({ navigation }) => {
     }
   }
 
+  const sendNotification = async () => {
+
+
+    console.log("dasdsadsad running")
+
+    let data = JSON.stringify({
+      "to": "dPBdQyn92UgZrLgaULLye0:APA91bG_6Xka38trlk4663plqK9dgd_7OLOEb0RvyhWzjFZ9uW8SktogQvUbrEC3k-o4U5mfcas9sUfHR_d4-SsZptpxrDe6B6EMMiHX_4Hjm__TcNfhpOpJlYpKui6supCi-GeTSeTQ",
+      "notification": {
+        "title": "Jp Guide",
+        "body": "Pdf Uploaded"
+      },
+      "data": {}
+    });
+    
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://fcm.googleapis.com/fcm/send',
+      headers: { 
+        'Authorization': 'key=AAAAI5_iRy4:APA91bG-265vdefp_ZxCgghvYa6L-xUgDHCHqhsPv9GXCho4J5caCx2dQxPjn9bkz89rdml9l70a16re1VANIJM9xC6fFZbko86cgfjZz1DZhq09RuGsClnybu-w0xnO6AYta_5etZK8', 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+
+
+  }
+
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={()=>{navigation.navigate('EditMainPdf',{pdfname: item.name})}} style={styles.EditContainer}>
+      <TouchableOpacity onPress={() => { navigation.navigate('EditMainPdf', { pdfname: item.name }) }} style={styles.EditContainer}>
         <AntDesign
           name='edit'
           size={25}
           color={COLORS.WHITE}
-          style={{ alignSelf:'flex-end'}}
+          style={{ alignSelf: 'flex-end' }}
         />
         <Text style={styles.TextStyle}>{item.name}</Text>
       </TouchableOpacity>
@@ -201,6 +240,16 @@ const AdminHome = ({ navigation }) => {
     <>
       <ImageBackground source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }} resizeMode={'cover'}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }} showsVerticalScrollIndicator={false}>
+
+          {
+            //I'll delete this pdf button in future
+            <TouchableOpacity onPress={() => sendNotification()} style={{ height: 50, width: wp('30%'), backgroundColor: colors.primary, alignSelf: 'flex-end', borderRadius: 200, marginRight: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+              <Text style={{ color: COLORS.WHITE, fontWeight: 'bold', fontSize: hp('2%') }}>Noti all user of the app</Text>
+            </TouchableOpacity>
+          }
+
+
+
           <TouchableOpacity onPress={() => navigation.navigate('AllPdf')} style={{ height: 50, width: wp('30%'), backgroundColor: colors.primary, alignSelf: 'flex-end', borderRadius: 200, marginRight: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
             <Text style={{ color: COLORS.WHITE, fontWeight: 'bold', fontSize: hp('2%') }}>Customize PDF</Text>
           </TouchableOpacity>

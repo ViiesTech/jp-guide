@@ -51,7 +51,7 @@ const Payment = ({ navigation }) => {
                 } else {
                     setBack(false)
                 }
-                setPrice(doc.data().Plan)
+                setPrice(doc?.data()?.Plan)
             })
     }, [])
 

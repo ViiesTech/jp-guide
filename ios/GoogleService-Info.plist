@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>153006262062-v7qg42a2o3tiaihjhbvoflb25mk0giqq.apps.googleusercontent.com</string>
+	<string>153006262062-or9ntv70ua4uno5qvjijlmimpje9qdir.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.153006262062-v7qg42a2o3tiaihjhbvoflb25mk0giqq</string>
+	<string>com.googleusercontent.apps.153006262062-or9ntv70ua4uno5qvjijlmimpje9qdir</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCZyILykFQnv9cbsahIrJH0gEbN700fajk</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.the-jp-guid</string>
+	<string>com.the-jp-guid</string>
 	<key>PROJECT_ID</key>
 	<string>jpguide-69169</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:153006262062:ios:193827dc33297923f7dcbf</string>
+	<string>1:153006262062:ios:f0c2c9d7feae9ce1f7dcbf</string>
 </dict>
 </plist>

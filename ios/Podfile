@@ -14,6 +14,9 @@ target 'the_jp_guid' do
   flags = get_default_flags()
 
   pod 'PDFNet', podspec: 'https://www.pdftron.com/downloads/ios/cocoapods/pdfnet/latest.podspec'
+  pod 'react-native-blob-util',
+    :path => '../node_modules/react-native-blob-util'
+
 
 
   use_react_native!(

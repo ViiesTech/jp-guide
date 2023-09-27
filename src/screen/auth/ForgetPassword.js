@@ -69,7 +69,7 @@ const ForgetPassword = ({ navigation }) => {
 
   const ResetPassword = () => {
     if (email) {
-      auth().sendPasswordResetEmail(email)
+      auth()?.sendPasswordResetEmail(email)
         .then(() => {
 
           Toast.show({

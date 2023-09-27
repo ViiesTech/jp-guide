@@ -185,6 +185,10 @@ const Detail = ({ navigation }) => {
     setAplhabet(Aplha)
 
 
+    console.log(Aplha)
+
+
+
     firestore()
       .collection("Alphabet")
       .doc(Aplha)
@@ -209,18 +213,35 @@ const Detail = ({ navigation }) => {
 
     // navigation.navigate('PDFViewerDelete')
 
-
+    // console.log(item)
+    // return
 
 
       await AsyncStorage.getItem(item.name).then((doc) => {
         console.log("docer;;';';';';';';';';';';';';';", doc)
+        // return
         // setPDFDocPAth(doc)
 
         if(doc !== null){
           navigation.navigate('PDFText', { pageUrl: doc, isSelected: item.name, Airport: item.Airport })
-
+          console.log("In Local Pdf")
         }else{
-          navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, Airport: item.Airport })
+
+          firestore().collection("Users").doc(UID).collection("pdf").doc(item.name).get().then((doc)=>{
+
+            if(doc.data() !== undefined){
+
+              navigation.navigate('PDFText', { pageUrl: doc.data().ImageURL, isSelected: item.name, Airport: item.Airport })
+              console.log("Going from my Local Pdf")
+              
+            }else{
+              
+              navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, Airport: item.Airport })
+              console.log("Going from my Global Pdf")
+
+            }
+              console.log(doc.data())
+          })
 
         }
   

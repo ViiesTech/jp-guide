@@ -1065,9 +1065,11 @@ PODS:
     - glog
   - react-native-background-timer (2.4.1):
     - React-Core
-  - react-native-blob-util (0.17.0):
+  - react-native-blob-util (0.17.3):
     - React-Core
   - react-native-document-picker (8.2.0):
+    - React-Core
+  - react-native-netinfo (9.4.1):
     - React-Core
   - react-native-orientation-locker (1.5.0):
     - React-Core
@@ -1258,6 +1260,7 @@ DEPENDENCIES:
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
@@ -1381,6 +1384,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-blob-util"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-orientation-locker:
     :path: "../node_modules/react-native-orientation-locker"
   react-native-pdf:
@@ -1495,8 +1500,9 @@ SPEC CHECKSUMS:
   React-jsinspector: badd81696361249893a80477983e697aab3c1a34
   React-logger: fdda34dd285bdb0232e059b19d9606fa0ec3bb9c
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
-  react-native-blob-util: f9dfda9077e57129b444a33e3c51f7785b2a075f
+  react-native-blob-util: 99f4d79189252f597fe0d810c57a3733b1b1dea6
   react-native-document-picker: 495c444c0c773c6e83a5d91165890ecb1c0a399a
+  react-native-netinfo: fefd4e98d75cbdd6e85fc530f7111a8afdf2b0c5
   react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
   react-native-pdf: 33c622cbdf776a649929e8b9d1ce2d313347c4fa
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
@@ -1536,6 +1542,6 @@ SPEC CHECKSUMS:
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: eca980a5771bf114c41a754098cd85e6e0d90ed7
 
-PODFILE CHECKSUM: c0b029e08c24e4ccb0e1065dac3282c0b0bb92be
+PODFILE CHECKSUM: 3720dc85aff228e18987fc47c3e20c882b0d6d5c
 
 COCOAPODS: 1.11.3

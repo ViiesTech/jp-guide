@@ -12,6 +12,8 @@ import { DocumentView, RNPdftron, PDFViewCtrl, } from "react-native-pdftron";
 import { openComposer } from "react-native-email-link";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import NetInfo from "@react-native-community/netinfo";
+import ReactNativeBlobUtil from 'react-native-blob-util'
 
 import Comment from '../../component/Comment'
 import auth from '@react-native-firebase/auth'
@@ -31,6 +33,8 @@ import Toast from 'react-native-toast-message';
 import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 import { useSelector, useDispatch } from 'react-redux'
+import AwesomeAlert from 'react-native-awesome-alerts';
+import storage from '@react-native-firebase/storage';
 
 const PDFText = ({ navigation, route }) => {
 
@@ -42,6 +46,12 @@ const PDFText = ({ navigation, route }) => {
 
   const _viewer = useRef()
 
+  //PDf Edited.......
+  const [isEditPdf, setEditPdf] = useState(false);
+  const [ShowAlert, setShowAlert] = useState(false);
+
+
+  const [showSavedAlert, setShowSavedAlert] = useState(false);
 
 
   const [LikedModel, setLikedModel] = useState(false);
@@ -63,10 +73,13 @@ const PDFText = ({ navigation, route }) => {
   const [TotalLike, setTotalLike] = useState([])
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const [pdfDocPath, setPDFDocPAth] = useState("")
+  const [isPdfUpdated, setPdfUpdated] = useState(false);
+
+  const [NewUpdatedPdf, setNewUpdatedPdf] = useState("")
+  const [isPdfUpdateLoading, setPdfUpdateLoading] = useState(false)
+  const [PdfUpdateAlert, setShowPdfUpdateAlert] = useState(false)
 
   const color = useSelector(state => state.pdf.Dark)
-
 
   const COLORS = {
     WHITE: color === true ? "#000000" : "#FFFFFF",
@@ -74,38 +87,114 @@ const PDFText = ({ navigation, route }) => {
 
   }
 
-
-
-
-
-
   useEffect(() => {
     FetchComment()
+    AnyUpdate()
   }, [])
 
   //Set Dark mode in pdf 
 
 
   const SetMode = () => {
-
-
-
     if (color === true) {
       // _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.None)
-
       _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.NightMode);
     } else {
       // _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.GradientMap);
       _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.None)
-
-
     }
   }
 
   //Set Dark mode in pdf 
 
 
+  const AnyUpdate = () => {
+    console.log("my alphabet is", isSelected[0],)
 
+    firestore()
+      .collection("Alphabet")
+      .doc(`${isSelected[0]}`)
+      .collection(`${isSelected[0]}`)
+      .doc(`${isSelected}`)
+      .get()
+      .then((querySnapshot) => {
+        // console.log("Document ID:", querySnapshot.data()?.UpdateDownloaded?.includes(UID))
+        const QueryExist = querySnapshot.data()?.UpdateDownloaded?.includes(UID)
+        if (QueryExist == true) {
+          setPdfUpdated(true)
+        } else {
+          setPdfUpdated(false)
+        }
+      })
+      .catch((error) => {
+        console.error("Error querying Firestore: ", error);
+      });
+  }
+
+  const UpdatePdf = () => {
+    setPdfUpdateLoading(true)
+
+    firestore()
+      .collection("Alphabet")
+      .doc(`${isSelected[0]}`)
+      .collection(`${isSelected[0]}`)
+      .doc(`${isSelected}`)
+      .update({
+        UpdateDownloaded: firestore.FieldValue.arrayUnion(UID),
+
+      }).then((doc) => {
+        DownloadNewUpdatedPDF()
+
+      }).catch((e) => {
+        setPdfUpdateLoading(false)
+      })
+
+  }
+
+  const DownloadNewUpdatedPDF = () => {
+    firestore()
+      .collection("Alphabet")
+      .doc(`${isSelected[0]}`)
+      .collection(`${isSelected[0]}`)
+      .doc(`${isSelected}`)
+      .get()
+      .then(async (doc) => {
+        const pdfUrl = doc?.data()?.Page
+        const name = doc?.data()?.name
+
+        try {
+          const response = await ReactNativeBlobUtil
+            .config({
+              fileCache: true,
+            })
+            .fetch('GET', `${pdfUrl}`, {
+              // Add any necessary headers here
+            })
+
+          // Get the downloaded file path
+          const filePath = response.path();
+
+          // Assuming 'name' is the property in e that holds the name of the file
+          const fileName = name;
+
+          // Save the filePath and fileName pair to AsyncStorage
+          await AsyncStorage.setItem(fileName, filePath);
+
+          setNewUpdatedPdf(filePath)
+
+          console.log(`Saved path for file ${fileName}: ${filePath}`);
+        } catch (error) {
+          console.error('Error downloading file:', error);
+          setPdfUpdateLoading(false)
+
+        }
+      }).then(() => {
+        AnyUpdate()
+        setPdfUpdateLoading(false)
+        setShowPdfUpdateAlert(false)
+
+      })
+  }
 
 
   const sendComment = () => {
@@ -137,8 +226,6 @@ const PDFText = ({ navigation, route }) => {
 
   }
 
-
-
   const FetchComment = () => {
 
 
@@ -149,12 +236,10 @@ const PDFText = ({ navigation, route }) => {
       .where('status', '==', 'Like')
       .onSnapshot((doc) => {
 
-
         const Temp = []
 
         doc?.docs?.map((doc) => {
           if (doc?.data()?.status === "Like") {
-
             Temp.push(doc?.data())
           }
 
@@ -210,8 +295,6 @@ const PDFText = ({ navigation, route }) => {
     setModalVisible(!isModalVisible);
   };
 
-
-
   const LikePdf = () => {
 
     disLike("Like")
@@ -244,11 +327,7 @@ const PDFText = ({ navigation, route }) => {
   }
 
   const DisLikePdf = () => {
-
-    // console.log("Dislike")
-
     disLike("Dislike")
-
 
     firestore()
       .collection('Users')
@@ -274,21 +353,36 @@ const PDFText = ({ navigation, route }) => {
 
   const savePDFtoFirebase = () => {
 
-    firestore()
-      .collection("SavedPDF")
-      .doc(isSelected)
-      .set({
-        pdfURL: pageUrl,
-        code: isSelected,
-        AirportName: Airport
-      }, {
-        merge: true,
-      }).then(() => {
-        Toast.show({
-          type: 'success',
-          text1: 'Saved',
-        });
+    setLoader(true)
+
+    _viewer.current.saveDocument().then(async (filePath) => {
+      await AsyncStorage.setItem(`${isSelected}`, filePath).then(() => {
+
+        firestore()
+          .collection("SavedPDF")
+          .doc(isSelected)
+          .set({
+            pdfURL: pageUrl,
+            code: isSelected,
+            AirportName: Airport
+          }, {
+            merge: true,
+          }).then(() => {
+            setLoader(false)
+            setShowSavedAlert(false)
+            Toast.show({
+              type: 'success',
+              text1: 'Saved',
+            });
+
+          }).catch((e) => {
+            setLoader(false)
+            setShowSavedAlert(false)
+          })
       })
+    })
+
+
   }
 
 
@@ -326,10 +420,9 @@ const PDFText = ({ navigation, route }) => {
 
   const [screenResolution, setScreenResolution] = useState('')
 
+
+  //Have to uncomment this
   useEffect(() => {
-
-
-
 
     const updateDimensions = () => {
       const { width, height } = Dimensions.get('window');
@@ -359,64 +452,85 @@ const PDFText = ({ navigation, route }) => {
     };
   }, []);
 
-  //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
-
-  const saveDoc = () => {
-
-    // console.log( "this.view",  _viewer)
 
 
-    _viewer.current.saveDocument().then(async (filePath) => {
+  const GoingBack = () => {
+
+    if (isEditPdf === true) {
+      setShowAlert(true)
+    } else {
+      navigation.navigate('Home')
+    }
+
+  }
+
+  //this function called on save pdf
+  const savePdfToFirestoreInUserCollection = () => {
+    setLoader(true)
+    NetInfo.fetch().then(state => {
+      console.log('Device connected to the internet.');
+
+      if (state.isConnected) {
+        _viewer.current.saveDocument().then(async (filePath) => {
+
+          // console.log("file path", filePath)
+
+          await AsyncStorage.setItem(`${isSelected}`, filePath).then(async () => {
+
+            const rand = Math.floor(Math.random() * 1000000000);
+            await storage().ref(`${rand}`).putFile(filePath);
+            await storage().ref(`${rand}`).getDownloadURL().then((pdfDownloadedUrl) => {
+
+              firestore()
+                .collection("Users")
+                .doc(UID)
+                .collection("pdf")
+                .doc(isSelected)
+                .set({
+                  "ImageURL": pdfDownloadedUrl,
+                  "name": isSelected
+                }).then(() => {
+                  navigation.navigate("Home")
+                  setLoader(false)
+                  setShowAlert(false)
+                })
+            })
 
 
-      await AsyncStorage.setItem(`${isSelected}`, filePath).then(() => {
-        navigation.navigate('Home')
-      })
+
+          })
+        })
+      } else {
+        console.log('Device is not connected to the internet.');
+
+        _viewer.current.saveDocument().then(async (filePath) => {
+
+          // console.log("file path", filePath)
+          await AsyncStorage.setItem(`${isSelected}`, filePath).then(async () => {
+
+
+            navigation.navigate("Home")
+
+
+          })
+        })
+      }
     });
 
   }
 
 
-
-
-
-
-
-
-
-
-
-
   return (
     <View style={{ backgroundColor: COLORS.WHITE, }}>
 
-
-
-      {/* 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: wp('90%'), alignSelf: 'center', marginTop: 20 }}>
-
-    
-
-
-
-      </View> */}
-
-
       <View style={{ height: 60, borderRadius: 500, alignItems: 'center', justifyContent: 'center', marginTop: 20, flexDirection: 'row', width: screenWidth * 0.9, justifyContent: 'space-between', alignSelf: 'center' }}>
 
-        {
-          Loader === true ?
-            <View>
-            <ActivityIndicator size={ COLORS.Text} color={COLORS.Text} />
-            <Text style={{color: COLORS.Text, fontWeight:'bold', marginTop:10}}>Saving</Text>
-            </View>
 
-            :
-            <TouchableOpacity onPress={() => saveDoc()} style={{ alignItems: 'center', justifyContent: 'center' }} >
-              <Icon name='back' color={COLORS.Text} size={30} />
-              <Text style={{ color: COLORS.Text, fontWeight: 'bold' }}>Return to Home</Text>
-            </TouchableOpacity>
-        }
+        <TouchableOpacity onPress={() => GoingBack()} style={{ alignItems: 'center', justifyContent: 'center' }} >
+          <Icon name='back' color={COLORS.Text} size={30} />
+          <Text style={{ color: COLORS.Text, fontWeight: 'bold' }}>Return to Home</Text>
+        </TouchableOpacity>
+
 
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -439,7 +553,7 @@ const PDFText = ({ navigation, route }) => {
 
 
 
-        <TouchableOpacity onPress={() => savePDFtoFirebase()} style={{ alignItems: 'center', justifyContent: 'center' }} >
+        <TouchableOpacity onPress={() => setShowSavedAlert(true)} style={{ alignItems: 'center', justifyContent: 'center' }} >
           <Ionicons
             name='airplane'
             color={COLORS.Text}
@@ -451,26 +565,30 @@ const PDFText = ({ navigation, route }) => {
 
 
 
+      <View style={{ flexDirection: 'row', paddingHorizontal: 70, justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
+        <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}></Text>
 
+        <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}>Likes {TotalLike.length}</Text>
+        {
+          isPdfUpdated === true ?
+            <View />
+            :
 
-      <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}>Likes {TotalLike.length}</Text>
-
+            <TouchableOpacity onPress={() => setShowPdfUpdateAlert(true)} style={{ borderRadius: 200, backgroundColor: COLORS.Text, alignItems: 'center', justifyContent: 'center', padding: 10, alignSelf: 'center' }}>
+              <Text style={{ color: COLORS.WHITE, }}>{isPdfUpdateLoading === true ? <ActivityIndicator size={'small'} color={COLORS?.WHITE} /> : "Update Pdf"}</Text>
+            </TouchableOpacity>
+        }
+      </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
         <View style={{ alignSelf: 'center' }} >
-
-
-
-
-
 
           {
             pageUrl !== null ?
 
               <DocumentView
 
-                document={pageUrl}
+                document={NewUpdatedPdf ? NewUpdatedPdf : pageUrl}
                 ref={_viewer}
-
 
                 onLoadComplete={(path) => {
                   console.log('The document has finished loading:', path);
@@ -481,11 +599,20 @@ const PDFText = ({ navigation, route }) => {
                 onDocumentError={(error) => {
                   console.log('Error occured during document opening:', error);
                   setLoader(false)
-
                 }}
+
                 onError={(error) => {
                   console.log('Error occured during document opening:', error);
                   setLoader(false)
+
+                }}
+
+
+                onExportAnnotationCommand={({ action, xfdfCommand, annotations }) => {
+                  console.log('Annotation edit action is', action);
+
+                  setEditPdf(true)
+                  // console.log('The exported xfdfCommand is', xfdfCommand);
 
                 }}
                 //
@@ -637,9 +764,144 @@ const PDFText = ({ navigation, route }) => {
 
 
 
+      <AwesomeAlert
+        show={ShowAlert}
+        showProgress={false}
+        title={"Save Edits"}
+        message={Loader === true ? <ActivityIndicator size={'large'} color={COLORS.Text} style={{ alignSelf: 'center', marginTop: 10 }} /> : "Do you want to save the change?"}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Don't Save"
+        confirmText="Save"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          navigation.navigate('Home')
+          setShowAlert(false)
+        }}
+        onConfirmPressed={() => {
+          savePdfToFirestoreInUserCollection()
+        }}
+
+        onDismiss={() => {
+          setShowSavedAlert(false)
+
+        }}
+        titleStyle={{ color: COLORS.Text, fontWeight: 'bold', fontSize: 24 }}
+        messageStyle={{ color: COLORS.Text, width: Loader === true ? null : wp('50%'), textAlign: 'center', fontSize: 18 }}
+        confirmButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center' }}
+        confirmButtonTextStyle={{ fontSize: 18 }}
+        cancelButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center', }}
+        cancelButtonTextStyle={{ color: 'black', fontSize: 18 }}
+        contentContainerStyle={{ backgroundColor: COLORS.WHITE, alignItems: 'center', justifyContent: 'center' }}
+      />
 
 
+      {/* <AwesomeAlert
+        show={showSavedAlert}
+        showProgress={false}
+        title={"Save"}
+        message={Loader === true ? <ActivityIndicator size={'large'} color={COLORS.Text} style={{ alignSelf: 'center', marginTop: 20 }} /> : "You can access the PDF even when you are offline after it has been saved."}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Don't Save"
+        confirmText="Save"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          setShowSavedAlert(false)
+        }}
+        onConfirmPressed={() => {
+          savePDFtoFirebase()
+        }}
+        onDismiss={() => {
+          setShowSavedAlert(false)
 
+        }}
+
+        titleStyle={{ color: COLORS.Text, fontWeight: 'bold', fontSize: 24 }}
+        messageStyle={{ color: COLORS.Text, width: Loader === true ? null : wp('50%'), textAlign: 'center', fontSize: 18, alignSelf: 'center' }}
+        confirmButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center' }}
+        confirmButtonTextStyle={{ fontSize: 18 }}
+        cancelButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center', }}
+        cancelButtonTextStyle={{ color: 'black', fontSize: 18 }}
+        contentContainerStyle={{ backgroundColor: COLORS.WHITE, alignItems: 'center', justifyContent: 'center' }}
+
+      />
+ */}
+
+      <AwesomeAlert
+        show={showSavedAlert}
+        showProgress={false}
+        title={"Save"}
+        message={Loader === true ? <ActivityIndicator size={'large'} color={COLORS.Text} style={{ alignSelf: 'center', marginTop: 20 }} /> : "You can access the PDF even when you are offline after it has been saved."}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Don't Save"
+        confirmText="Save"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          setShowSavedAlert(false)
+        }}
+        onConfirmPressed={() => {
+          savePDFtoFirebase()
+        }}
+        onDismiss={() => {
+          setShowSavedAlert(false)
+
+        }}
+
+        titleStyle={{ color: COLORS.Text, fontWeight: 'bold', fontSize: 24 }}
+        messageStyle={{ color: COLORS.Text, width: Loader === true ? null : wp('50%'), textAlign: 'center', fontSize: 18, alignSelf: 'center' }}
+        confirmButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center' }}
+        confirmButtonTextStyle={{ fontSize: 18 }}
+        cancelButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center', }}
+        cancelButtonTextStyle={{ color: 'black', fontSize: 18 }}
+        contentContainerStyle={{ backgroundColor: COLORS.WHITE, alignItems: 'center', justifyContent: 'center' }}
+
+      />
+
+      {
+        // new alert after the update pdf press
+      }
+      <AwesomeAlert
+        show={PdfUpdateAlert}
+        showProgress={false}
+        title={"Update Pdf"}
+        message={isPdfUpdateLoading === true ? <ActivityIndicator size={'large'} color={COLORS.Text} style={{ alignSelf: 'center', marginTop: 20 }} /> : "When you update the PDF, all your annotations will be removed."}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Cancel"
+        confirmText="Update"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+         setShowPdfUpdateAlert(false)
+        }}
+        onConfirmPressed={() => {
+          UpdatePdf()
+        }}
+        onDismiss={() => {
+          setShowPdfUpdateAlert(false)
+
+        }}
+
+        titleStyle={{ color: COLORS.Text, fontWeight: 'bold', fontSize: 24 }}
+        messageStyle={{ color: COLORS.Text, width: Loader === true ? null : wp('50%'), textAlign: 'center', fontSize: 18, alignSelf: 'center' }}
+        confirmButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center' }}
+        confirmButtonTextStyle={{ fontSize: 18 }}
+        cancelButtonStyle={{ height: 60, width: wp('15%'), alignItems: 'center', justifyContent: 'center', }}
+        cancelButtonTextStyle={{ color: 'black', fontSize: 18 }}
+        contentContainerStyle={{ backgroundColor: COLORS.WHITE, alignItems: 'center', justifyContent: 'center' }}
+
+      />
+
+      <Toast />
     </View>
   )
 }

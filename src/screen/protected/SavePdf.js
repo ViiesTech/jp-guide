@@ -128,6 +128,36 @@ const SavePdf = ({ navigation }) => {
 
     //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
 
+
+    const GoToPDFPage = async(item) => {
+
+
+        await AsyncStorage.getItem(`${item.code}`).then((doc) => {
+            if(doc !== null){
+                navigation.navigate('PDFText', { pageUrl: doc, isSelected: item.code, Airport: item.AirportName })
+      
+              }else{
+                firestore().collection("Users").doc(UID).collection("pdf").doc(item.name).get().then((doc)=>{
+
+                    if(doc.data() !== undefined){
+
+                        navigation.navigate('PDFText', { pageUrl: doc.data().ImageURL, isSelected: item.name, Airport: item.Airport })
+                        console.log("Going from my Local Pdf")
+                        
+                      }else{
+                        navigation.navigate('PDFText', { pageUrl: item.Page, isSelected: item.name, Airport: item.Airport })
+                        console.log("Going from my Global Pdf")
+                      }
+
+                })
+              }
+        })
+
+        return
+
+
+    }
+
     return (
         <FastImage source={color === true ?  require('../../assets/images/hidark.png') : require('../../assets/images/hi.jpeg')} style={{ flex: 1, padding: 20 }} resizeMode={'cover'}>
             {/* <Header Logo={require('../../assets/images/profile.png')} QuickFind={"NO"} ImageUrl={ImageUrl} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} /> */}
@@ -158,7 +188,7 @@ const SavePdf = ({ navigation }) => {
                         console.log('renderItem', item)
                         return (
                             <View style={{ width: wp('20%') }}>
-                                <TouchableOpacity onPress={() => navigation.navigate('PDFText', { pageUrl: item.pdfURL, isSelected: item.code, Airport: item.AirportName })} style={{ height: 80, alignSelf: 'center', backgroundColor: colors.primary, borderRadius: 5, marginTop: 10, alignItems: 'center', paddingHorizontal: 10, justifyContent: 'center', width: wp('16%'), marginLeft: 10 }}>
+                                <TouchableOpacity onPress={() => GoToPDFPage(item)} style={{ height: 80, alignSelf: 'center', backgroundColor: colors.primary, borderRadius: 5, marginTop: 10, alignItems: 'center', paddingHorizontal: 10, justifyContent: 'center', width: wp('16%'), marginLeft: 10 }}>
                                     <View style={{ flexDirection: 'row' }}>
 
                                         <Text style={{ fontWeight: 'bold', fontSize: hp('2%'), color: 'white' }}>{item.code}</Text>

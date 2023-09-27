@@ -73,21 +73,28 @@ const EditProfile = ({ navigation }) => {
     }
   }, [])
 
-  const Logout = () => {
-
-    firestore()
-      .collection('Users')
-      .doc(UID)
-      .update({
-
-        LoggedIn: false,
+  const Logout = async () => {
 
 
-      }).then(() => {
-        auth()
-          .signOut()
+    await AsyncStorage.clear().then(() => {
+      
 
-      })
+      firestore()
+        .collection('Users')
+        .doc(UID)
+        .update({
+
+          LoggedIn: false,
+
+
+        }).then(() => {
+          auth()
+            ?.signOut()
+
+        })
+    })
+
+
 
   }
   const saveChange = () => {

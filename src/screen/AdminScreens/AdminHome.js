@@ -62,8 +62,6 @@ const AdminHome = ({ navigation }) => {
   }
 
 
-  // auth().signOut()
-
   // console.log(value)
 
   const firstLatter = data.Code.charAt(0).toUpperCase()
@@ -124,12 +122,13 @@ const AdminHome = ({ navigation }) => {
                     Airport: data.Code + data.CodeDetail,
                     Page: pdfDownloadedUrl,
                     name: data.Code,
+                    UpdateDownloaded:[]
                   }, {
                     merge: true
                   }).then(() => {
                     Toast.show({
                       type: 'error',
-                      text1: 'This airport is already exists',
+                      text1: 'Done',
                     });
                     setLoading(false)
                   })
@@ -141,6 +140,7 @@ const AdminHome = ({ navigation }) => {
                     Airport: data.Code + data.CodeDetail,
                     Page: pdfDownloadedUrl,
                     name: data.Code,
+                    UpdateDownloaded:[]
                   }, {
                     merge: true
                   }).then(() => {
@@ -154,6 +154,8 @@ const AdminHome = ({ navigation }) => {
                         Airport: data.Code + data.CodeDetail,
                         Page: pdfDownloadedUrl,
                         name: data.Code,
+                        UpdateDownloaded:[]
+
                       }, {
                         merge: true
                       })
@@ -184,44 +186,73 @@ const AdminHome = ({ navigation }) => {
     }
   }
 
-  const sendNotification = async () => {
+  // const sendNotification = async () => {
 
 
-    console.log("dasdsadsad running")
+  //   console.log("dasdsadsad running")
 
-    let data = JSON.stringify({
-      "to": "dPBdQyn92UgZrLgaULLye0:APA91bG_6Xka38trlk4663plqK9dgd_7OLOEb0RvyhWzjFZ9uW8SktogQvUbrEC3k-o4U5mfcas9sUfHR_d4-SsZptpxrDe6B6EMMiHX_4Hjm__TcNfhpOpJlYpKui6supCi-GeTSeTQ",
-      "notification": {
-        "title": "Jp Guide",
-        "body": "Pdf Uploaded"
-      },
-      "data": {}
-    });
-    
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://fcm.googleapis.com/fcm/send',
-      headers: { 
-        'Authorization': 'key=AAAAI5_iRy4:APA91bG-265vdefp_ZxCgghvYa6L-xUgDHCHqhsPv9GXCho4J5caCx2dQxPjn9bkz89rdml9l70a16re1VANIJM9xC6fFZbko86cgfjZz1DZhq09RuGsClnybu-w0xnO6AYta_5etZK8', 
-        'Content-Type': 'application/json'
-      },
-      data : data
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  //   let data = JSON.stringify({
+  //     "to": "dPBdQyn92UgZrLgaULLye0:APA91bG_6Xka38trlk4663plqK9dgd_7OLOEb0RvyhWzjFZ9uW8SktogQvUbrEC3k-o4U5mfcas9sUfHR_d4-SsZptpxrDe6B6EMMiHX_4Hjm__TcNfhpOpJlYpKui6supCi-GeTSeTQ",
+  //     "notification": {
+  //       "title": "Jp Guide",
+  //       "body": "Pdf Uploaded"
+  //     },
+  //     "data": {}
+  //   });
 
+  //   let config = {
+  //     method: 'post',
+  //     maxBodyLength: Infinity,
+  //     url: 'https://fcm.googleapis.com/fcm/send',
+  //     headers: { 
+  //       'Authorization': 'key=AAAAI5_iRy4:APA91bG-265vdefp_ZxCgghvYa6L-xUgDHCHqhsPv9GXCho4J5caCx2dQxPjn9bkz89rdml9l70a16re1VANIJM9xC6fFZbko86cgfjZz1DZhq09RuGsClnybu-w0xnO6AYta_5etZK8', 
+  //       'Content-Type': 'application/json'
+  //     },
+  //     data : data
+  //   };
 
-
-  }
+  //   axios.request(config)
+  //   .then((response) => {
+  //     console.log(JSON.stringify(response.data));
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 
 
+
+  // }
+
+
+  //on working
+  // const sendNotificationToAllUser = () => {
+  //   const data = JSON.stringify({
+  //     "fcmToken": [
+  //       "d6nTxiSWbksZi3harhRtPu:APA91bHEbtxbRYWFpOP9LCVpiId1a3LoiOW_FTjxqvUc4s2W-NYqUMeMT3mK0Vf2Xf2M6dsCZJXbSl9sQ_H4yTPlc_0mR7nCtBYLyFqxHyfNH-C1d74IBId7O6HMeLB4V8nVWccLyDlQ",
+  //       "dE0SJtxp8k1rsZD3UiQx2u:APA91bFtiZiuJY-CJ65h8FmhbukRveCLinexJQzqsEHFL2qNXWCr2qKBuUQ1cPSMsUkZybo-nSFP51ChlhSMCBh3rLTwPLViuEzzOTaLrIV7AMsRKTLUGYpPXtyNhe8xhR2Aw6KxYQsf"
+  //     ],
+  //     "message": "GUA Updated"
+  //   });
+
+  //   const config = {
+  //     method: 'post',
+  //     maxBodyLength: Infinity,
+  //     url: 'https://long-pink-moose-slip.cyclic.app/sendNotifications',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     data: data
+  //   };
+
+  //   axios.request(config)
+  //     .then((response) => {
+  //       console.log(JSON.stringify(response.data));
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+
+  // }
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => { navigation.navigate('EditMainPdf', { pdfname: item.name }) }} style={styles.EditContainer}>
@@ -240,13 +271,13 @@ const AdminHome = ({ navigation }) => {
     <>
       <ImageBackground source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }} resizeMode={'cover'}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }} showsVerticalScrollIndicator={false}>
-
+{/* 
           {
             //I'll delete this pdf button in future
-            <TouchableOpacity onPress={() => sendNotification()} style={{ height: 50, width: wp('30%'), backgroundColor: colors.primary, alignSelf: 'flex-end', borderRadius: 200, marginRight: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+            <TouchableOpacity onPress={() => sendNotificationToAllUser()} style={{ height: 50, width: wp('30%'), backgroundColor: colors.primary, alignSelf: 'flex-end', borderRadius: 200, marginRight: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
               <Text style={{ color: COLORS.WHITE, fontWeight: 'bold', fontSize: hp('2%') }}>Noti all user of the app</Text>
             </TouchableOpacity>
-          }
+          } */}
 
 
 
@@ -328,7 +359,7 @@ const AdminHome = ({ navigation }) => {
 
           </View>
 
-          <TouchableOpacity onPress={() => auth().signOut()} style={{ height: 60, width: wp("80%"), backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 20, marginTop: 20, alignSelf: 'center', }}>
+          <TouchableOpacity onPress={() => auth()?.signOut()} style={{ height: 60, width: wp("80%"), backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 20, marginTop: 20, alignSelf: 'center', }}>
             <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: hp('2%') }}>{"Logout"}</Text>
           </TouchableOpacity>
 

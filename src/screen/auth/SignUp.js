@@ -139,6 +139,7 @@ const SignUp = ({ navigation }) => {
                             DeviceToken: deviceToken,
                             status: "User",
                             Plan:"",
+                            EulaStatus:false
                         }).then(() => {
                             setLoading(false)
                         }).catch((err) => {

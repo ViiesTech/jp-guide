@@ -9,6 +9,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
 import { useConfirmPayment, initStripe, CardField, useStripe } from '@stripe/stripe-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios';
@@ -170,11 +171,15 @@ const Payment = ({ navigation }) => {
 
     }
 
-    const Logout = () => {
-        auth()
-            .signOut()
+    const Logout = async() => {
+
+        await AsyncStorage.clear().then(()=>{
+        
+            auth()
+            ?.signOut()
             .then(() => console.log('User signed out!'));
-        setModalVisible(false);
+            setModalVisible(false);
+        })
     }
 
     return (

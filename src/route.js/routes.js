@@ -46,6 +46,8 @@ import PDF from '../screen/AdminScreens/PDF';
 import { COLORS } from '../utils/COLORS';
 import EditMainPdf from '../screen/AdminScreens/EditMainPdf';
 import PDFViewerDelete from '../screen/protected/PDFViewerDelete';
+import EulaForm from '../screen/protected/EulaForm';
+import DownloadPdf from '../screen/protected/DownloadPdf';
 
 
 const Stack = createNativeStackNavigator();
@@ -148,7 +150,7 @@ const Routes = () => {
   const [user, setUser] = useState();
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    const subscriber = auth()?.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
 
@@ -188,9 +190,11 @@ const Routes = () => {
               <Stack.Screen name="AllPdf" component={AllPdf} options={{gestureEnabled : false}}/>
               <Stack.Screen name="PDF" component={PDF} options={{gestureEnabled : false}}/>
 
-
               <>
+                <Stack.Screen name="EulaForm" component={EulaForm} options={{gestureEnabled : false}}/>
+                <Stack.Screen name="DownloadPdf" component={DownloadPdf} options={{gestureEnabled : false}}/>
                 <Stack.Screen name="Home" component={Home} options={{gestureEnabled : false}}/>
+
                 <Stack.Screen name='Detail' component={Detail} options={{gestureEnabled : false}}/>
                 <Stack.Screen name='Emergency' component={Emergency} options={{gestureEnabled : false}}/>
                 <Stack.Screen name='Operational' component={Operational} options={{gestureEnabled : false}}/>
@@ -202,7 +206,6 @@ const Routes = () => {
                 <Stack.Screen name='NoteDetail' component={NoteDetail} options={{gestureEnabled : false}}/>
                 <Stack.Screen name="Payment" component={Payment} options={{gestureEnabled : false}}/>
                 <Stack.Screen name="PDFText" component={PDFText} options={{gestureEnabled : false}}/>
-
 
                 <Stack.Screen name='PDFViewerDelete' component={PDFViewerDelete} />
 

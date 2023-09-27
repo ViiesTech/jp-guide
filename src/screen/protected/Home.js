@@ -22,28 +22,125 @@ import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import FastImage from 'react-native-fast-image'
+import NetInfo from "@react-native-community/netinfo";
+
+import ReactNativeBlobUtil from 'react-native-blob-util'
 
 const Home = ({ navigation }) => {
 
   //Orientation
   const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
   const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
-
   const [screenResolution, setScreenResolution] = useState('')
 
+  const [showEulaModal, setShowEULAModal] = useState(true)
 
   useEffect(() => {
-
-      Orientation.unlockAllOrientations();
-
+    Orientation.unlockAllOrientations();
   }, [navigation]);
-
-
-
 
   useEffect(() => {
     checkDarkMode()
+    getMyEditFromFirebase()
   }, [])
+
+  const getMyEditFromFirebase = async () => {
+
+
+    const Pdf = await AsyncStorage.getItem('OI')
+
+    console.log(Pdf)
+    // console.log("whats in side", Pdf)
+
+    // if (Pdf !== null) {
+      
+    // } else {
+
+      const promise = []
+      firestore()
+        .collection("Users")
+        .doc(UID)
+        .collection("pdf")
+        .get()
+        .then((doc) => {
+          doc?.docs?.forEach((e) => {
+            promise.push(e.data())
+          })
+
+        }).then(async () => {
+
+          console.log(promise)
+
+          for (const e of promise) {
+            try {
+              const response = await ReactNativeBlobUtil
+                .config({
+                  fileCache: true,
+                })
+                .fetch('GET', `${e.ImageURL}`, {
+                  // Add any necessary headers here
+                })
+
+              // Get the downloaded file path
+              const filePath = response.path();
+
+              // Assuming 'name' is the property in e that holds the name of the file
+              const fileName = e?.name;
+
+              // Save the filePath and fileName pair to AsyncStorage
+              await AsyncStorage.setItem(JSON.stringify(fileName), JSON.stringify(filePath))
+
+
+              console.log(`Saved path for file ${fileName}: ${filePath}`);
+            } catch (error) {
+              console.error('Error downloading file:', error);
+            }
+          }
+        })
+        // .then(() => {
+        //   const TabsPdf = []
+        //   firestore()
+        //     .collection("TabsPdf")
+        //     .get()
+        //     .then((doc) => {
+        //       doc?.docs?.forEach((e) => {
+        //         TabsPdf.push(e.data())
+        //       })
+
+        //     }).then(async () => {
+
+        //       for (const e of TabsPdf) {
+        //         try {
+        //           const response = await ReactNativeBlobUtil
+        //             .config({
+        //               fileCache: true,
+        //             })
+        //             .fetch('GET', `${e.PDF}`, {
+        //               // Add any necessary headers here
+        //             })
+
+        //           // Get the downloaded file path
+        //           const filePath = response.path();
+
+        //           // Assuming 'name' is the property in e that holds the name of the file
+        //           const fileName = e?.name;
+
+        //           // Save the filePath and fileName pair to AsyncStorage
+        //           await AsyncStorage.setItem(fileName, filePath)
+
+
+        //           console.log(`Saved path for file ${fileName}: ${filePath}`);
+        //         } catch (error) {
+        //           console.error('Error downloading file:', error);
+        //         }
+        //       }
+        //     })
+        // })
+
+    // }
+  }
+
+
   const checkDarkMode = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('DarkMode');
@@ -52,6 +149,14 @@ const Home = ({ navigation }) => {
     } catch (e) {
       // error reading value
     }
+  }
+
+  const checkEulaServiceStatus = () => {
+    if (isModalVisible === false) {
+      setShowEULAModal(true)
+
+    }
+
   }
 
   const color = useSelector(state => state.pdf.Dark)
@@ -115,8 +220,6 @@ const Home = ({ navigation }) => {
   };
 
 
-
-
   //************************* getting current orientation */
 
   const [Search, setSearch] = useState('')
@@ -135,18 +238,19 @@ const Home = ({ navigation }) => {
   const UID = auth()?.currentUser?.uid
 
   const goToPayment = (price) => {
-    setModalVisible(false);
-    firestore()
-    .collection('Users')
-    .doc(UID)
-    .update({
-      Plan : price
-    }).then(()=>{
+    setModalVisible(false)
 
-      navigation.navigate('Payment')
-    }).catch((e)=>{
-      console.log(e)
-    })
+    firestore()
+      .collection('Users')
+      .doc(UID)
+      .update({
+        Plan: price
+      }).then(() => {
+
+        navigation.navigate('Payment')
+      }).catch((e) => {
+        console.log(e)
+      })
 
   };
 
@@ -170,8 +274,6 @@ const Home = ({ navigation }) => {
         // console.log("allPdf", allPdf);
 
         const sort = allPdf.sort((a, b) => a.name.localeCompare(b.name));
-
-
         dispatch(setAllPdf(sort));
 
       })
@@ -188,7 +290,6 @@ const Home = ({ navigation }) => {
       .collection("Users")
       .doc(UID)
       .onSnapshot((doc) => {
-        // console.log(doc.data().Image)
         setImageUrl(doc?.data()?.Image)
       })
   }
@@ -204,7 +305,7 @@ const Home = ({ navigation }) => {
           if (doc?.data()?.DeviceToken === DevToken) {
 
           } else {
-            auth().signOut()
+            // auth()?.signOut()
           }
         })
     }
@@ -212,8 +313,6 @@ const Home = ({ navigation }) => {
 
 
   const CallData = (Aplha) => {
-
-
     // console.log("........", Aplha)
 
     setCard(true)
@@ -321,88 +420,102 @@ const Home = ({ navigation }) => {
   const alphabet = ["Home", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   const cardDetail = [
     { name: "SEARCH AIRPORTS", title: "SEARCH AIRPORTS", image: require('../../assets/images/card1.png'), imageBG: require('../../assets/images/searchair.png'), nav: "Detail" },
-    { name: "INTERNATIONAL SUPPLEMENT", title: "INTERNATIONAL SUPPLEMENT", image: require('../../assets/images/emergency.png'), imageBG: require('../../assets/images/sup.png'), nav: "Operational" },
-    { name: "COMMUNICATIONS", title: "COMMUNICATIONS", image: require('../../assets/images/operational.png'), imageBG: require('../../assets/images/com.png'), nav: "Operational" },
-    { name: "GENERAL INTERNATIONAL \n INFORMATION", title: "GENERAL INTERNATIONAL INFORMATION", image: require('../../assets/images/genint.png'), imageBG: require('../../assets/images/genint.png'), nav: "Operational" },
-    { name: "OPERATIONAL INFORMATION", title: "OPERATIONAL INFORMATION", image: require('../../assets/images/communication.png'), imageBG: require('../../assets/images/Operationals.png'), nav: "Operational" },
-    { name: "GENERAL AIRCRAFT NOTES\n AND MAINTENANCE", title: "GENERAL AIRCRAFT NOTES AND MAINTENANCE", image: require('../../assets/images/notes.png'), imageBG: require('../../assets/images/A:C.png'), nav: "Operational" }
+    { name: "INTERNATIONAL SUPPLEMENT", title: "IS", image: require('../../assets/images/emergency.png'), imageBG: require('../../assets/images/sup.png'), nav: "Operational" },
+    { name: "COMMUNICATIONS", title: "CM", image: require('../../assets/images/operational.png'), imageBG: require('../../assets/images/com.png'), nav: "Operational" },
+    { name: "GENERAL INTERNATIONAL \n INFORMATION", title: "GII", image: require('../../assets/images/genint.png'), imageBG: require('../../assets/images/genint.png'), nav: "Operational" },
+    { name: "OPERATIONAL INFORMATION", title: "OI", image: require('../../assets/images/communication.png'), imageBG: require('../../assets/images/Operationals.png'), nav: "Operational" },
+    { name: "GENERAL AIRCRAFT NOTES\n AND MAINTENANCE", title: "GANAM", image: require('../../assets/images/notes.png'), imageBG: require('../../assets/images/A:C.png'), nav: "Operational" }
   ]
 
   const goToTabsPdf = async (item) => {
 
 
+
     await AsyncStorage.getItem(item?.title).then((doc) => {
 
       if (doc !== null) {
-        navigation.navigate(item.nav, { pdfname: doc, })
-
+        navigation.navigate(item.nav, { pdfname: doc, title: item?.title })
         console.log("Innnnnn")
 
       } else {
 
         console.log("Outtttttt")
 
-        if (item.title === "INTERNATIONAL SUPPLEMENT") {
-
-          // getSaveFirestore("IS")
-          firestore()
-            .collection("TabsPdf")
-            .doc('IS')
-            .onSnapshot((doc) => {
-
-              console.log(doc?.data()?.PDF,)
-              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
-
-            })
+        if (item.title === "IS") {
 
 
-        } else if (item.title === "GENERAL AIRCRAFT NOTES AND MAINTENANCE") {
+          firestore().collection("Users").doc(UID).collection("pdf").doc(item?.title).get().then((doc) => {
+
+            if (doc.data() !== undefined) {
+
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.ImageURL, title: item?.title })
+
+            } else {
+              // getSaveFirestore("IS")
+              firestore()
+                .collection("TabsPdf")
+                .doc('IS')
+                .onSnapshot((doc) => {
+
+                  console.log(doc?.data()?.PDF,)
+                  navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: 'IS' })
+
+                })
+            }
+
+          })
+
+
+
+
+
+        } else if (item.title === "GANAM") {
           firestore()
             .collection("TabsPdf")
             .doc('GANAM')
             .onSnapshot((doc) => {
 
               console.log(doc?.data()?.PDF,)
-              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: 'GANAM' })
 
             })
           // getSaveFirestore("GANAM")
 
 
-        } else if (item.title === "COMMUNICATIONS") {
+        } else if (item.title === "CM") {
           firestore()
             .collection("TabsPdf")
             .doc('CM')
             .onSnapshot((doc) => {
 
               console.log(doc?.data()?.PDF,)
-              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: 'CM' })
 
             })
           // getSaveFirestore("CM")
 
 
-        } else if (item.title === "GENERAL INTERNATIONAL INFORMATION") {
+        } else if (item.title === "GII") {
           firestore()
             .collection("TabsPdf")
             .doc('GII')
             .onSnapshot((doc) => {
 
               console.log(doc?.data()?.PDF,)
-              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: 'GII' })
 
             })
           // getSaveFirestore("GII")
 
 
-        } else if (item.title === "OPERATIONAL INFORMATION") {
+        } else if (item.title === "OI") {
           firestore()
             .collection("TabsPdf")
             .doc('OI')
             .onSnapshot((doc) => {
 
               console.log(doc?.data()?.PDF,)
-              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: item?.title })
+              navigation.navigate(item.nav, { pdfname: doc?.data()?.PDF, title: 'OI' })
 
             })
           // getSaveFirestore("OI")
@@ -637,6 +750,8 @@ const Home = ({ navigation }) => {
 
 
 
+
+
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -658,7 +773,12 @@ const Home = ({ navigation }) => {
           }}
         />
         {/* </ScrollView> */}
+
+
+
       </FastImage>
+
+
     </SafeAreaView>
   )
 }

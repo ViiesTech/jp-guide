@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ImageBackground, StatusBar, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
-import React,{useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CustomButton from '../../component/CustomButton';
 import colors from '../../constant/colors';
@@ -21,8 +21,8 @@ const GetStart = ({ navigation }) => {
 
 
   const COLORS = {
-    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
-    Text : color === true ?  "#FFFFFF" :"#000000"
+    WHITE: color === true ? "#000000" : "#FFFFFF",
+    Text: color === true ? "#FFFFFF" : "#000000"
 
   }
 
@@ -62,23 +62,23 @@ const GetStart = ({ navigation }) => {
     navigation.navigate('Login')
   }
   return (
-    <View style={{height:screenHeight, width:screenWidth}}>
+    <View style={{ height: screenHeight, width: screenWidth }}>
       <StatusBar
         animated={true}
         backgroundColor="transparent"
         translucent={true} />
-      <FastImage source={require('../../assets/images/hi.jpeg')} resizeMode="cover" style={{height:screenHeight , width: screenWidth, alignItems:'center', justifyContent:'center', padding:20}}>
+      <FastImage source={require('../../assets/images/hi.jpeg')} resizeMode="cover" style={{ height: screenHeight, width: screenWidth, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
         {/* <ScrollView contentContainerStyle={{flexGrow:1}} showsVerticalScrollIndicator={false}> */}
 
         <View style={{ width: screenWidth * 0.9, height: screenHeight * 0.9, justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{  }}>
-            <Image style={{height:screenHeight * 0.5,width:screenWidth * 0.5}} source={require('../../assets/images/profile.png')} resizeMode='contain' />
+          <View style={{}}>
+            <Image style={{ height: screenHeight * 0.5, width: screenWidth * 0.5 }} source={require('../../assets/images/profile.png')} resizeMode='contain' />
           </View>
-          <View style={{ width: screenWidth * 0.9}}>
+          <View style={{ width: screenWidth * 0.9 }}>
             <CustomButton
               buttonColor={colors.primary}
               title="Login"
-              buttonStyle={{ width: screenWidth * 0.9 , alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
+              buttonStyle={{ width: screenWidth * 0.9, alignSelf: 'center', marginVertical: 10, borderRadius: 10 }}
               textStyle={{ fontSize: 20 }}
               onPress={() => handleLogin()}
             />

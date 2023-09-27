@@ -18,6 +18,7 @@ import auth from '@react-native-firebase/auth';
 import EditProfile from '../screen/protected/EditProfile';
 import Payment from '../screen/protected/Payment';
 import PDFText from '../screen/protected/PDFText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -49,7 +50,7 @@ const Loading = ({ navigation }) => {
             .collection("Users")
             .doc(UID)
             .get()
-            .then((DOC) => {
+            .then( async(DOC) => {
 
 
                 // navigation.navigate("AdminHome")
@@ -60,7 +61,20 @@ const Loading = ({ navigation }) => {
                         navigation.navigate("AdminHome")
                     )
                 } else {
-                    navigation.navigate("Home")
+
+                    if(DOC?.data()?.EulaStatus == false){
+                        navigation.navigate("EulaForm")
+                    }else{
+                        const getPdfUrl = await AsyncStorage.getItem("YYZ")
+
+                        if(getPdfUrl === null){
+                            navigation.navigate("DownloadPdf")
+                        }else{
+
+                            navigation.navigate("Home")
+                        }
+                        
+                    }
                 }
 
             })

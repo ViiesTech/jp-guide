@@ -26,6 +26,9 @@ import FastImage from 'react-native-fast-image'
 import { useDispatch, useSelector } from 'react-redux';
 
 const Notes = ({ navigation }) => {
+
+  const UID = auth()?.currentUser?.uid
+
   const [txt, setText] = useState("")
   const [data, setData] = useState()
   const [isModalVisible, setModalVisible] = useState(false);
@@ -56,6 +59,8 @@ const Notes = ({ navigation }) => {
   const getPDFtoFirebaseDATA = () => {
     firestore()
       .collection('Notes')
+      .doc(UID)
+      .collection("myNotes")
       .onSnapshot((doc) => {
         const Temp = [];
         doc?.docs?.forEach((note) => {
@@ -77,7 +82,7 @@ const Notes = ({ navigation }) => {
 
   const DeletePdf = (code) => {
     setDeleteModal(true)
-    const documentRef = firestore().collection('Notes').doc(code);
+    const documentRef = firestore().collection('Notes').doc(UID).collection("myNotes").doc(code);
 
     documentRef.delete().then(() => {
       setDeleteModal(false)
@@ -98,6 +103,8 @@ const Notes = ({ navigation }) => {
     if (txt !== "") {
       firestore()
         .collection("Notes")
+        .doc(UID)
+        .collection("myNotes")
         .add({
           createAt: new Date(),
           NoteMsg: txt

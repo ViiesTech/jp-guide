@@ -52,9 +52,9 @@ const Home = ({ navigation }) => {
     console.log(Pdf)
     // console.log("whats in side", Pdf)
 
-    // if (Pdf !== null) {
+    if (Pdf !== null) {
       
-    // } else {
+    } else {
 
       const promise = []
       firestore()
@@ -63,13 +63,16 @@ const Home = ({ navigation }) => {
         .collection("pdf")
         .get()
         .then((doc) => {
+          console.log("please let me the doc of docs",doc?.docs)
+
+
           doc?.docs?.forEach((e) => {
             promise.push(e.data())
           })
 
         }).then(async () => {
 
-          console.log(promise)
+          console.log("please let me know the",promise)
 
           for (const e of promise) {
             try {
@@ -88,7 +91,7 @@ const Home = ({ navigation }) => {
               const fileName = e?.name;
 
               // Save the filePath and fileName pair to AsyncStorage
-              await AsyncStorage.setItem(JSON.stringify(fileName), JSON.stringify(filePath))
+              await AsyncStorage.setItem(fileName,filePath)
 
 
               console.log(`Saved path for file ${fileName}: ${filePath}`);
@@ -97,47 +100,47 @@ const Home = ({ navigation }) => {
             }
           }
         })
-        // .then(() => {
-        //   const TabsPdf = []
-        //   firestore()
-        //     .collection("TabsPdf")
-        //     .get()
-        //     .then((doc) => {
-        //       doc?.docs?.forEach((e) => {
-        //         TabsPdf.push(e.data())
-        //       })
+        .then(() => {
+          const TabsPdf = []
+          firestore()
+            .collection("TabsPdf")
+            .get()
+            .then((doc) => {
+              doc?.docs?.forEach((e) => {
+                TabsPdf.push(e.data())
+              })
 
-        //     }).then(async () => {
+            }).then(async () => {
 
-        //       for (const e of TabsPdf) {
-        //         try {
-        //           const response = await ReactNativeBlobUtil
-        //             .config({
-        //               fileCache: true,
-        //             })
-        //             .fetch('GET', `${e.PDF}`, {
-        //               // Add any necessary headers here
-        //             })
+              for (const e of TabsPdf) {
+                try {
+                  const response = await ReactNativeBlobUtil
+                    .config({
+                      fileCache: true,
+                    })
+                    .fetch('GET', `${e.PDF}`, {
+                      // Add any necessary headers here
+                    })
 
-        //           // Get the downloaded file path
-        //           const filePath = response.path();
+                  // Get the downloaded file path
+                  const filePath = response.path();
 
-        //           // Assuming 'name' is the property in e that holds the name of the file
-        //           const fileName = e?.name;
+                  // Assuming 'name' is the property in e that holds the name of the file
+                  const fileName = e?.name;
 
-        //           // Save the filePath and fileName pair to AsyncStorage
-        //           await AsyncStorage.setItem(fileName, filePath)
+                  // Save the filePath and fileName pair to AsyncStorage
+                  await AsyncStorage.setItem(fileName, filePath)
 
 
-        //           console.log(`Saved path for file ${fileName}: ${filePath}`);
-        //         } catch (error) {
-        //           console.error('Error downloading file:', error);
-        //         }
-        //       }
-        //     })
-        // })
+                  console.log(`Saved path for file ${fileName}: ${filePath}`);
+                } catch (error) {
+                  console.error('Error downloading file:', error);
+                }
+              }
+            })
+        })
 
-    // }
+    }
   }
 
 

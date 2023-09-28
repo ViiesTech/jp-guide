@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground, TextInput, TouchableOpacity, Image, ActivityIndicator, StyleSheet, FlatList, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import colors from '../../constant/colors'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -35,11 +35,39 @@ const AdminHome = ({ navigation }) => {
   const [ImageUrl, setImageUrl] = useState("")
   const [ImageName, setImageName] = useState("")
   const [Loading, setLoading] = useState(false)
-
+  const [allUserTokens, setAllUserTokens] = useState()
+  
   const [data, setData] = useState({
     Code: "",
     CodeDetail: "",
   })
+
+  console.log(allUserTokens)
+
+  useEffect(()=>{
+    getAllTokens()
+  },[])
+
+ const getAllTokens = () => {
+    firestore()
+    .collection("Users")
+    .get()
+    .then((doc)=>{
+      const temp = []
+      // console.log(doc.docs)
+      doc.docs.forEach((e)=>{
+        const allTokens = e.data().DeviceToken
+        if(allTokens == null || allTokens == ""){
+
+        }else{
+
+          temp.push(allTokens)
+        }
+      })
+
+      setAllUserTokens(temp)
+    })
+  }
 
 
   async function pickDocument() {
@@ -127,10 +155,11 @@ const AdminHome = ({ navigation }) => {
                     merge: true
                   }).then(() => {
                     Toast.show({
-                      type: 'error',
+                      type: 'success',
                       text1: 'Done',
                     });
                     setLoading(false)
+                    sendNotificationToAllUser()
                   })
 
               } else {
@@ -166,6 +195,7 @@ const AdminHome = ({ navigation }) => {
                       type: 'success',
                       text1: 'Pdf Succesfully Uploaded',
                     });
+                    sendNotificationToAllUser()
                     setLoading(false)
                   })
               }
@@ -225,34 +255,33 @@ const AdminHome = ({ navigation }) => {
 
 
   //on working
-  // const sendNotificationToAllUser = () => {
-  //   const data = JSON.stringify({
-  //     "fcmToken": [
-  //       "d6nTxiSWbksZi3harhRtPu:APA91bHEbtxbRYWFpOP9LCVpiId1a3LoiOW_FTjxqvUc4s2W-NYqUMeMT3mK0Vf2Xf2M6dsCZJXbSl9sQ_H4yTPlc_0mR7nCtBYLyFqxHyfNH-C1d74IBId7O6HMeLB4V8nVWccLyDlQ",
-  //       "dE0SJtxp8k1rsZD3UiQx2u:APA91bFtiZiuJY-CJ65h8FmhbukRveCLinexJQzqsEHFL2qNXWCr2qKBuUQ1cPSMsUkZybo-nSFP51ChlhSMCBh3rLTwPLViuEzzOTaLrIV7AMsRKTLUGYpPXtyNhe8xhR2Aw6KxYQsf"
-  //     ],
-  //     "message": "GUA Updated"
-  //   });
+  const sendNotificationToAllUser = () => {
+    const datas = JSON.stringify({
+      "fcmToken": allUserTokens,
+      "message": data.Code + " Pdf Updated"
+    });
 
-  //   const config = {
-  //     method: 'post',
-  //     maxBodyLength: Infinity,
-  //     url: 'https://long-pink-moose-slip.cyclic.app/sendNotifications',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     data: data
-  //   };
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://jpguidenotification-9a79be001093.herokuapp.com/sendNotifications',
+      headers: { 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json'
+      },
+      data : datas
+    };
+    
 
-  //   axios.request(config)
-  //     .then((response) => {
-  //       console.log(JSON.stringify(response.data));
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-  // }
+  }
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => { navigation.navigate('EditMainPdf', { pdfname: item.name }) }} style={styles.EditContainer}>

@@ -16,6 +16,7 @@ const EditMainPdf = ({ route, navigation }) => {
   const [ImageUrl, setImageUrl] = useState("")
   const [ImageName, setImageName] = useState("")
   const [Loading, setLoading] = useState(false)
+  const [allUserTokens, setAllUserTokens] = useState()
 
 
   const [pdfImage, setImagePdf] = useState("")
@@ -44,6 +45,32 @@ const EditMainPdf = ({ route, navigation }) => {
 
 
   }, [])
+
+
+  useEffect(()=>{
+    getAllTokens()
+  },[])
+
+ const getAllTokens = () => {
+    firestore()
+    .collection("Users")
+    .get()
+    .then((doc)=>{
+      const temp = []
+      // console.log(doc.docs)
+      doc.docs.forEach((e)=>{
+        const allTokens = e.data().DeviceToken
+        if(allTokens == null || allTokens == ""){
+
+        }else{
+
+          temp.push(allTokens)
+        }
+      })
+
+      setAllUserTokens(temp)
+    })
+  }
 
 
 
@@ -102,12 +129,15 @@ const EditMainPdf = ({ route, navigation }) => {
           .collection("TabsPdf")
           .doc(nickPDf)
           .set({
-            PDF: pdfDownloadedUrl
+            PDF: pdfDownloadedUrl,
+            UpdateDownloaded: [],
+            name: nickPDf
           }).then(() => {
 
 
             console.log("saved")
             setLoading(false)
+            sendNotificationToAllUser()
 
           }).catch((err) => {
 
@@ -120,7 +150,34 @@ const EditMainPdf = ({ route, navigation }) => {
     }
   }
 
+ //on working
+ const sendNotificationToAllUser = () => {
+  const datas = JSON.stringify({
+    "fcmToken": allUserTokens,
+    "message": pdfname + " Pdf Updated"
+  });
 
+  const config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'https://jpguidenotification-9a79be001093.herokuapp.com/sendNotifications',
+    headers: { 
+      'Accept': 'application/json', 
+      'Content-Type': 'application/json'
+    },
+    data : datas
+  };
+  
+
+  axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+}
 
 
 

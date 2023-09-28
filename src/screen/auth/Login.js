@@ -12,6 +12,7 @@ import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, Ori
 import FastImage from 'react-native-fast-image'
 import { COLORS } from '../../utils/COLORS'
 import { useSelector, useDispatch } from 'react-redux'
+import messaging from '@react-native-firebase/messaging';
 
 const Login = ({ navigation }) => {
 
@@ -22,8 +23,8 @@ const Login = ({ navigation }) => {
   const color = useSelector(state => state.pdf.Dark)
 
   const COLORS = {
-    WHITE : color === true ?  "#000000" : "#FFFFFF" ,
-    Text : color === true ?  "#FFFFFF" :"#000000"
+    WHITE: color === true ? "#000000" : "#FFFFFF",
+    Text: color === true ? "#FFFFFF" : "#000000"
   }
 
   //Orientation
@@ -68,10 +69,13 @@ const Login = ({ navigation }) => {
   console.log(Email, Password)
 
   const handleLogin = async () => {
+
+
+
     const DevToken = await AsyncStorage.getItem("FMCToken")
 
 
-    console.log("device token :" + DevToken) 
+    console.log("device token :" + DevToken)
 
     setLoading(true)
 
@@ -99,54 +103,62 @@ const Login = ({ navigation }) => {
       setLoading(false)
 
     } else {
-      auth()
-        .signInWithEmailAndPassword(Email, Password)
-        .then(() => {
-          console.log('User account created & signed in!');
-          setLoading(false)
+      const fcmToken = await messaging().getToken();
 
-          const UID = auth()?.currentUser?.uid
+      console.warn("fcm token",fcmToken)
 
-          firestore()
-            .collection("Users")
-            .doc(UID)
-            .update({
-              DeviceToken: DevToken
+      if (fcmToken) {
+        await AsyncStorage.setItem("FMCToken", fcmToken)
+        auth()
+          .signInWithEmailAndPassword(Email, Password)
+          .then(() => {
+            console.log('User account created & signed in!');
+            setLoading(false)
+
+            const UID = auth()?.currentUser?.uid
+
+            firestore()
+              .collection("Users")
+              .doc(UID)
+              .update({
+                DeviceToken: fcmToken
+              }
+              )
+
+
+
+          })
+          .catch(error => {
+
+            console.log(error.code)
+            if (error.code === 'auth/email-already-in-use') {
+              Toast.show({
+                type: 'error',
+                text1: 'That email address is already in use!',
+              });
+
             }
-            )
+
+            if (error.code === 'auth/invalid-email') {
+              Toast.show({
+                type: 'error',
+                text1: 'That email address is invalid!',
+              });
+            }
+
+            if (error.code === 'auth/user-not-found') {
+              Toast.show({
+                type: 'error',
+                text1: 'User not found!',
+              });
+            }
+            setLoading(false)
 
 
+            console.error(error);
+          });
+      }
 
-        })
-        .catch(error => {
-
-          console.log(error.code)
-          if (error.code === 'auth/email-already-in-use') {
-            Toast.show({
-              type: 'error',
-              text1: 'That email address is already in use!',
-            });
-
-          }
-
-          if (error.code === 'auth/invalid-email') {
-            Toast.show({
-              type: 'error',
-              text1: 'That email address is invalid!',
-            });
-          }
-
-          if (error.code === 'auth/user-not-found') {
-            Toast.show({
-              type: 'error',
-              text1: 'User not found!',
-            });
-          }
-          setLoading(false)
-
-
-          console.error(error);
-        });
     }
 
   }
@@ -185,7 +197,7 @@ const Login = ({ navigation }) => {
                 />
               </View>
               <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
-                <Text style={{ alignSelf: 'flex-end', color: 'black', fontWeight: 'bold', fontSize:hp('1.5%') }}>Forgot password?</Text>
+                <Text style={{ alignSelf: 'flex-end', color: 'black', fontWeight: 'bold', fontSize: hp('1.5%') }}>Forgot password?</Text>
               </TouchableOpacity>
               <CustomButton
                 buttonColor={colors.primary}

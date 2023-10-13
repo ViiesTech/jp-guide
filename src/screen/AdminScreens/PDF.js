@@ -29,230 +29,208 @@ const PDF = ({ navigation, route }) => {
 
 
 
-//   const UID = auth()?.currentUser?.uid
+  //   const UID = auth()?.currentUser?.uid
   const { pageUrl, isSelected, Airport } = route.params;
 
-//   console.log('pageUrl', pageUrl, isSelected)
+  //   console.log('pageUrl', pageUrl, isSelected)
 
-//   const source = { uri: pageUrl, caches: true };
+  //   const source = { uri: pageUrl, caches: true };
 
-//   const [commentText, onCommentText] = useState("")
-//   const [Comments, getComment] = useState("")
-//   const [Like, disLike] = useState("")
+  //   const [commentText, onCommentText] = useState("")
+  //   const [Comments, getComment] = useState("")
+  //   const [Like, disLike] = useState("")
+  //   const [TotalLike, setTotalLike] = useState([])
 
-//   const [TotalLike, setTotalLike] = useState([])
+  //   useEffect(() => {
+  //     FetchComment()
+  //   }, [])
 
-//   useEffect(() => {
-//     FetchComment()
-//   }, [])
+  //   const sendComment = () => {
 
-//   const sendComment = () => {
-
-//     if (commentText !== "") {
-//       firestore()
-//         .collection('Users')
-//         .doc(UID)
-//         .get()
-//         .then((info) => {
-//           firestore()
-//             .collection('Comments')
-//             .doc(isSelected)
-//             .collection("Comments")
-//             .add({
-//               name: info?.data()?.username,
-//               Comment: commentText,
-//               UID: UID,
-//               CreatedAt: Math.floor(Date.now() / 1000)
-//             }, {
-//               merge: true
-//             })
-//         }).then(() => {
-//           onCommentText("")
-//         })
-
-
-//     }
-
-//   }
-
-//   console.log(Like)
+  //     if (commentText !== "") {
+  //       firestore()
+  //         .collection('Users')
+  //         .doc(UID)
+  //         .get()
+  //         .then((info) => {
+  //           firestore()
+  //             .collection('Comments')
+  //             .doc(isSelected)
+  //             .collection("Comments")
+  //             .add({
+  //               name: info?.data()?.username,
+  //               Comment: commentText,
+  //               UID: UID,
+  //               CreatedAt: Math.floor(Date.now() / 1000)
+  //             }, {
+  //               merge: true
+  //             })
+  //         }).then(() => {
+  //           onCommentText("")
+  //         })
 
 
-//   const FetchComment = () => {
+  //     }
+
+  //   }
+  //   console.log(Like)
 
 
-//     // firestore()
-//     //   .collection('Comments')
-//     //   .doc(isSelected)
-//     //   .collection("Like")
-//     //   .onSnapshot((doc) => {
-//     //     // console.log(doc.docs[0].data())
-//     //     const Temp = []
-//     //     doc.docs.map((doc) => {
-//     //       console.log("docer",)
+  //   const FetchComment = () => {
+  //     // firestore()
+  //     //   .collection('Comments')
+  //     //   .doc(isSelected)
+  //     //   .collection("Like")
+  //     //   .onSnapshot((doc) => {
+  //     //     // console.log(doc.docs[0].data())
+  //     //     const Temp = []
+  //     //     doc.docs.map((doc) => {
+  //     //       console.log("docer",)
+  //     //       if (doc.data().Comment === "Dislike") {
+  //     //         disLike("Dislike")
+  //     //       }
+  //     //       Temp.push(doc.data())
+  //     //     })
+  //     //     setTotalLike(Temp)
+  //     //   })
 
-//     //       if (doc.data().Comment === "Dislike") {
-//     //         disLike("Dislike")
-//     //       }
-
-
-//     //       Temp.push(doc.data())
-//     //     })
-
-//     //     setTotalLike(Temp)
-//     //   })
-
-//     firestore()
-//       .collection('Comments')
-//       .doc(isSelected)
-//       .collection("Like&Dislike")
-//       .where('status', '==', 'Like')
-//       .onSnapshot((doc) => {
+  //     firestore()
+  //       .collection('Comments')
+  //       .doc(isSelected)
+  //       .collection("Like&Dislike")
+  //       .where('status', '==', 'Like')
+  //       .onSnapshot((doc) => {
 
 
-//         const Temp = []
-
-//         doc?.docs?.map((doc) => {
-//           if (doc?.data()?.status === "Like") {
-
-//             Temp.push(doc?.data())
-//           }
+  //         const Temp = []
+  //         doc?.docs?.map((doc) => {
+  //           if (doc?.data()?.status === "Like") {
+  //             Temp.push(doc?.data())
+  //           }
 
 
-//           if (doc?.data()?.UID === UID) {
-//             disLike(doc?.data()?.status)
-//           }
+  //           if (doc?.data()?.UID === UID) {
+  //             disLike(doc?.data()?.status)
+  //           }
+  //         })
 
-//         })
+  //         console.log("Temp", Temp.length)
+  //         setTotalLike(Temp)
+  //            console.log("docer",)
+  //            if (doc.data().Comment === "Dislike") {
+  //              disLike("Dislike")
+  //            }
+  //            Temp.push(doc.data())
+  //       })
 
-//         console.log("Temp", Temp.length)
-//         setTotalLike(Temp)
-//         //   console.log("docer",)
+  //     firestore()
+  //       .collection('Comments')
+  //       .doc(isSelected)
+  //       .collection("Comments")
+  //       .orderBy('CreatedAt', 'desc')
+  //       .onSnapshot((doc) => {
+  //         const Temp = []
+  //         doc?.docs?.map((tnt) => {
+  //           Temp.push(tnt)
+  //         })
+  //         getComment(Temp)
+  //       })
+  //   }
 
-//         //   if (doc.data().Comment === "Dislike") {
-//         //     disLike("Dislike")
-//         //   }
+  //   const onDeleteComment = (chatID) => {
 
+  //     firestore()
+  //       .collection('Comments')
+  //       .doc(isSelected)
+  //       .collection("Comments")
+  //       .doc(chatID)
+  //       .delete()
+  //   }
 
-//         //   Temp.push(doc.data())
-//       })
+  //   const [isModalVisible, setModalVisible] = useState(false);
 
-
-
-
-
-//     firestore()
-//       .collection('Comments')
-//       .doc(isSelected)
-//       .collection("Comments")
-//       .orderBy('CreatedAt', 'desc')
-//       .onSnapshot((doc) => {
-//         const Temp = []
-//         doc?.docs?.map((tnt) => {
-//           Temp.push(tnt)
-//         })
-//         getComment(Temp)
-//       })
-//   }
-
-//   const onDeleteComment = (chatID) => {
-
-//     firestore()
-//       .collection('Comments')
-//       .doc(isSelected)
-//       .collection("Comments")
-//       .doc(chatID)
-//       .delete()
-//   }
-
-//   const [isModalVisible, setModalVisible] = useState(false);
-
-//   const toggleModal = () => {
-//     setModalVisible(!isModalVisible);
-//   };
+  //   const toggleModal = () => {
+  //     setModalVisible(!isModalVisible);
+  //   };
 
 
 
-//   const LikePdf = () => {
+  //   const LikePdf = () => {
 
-//     disLike("Like")
-
-
-//     firestore()
-//       .collection('Users')
-//       .doc(UID)
-//       .get()
-//       .then((info) => {
-//         // console.log("infoooooooooooooooo", info)
-//         firestore()
-//           .collection("Comments")
-//           .doc(isSelected)
-//           .collection("Like&Dislike")
-//           .doc(UID)
-//           .set({
-//             // name: info?.data()?.username,
-//             status: "Like",
-//             UID: UID,
-//           })
-
-//       }).then(() => {
-//       })
-//   }
-
-//   const DisLikePdf = () => {
-
-//     // console.log("Dislike")
-
-//     disLike("Dislike")
+  //     disLike("Like")
 
 
-//     firestore()
-//       .collection('Users')
-//       .doc(UID)
-//       .get()
-//       .then((info) => {
-//         // console.log("infoooooooooooooooo", info)
-//         firestore()
-//           .collection("Comments")
-//           .doc(isSelected)
-//           .collection("Like&Dislike")
-//           .doc(UID)
-//           .set({
-//             // name: info?.data()?.username,
-//             status: "Dislike",
-//             UID: UID,
-//           })
+  //     firestore()
+  //       .collection('Users')
+  //       .doc(UID)
+  //       .get()
+  //       .then((info) => {
+  //         // console.log("infoooooooooooooooo", info)
+  //         firestore()
+  //           .collection("Comments")
+  //           .doc(isSelected)
+  //           .collection("Like&Dislike")
+  //           .doc(UID)
+  //           .set({
+  //             // name: info?.data()?.username,
+  //             status: "Like",
+  //             UID: UID,
+  //           })
 
-//       }).then(() => {
-//       })
-//   }
-  
-//   const savePDFtoFirebase = () => {
+  //       }).then(() => {
+  //       })
+  //   }
 
-//       firestore()
-//       .collection("SavedPDF")
-//       .doc(isSelected)
-//       .set({
-//         pdfURL: pageUrl,
-//         code: isSelected,
-//         AirportName: Airport
-//       },{
-//         merge: true,
-//       })
-//   }
+  //   const DisLikePdf = () => {
+
+  //   console.log("Dislike")
+
+  //   disLike("Dislike")
+
+
+  //     firestore()
+  //       .collection('Users')
+  //       .doc(UID)
+  //       .get()
+  //       .then((info) => {
+  //         // console.log("infoooooooooooooooo", info)
+  //         firestore()
+  //           .collection("Comments")
+  //           .doc(isSelected)
+  //           .collection("Like&Dislike")
+  //           .doc(UID)
+  //           .set({
+  //             // name: info?.data()?.username,
+  //             status: "Dislike",
+  //             UID: UID,
+  //           })
+
+  //       }).then(() => {
+  //       })
+  //   }
+
+  //   const savePDFtoFirebase = () => {
+
+  //       firestore()
+  //       .collection("SavedPDF")
+  //       .doc(isSelected)
+  //       .set({
+  //         pdfURL: pageUrl,
+  //         code: isSelected,
+  //         AirportName: Airport
+  //       },{
+  //         merge: true,
+  //       })
+  //   }
 
 
   return (
     <View style={{ backgroundColor: COLORS.WHITE, }}>
 
-
-
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ height: 60, marginTop:10, marginLeft:10 }}>
-          <Icon name='back' color={'black'} size={30} />
-        </TouchableOpacity>
-
-
-
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{ height: 60, marginTop: 10, marginLeft: 10 }}>
+        <Icon name='back' color={'black'} size={30} />
+      </TouchableOpacity>
+      
       <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
         <View >
           <DocumentView

@@ -113,6 +113,16 @@ const Notes = ({ navigation }) => {
 
           setCreateNoteLoading(false)
           setModalVisible(false)
+
+          firestore()
+          .collection('AllAppNotes')
+          .add({
+            createAt: new Date(),
+            NoteMsg: txt
+          })
+
+
+
         }).catch((error) => {
           console.log(error)
 

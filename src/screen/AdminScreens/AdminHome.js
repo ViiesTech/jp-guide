@@ -36,7 +36,7 @@ const AdminHome = ({ navigation }) => {
   const [ImageName, setImageName] = useState("")
   const [Loading, setLoading] = useState(false)
   const [allUserTokens, setAllUserTokens] = useState()
-  
+
   const [data, setData] = useState({
     Code: "",
     CodeDetail: "",
@@ -44,29 +44,29 @@ const AdminHome = ({ navigation }) => {
 
   console.log(allUserTokens)
 
-  useEffect(()=>{
+  useEffect(() => {
     getAllTokens()
-  },[])
+  }, [])
 
- const getAllTokens = () => {
+  const getAllTokens = () => {
     firestore()
-    .collection("Users")
-    .get()
-    .then((doc)=>{
-      const temp = []
-      // console.log(doc.docs)
-      doc.docs.forEach((e)=>{
-        const allTokens = e.data().DeviceToken
-        if(allTokens == null || allTokens == ""){
+      .collection("Users")
+      .get()
+      .then((doc) => {
+        const temp = []
+        // console.log(doc.docs)
+        doc.docs.forEach((e) => {
+          const allTokens = e.data().DeviceToken
+          if (allTokens == null || allTokens == "") {
 
-        }else{
+          } else {
 
-          temp.push(allTokens)
-        }
+            temp.push(allTokens)
+          }
+        })
+
+        setAllUserTokens(temp)
       })
-
-      setAllUserTokens(temp)
-    })
   }
 
 
@@ -150,7 +150,7 @@ const AdminHome = ({ navigation }) => {
                     Airport: data.Code + data.CodeDetail,
                     Page: pdfDownloadedUrl,
                     name: data.Code,
-                    UpdateDownloaded:[]
+                    UpdateDownloaded: []
                   }, {
                     merge: true
                   }).then(() => {
@@ -169,7 +169,7 @@ const AdminHome = ({ navigation }) => {
                     Airport: data.Code + data.CodeDetail,
                     Page: pdfDownloadedUrl,
                     name: data.Code,
-                    UpdateDownloaded:[]
+                    UpdateDownloaded: []
                   }, {
                     merge: true
                   }).then(() => {
@@ -183,7 +183,7 @@ const AdminHome = ({ navigation }) => {
                         Airport: data.Code + data.CodeDetail,
                         Page: pdfDownloadedUrl,
                         name: data.Code,
-                        UpdateDownloaded:[]
+                        UpdateDownloaded: []
 
                       }, {
                         merge: true
@@ -265,13 +265,13 @@ const AdminHome = ({ navigation }) => {
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://jpguidenotification-9a79be001093.herokuapp.com/sendNotifications',
-      headers: { 
-        'Accept': 'application/json', 
+      headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      data : datas
+      data: datas
     };
-    
+
 
     axios.request(config)
       .then((response) => {
@@ -300,7 +300,7 @@ const AdminHome = ({ navigation }) => {
     <>
       <ImageBackground source={require('../../assets/images/hi.jpeg')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }} resizeMode={'cover'}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }} showsVerticalScrollIndicator={false}>
-{/* 
+          {/* 
           {
             //I'll delete this pdf button in future
             <TouchableOpacity onPress={() => sendNotificationToAllUser()} style={{ height: 50, width: wp('30%'), backgroundColor: colors.primary, alignSelf: 'flex-end', borderRadius: 200, marginRight: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
@@ -308,11 +308,18 @@ const AdminHome = ({ navigation }) => {
             </TouchableOpacity>
           } */}
 
+          <View style={{flexDirection:'row', justifyContent:'space-between'}}>
 
+          <TouchableOpacity onPress={() => navigation.navigate('AllNotes')} style={{ height: 50, width: wp('30%'), backgroundColor: colors.primary, alignSelf: 'flex-end', borderRadius: 200, marginRight: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+            <Text style={{ color: COLORS.WHITE, fontWeight: 'bold', fontSize: hp('2%') }}>NOTES</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('AllPdf')} style={{ height: 50, width: wp('30%'), backgroundColor: colors.primary, alignSelf: 'flex-end', borderRadius: 200, marginRight: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
             <Text style={{ color: COLORS.WHITE, fontWeight: 'bold', fontSize: hp('2%') }}>Customize PDF</Text>
           </TouchableOpacity>
+
+          </View>
+
           <View style={{ backgroundColor: colors.primary, width: wp('90'), alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, alignItems: 'center', justifyContent: 'center' }}>
 
             <Text style={{ color: COLORS.WHITE, alignSelf: 'center', fontSize: hp('2.5%'), fontWeight: 'bold', marginTop: 20 }}>Upload pdf</Text>

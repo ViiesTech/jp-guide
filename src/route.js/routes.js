@@ -48,6 +48,7 @@ import EditMainPdf from '../screen/AdminScreens/EditMainPdf';
 import PDFViewerDelete from '../screen/protected/PDFViewerDelete';
 import EulaForm from '../screen/protected/EulaForm';
 import DownloadPdf from '../screen/protected/DownloadPdf';
+import AllNotes from '../screen/AdminScreens/AllNotes';
 
 
 const Stack = createNativeStackNavigator();
@@ -161,8 +162,6 @@ const Routes = () => {
 
   if (initializing) return null;
 
-
-
   return (
     <Stack.Navigator initialRouteName='GetStart' screenOptions={{ headerShown: false, gestureEnabled : false }}>
       {
@@ -186,6 +185,7 @@ const Routes = () => {
               <Stack.Screen name="Loading" component={Loading} options={{gestureEnabled : false}}/>
               <Stack.Screen name="AdminHome" component={AdminHome} options={{gestureEnabled : false}}/>
               <Stack.Screen name="EditMainPdf" component={EditMainPdf} options={{gestureEnabled : false}}/>
+              <Stack.Screen name="AllNotes" component={AllNotes} options={{gestureEnabled : false}}/>
 
               <Stack.Screen name="AllPdf" component={AllPdf} options={{gestureEnabled : false}}/>
               <Stack.Screen name="PDF" component={PDF} options={{gestureEnabled : false}}/>

@@ -35,7 +35,6 @@ const SavePdf = ({ navigation }) => {
     const COLORS = {
       WHITE : color === true ?  "#000000" : "#FFFFFF" ,
       Text : color === true ?  "#FFFFFF" :"#000000"
-  
     }
 
 

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking, _View, ActivityIndicator, } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking, _View, ActivityIndicator, Platform } from 'react-native'
 import React, { useRef } from 'react'
 import axios from 'axios';
 import RenderHtml from 'react-native-render-html';
@@ -519,6 +519,7 @@ const PDFText = ({ navigation, route }) => {
 
   }
 
+  
 
   return (
     <View style={{ backgroundColor: COLORS.WHITE, }}>
@@ -623,7 +624,35 @@ const PDFText = ({ navigation, route }) => {
                 followSystemDarkMode={false}
                 forceAppTheme={color === true ? Config.ThemeOptions.ThemeDark : Config.ThemeOptions.ThemeLight}
                 autoSaveEnabled={true}
-                hideTopAppNavBar={true}
+
+                initialToolbar={Config.DefaultToolbars.Annotate}
+
+                hideDefaultAnnotationToolbars={[
+                  Config.DefaultToolbars.FillAndSign,
+                  Config.DefaultToolbars.PrepareForm,
+                  Config.DefaultToolbars.Insert,
+                  Config.DefaultToolbars.Favorite,
+                  Config.DefaultToolbars.Measure,
+                  Config.DefaultToolbars.Redaction,
+
+                ]}
+
+                topAppNavBarRightBar={[Config.Buttons.reflowButton, Config.Buttons.searchButton]}
+
+
+
+                
+
+                onCurrentToolbarChanged = {({toolbar}) => {
+                  console.log('toolbar changed to: ' + toolbar);
+                }}
+
+                onAnnotationToolbarItemPress = {({id}) => {
+                  console.log('toolbar item press: ' + id);
+                }}
+
+
+                // hideTopAppNavBar={true}
                 style={{ height: hp('100%'), width: screenWidth }}
 
               />
@@ -881,7 +910,7 @@ const PDFText = ({ navigation, route }) => {
         confirmText="Update"
         confirmButtonColor="#DD6B55"
         onCancelPressed={() => {
-         setShowPdfUpdateAlert(false)
+          setShowPdfUpdateAlert(false)
         }}
         onConfirmPressed={() => {
           UpdatePdf()

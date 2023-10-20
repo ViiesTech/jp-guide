@@ -299,8 +299,8 @@ const Detail = ({ navigation }) => {
                 // console.log(".,................................", item)
                 return (
                   <>
-                    <TouchableOpacity onPress={() => CallData(item)} style={{ height: 40, width: 40, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
-                      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2%') }}>{item}</Text>
+                    <TouchableOpacity onPress={() => CallData(item)} style={{ height: 50, width: 50, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
+                      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24 }}>{item}</Text>
                     </TouchableOpacity>
 
                   </>
@@ -324,8 +324,8 @@ const Detail = ({ navigation }) => {
               // console.log(".,................................", item)
               return (
                 <>
-                  <TouchableOpacity onPress={() => CallData(item)} style={{ height: 40, width: 40, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
-                    <Text style={{ color:'white', fontWeight: 'bold', fontSize: hp('2%') }}>{item}</Text>
+                  <TouchableOpacity onPress={() => CallData(item)} style={{ height: 50, width: 50, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
+                    <Text style={{ color:'white', fontWeight: 'bold', fontSize: 24  }}>{item}</Text>
                   </TouchableOpacity>
 
                 </>
@@ -366,24 +366,13 @@ const Detail = ({ navigation }) => {
                     }
                   }).map((item, key) => {
                     // console.log("item", item)
-
-
                     return (
                       <View style={{ marginLeft: 20 }}>
-
-
-
-                        <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 50, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', width: 50, alignSelf: 'center',marginRight:10,}}>
-
-
-
-                          <Text style={{ color: "white", alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
+                        <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', width: 60, alignSelf: 'center',marginRight:10,}}>
+                          <Text style={{ color: "white", alignSelf: 'center', fontSize: 23, fontWeight: 'bold' }}>
                             {item.name}
                           </Text>
-
                         </TouchableOpacity>
-
-
                       </View>
                     )
                   })
@@ -400,30 +389,20 @@ const Detail = ({ navigation }) => {
                     }
                   }).map((item, key) => {
                     // console.log("item", item)
-
-
                     return (
                       <View style={{ marginLeft: 20 }}>
 
+                        <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 60, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', width: 60, alignSelf: 'center', marginRight:10 }}>
 
-
-                        <TouchableOpacity onPress={() => goToPDFPage(item)} style={{ height: 50, backgroundColor: colors.primary, borderRadius: 10, marginTop: 20, justifyContent: 'center', width: 50, alignSelf: 'center', marginRight:10 }}>
-
-
-
-                          <Text style={{ color: "white", alignSelf: 'center', fontSize: hp('1.8%'), fontWeight: 'bold' }}>
+                          <Text style={{ color: "white", alignSelf: 'center', fontSize: 23, fontWeight: 'bold' }}>
                             {item.name}
                           </Text>
 
                         </TouchableOpacity>
 
-
                       </View>
                     )
                   })
-
-
-
               }
             </ScrollView>
           </ScrollView>
@@ -431,116 +410,7 @@ const Detail = ({ navigation }) => {
         </View>
       </Modal>
     </FastImage>
-    // <ScrollView >
-    //   <View style={{ marginTop: HEIGHT + hp('5'), alignSelf: 'center' }}>
-    //     <Header Logo={require('../../assets/images/profile.png')} profile={require('../../assets/images/OldPic.png')} btnColor={colors.primary} Nav={navigation} />
-    //   </View>
-    //   <View style={{ flexDirection: 'row', backgroundColor: colors.primary, width: wp('90'), height: hp('85'), alignSelf: 'center', borderRadius: 20, top: 30 }}>
-    //     <View style={{ padding: 30 }}>
-    //       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-    //         <TouchableOpacity onPress={() => navigation.goBack()}>
-    //           <Icon name='arrow-back' color={'gray'} size={50} />
-    //         </TouchableOpacity>
-    //         <Text style={{ fontSize: 24, color: 'white', marginLeft: 20 }}>Airports Worldwide</Text>
-    //       </View>
-    //       {/* <View style={{ marginTop: 10 }}>
-    //         <FlatList
-    //           data={data}
-    //           keyExtractor={item => item.id}
-    //           horizontal
-    //           showsHorizontalScrollIndicator={false}
-    //           renderItem={({ item, key }) => {
-    //             return (
-    //               <View style={{ margin: 15 }} key={key}>
-    //                 <TouchableOpacity onPress={() => setSelected(item.title)} style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 10, padding: 20, backgroundColor: isSelected == item.title ? "gray" : null }}>
-    //                   <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>{item.title}</Text>
-    //                   <Text style={{ fontSize: 18, color: 'white' }}>{item.state}</Text>
-    //                 </TouchableOpacity>
-    //               </View>
-    //             )
-    //           }}
-    //         />
-    //       </View> */}
-    //       {/*           
-    //       <TouchableOpacity onPress={() => toggleModal()} style={{ height: 60, width: wp('90%'), backgroundColor: colors.primary, alignSelf: 'center', borderRadius: 500, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
-    //     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: hp('2%') }}>View or add comments</Text>
-    //   </TouchableOpacity>
-    //    */}
-    //       <ScrollView style={{ backgroundColor: 'white', height: hp('65%'), marginTop: 20, borderRadius: 10, width: wp('85%') }}>
-
-    //         <View style={{ padding: 30 }}>
-    //           {
-    //             isSelected === "AUA" || isSelected === "ANU" || isSelected === "BAQ" || isSelected === "BDA" || isSelected === "BGI" || isSelected === "BOG" || isSelected === "BZE" || isSelected === "CZM" || isSelected === "CAP" || isSelected === "CCS" || isSelected === "CLO" || isSelected === "CUN" || isSelected === "CUR" ||isSelected === "FDF" ||isSelected === "GCM" ||isSelected === "GDL" ||isSelected === "GEO" ||isSelected === "GND" || isSelected === "GUA" || isSelected ==="GYE" ||isSelected === "HAV" || isSelected ==="HOG" || isSelected ==="KIN" || isSelected ==="LIR" || isSelected ==="MAR" || isSelected ==="MBJ" || isSelected ==="MDE" ||isSelected === "MEX" ||isSelected === "MGA"  ||isSelected === "NAS" ||isSelected === "PAP" || isSelected ==="PLS" || isSelected ==="POP" ||isSelected === "POS" ||isSelected === "PTY" ||isSelected === "PUJ" ||isSelected === "PVR" || isSelected ==="RTB" ||isSelected === "SAL" ||isSelected === "SAP" ||isSelected === "SDQ" ||isSelected === "SJO" ||isSelected === "SJU" ||isSelected === "SKB" ||isSelected === "SNU" ||isSelected === "STI"  ||isSelected === "STX" ||isSelected === "SXM" ||isSelected === "UIO" ||isSelected === "UVF" ||isSelected === "VRA" ||isSelected === "XPL" ||isSelected === "YUL" || isSelected ==="YYZ" ?
-    //               <PdfData URL={sources} onSendComment={sendComment} onState={onCommentText} val={commentText} />
-
-    //               :
-
-    //               <PdfData URL={source} onSendComment={sendComment} onState={onCommentText} val={commentText} />
-
-
-    //           }
-
-    //           <FlatList
-    //             data={Comment}
-    //             renderItem={(cmt) => {
-
-    //               const comment = cmt?.item.data().Comment
-    //               const name = cmt?.item.data().name
-    //               const uid = cmt?.item.data().UID
-
-    //               return (
-    //                 <>
-    //                   {
-    //                     comment !== "" ?
-    //                       <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 35, width: wp('70%'), justifyContent: 'space-between' }}>
-    //                         <ShowingComments name={name} comment={comment} />
-    //                         {/* <View style={{ flexDirection: 'row' }}>
-    //                           <Image source={require('../../assets/images/profile.png')} style={{ height: 60, width: 60, }} />
-    //                           <View style={{ marginLeft: 15 }}>
-    //                             <Text style={{ fontSize: hp('2%'), fontWeight: 'bold' }}>{name}</Text>
-    //                             <Text style={{ fontSize: hp('1.5%') }}>{comment}</Text>
-    //                           </View>
-    //                         </View> */}
-
-    //                         {
-    //                           UID === uid ?
-    //                             <TouchableOpacity onPress={() => onDeleteComment(cmt.item.id)}>
-
-    //                               <MaterialCommunityIcons
-    //                                 name='delete'
-    //                                 size={25}
-
-    //                               />
-    //                             </TouchableOpacity>
-    //                             :
-    //                             null
-    //                         }
-
-    //                       </View>
-
-    //                       :
-
-    //                       <Text>No Comment here</Text>
-
-    //                   }
-
-
-    //                 </>
-    //               )
-    //             }}
-    //           />
-    //         </View>
-
-
-    //         {/* 
-    //         <View style={{ height: 200, width: wp('80%'), alignSelf: 'center',  padding: 20 }}>
-    //             <Comment/>
-    //         </View> */}
-
-    //       </ScrollView>
-    //     </View>
-    //   </View>
-    // </ScrollView>
+   
   )
 }
 

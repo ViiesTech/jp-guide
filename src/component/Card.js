@@ -16,7 +16,7 @@ const Card = ({
 }) => {
     return (
         <View>
-            <Text style={{ fontSize: hp('1.5%'), color: COLORS.WHITE, fontWeight: 'bold', opacity: 1, marginTop:30, position:'absolute', zIndex:200, alignSelf:'center', textAlign:'center' }}>{title}</Text>
+            <Text style={{ fontSize: 23, color: COLORS.WHITE, fontWeight: 'bold', opacity: 1, marginTop:30, position:'absolute', zIndex:200, alignSelf:'center', textAlign:'center' }}>{title}</Text>
             <TouchableOpacity onPress={onPress} style={{ opacity: 0.6 }}>
                 <FastImage source={imageBG}
                     style={{

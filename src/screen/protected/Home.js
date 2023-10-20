@@ -25,7 +25,7 @@ import FastImage from 'react-native-fast-image'
 import NetInfo from "@react-native-community/netinfo";
 
 import ReactNativeBlobUtil from 'react-native-blob-util'
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 const Home = ({ navigation }) => {
 
   //Orientation
@@ -34,7 +34,7 @@ const Home = ({ navigation }) => {
   const [screenResolution, setScreenResolution] = useState('')
 
   const [showEulaModal, setShowEULAModal] = useState(true)
-
+  const [ DaysLeft, setDaysLeft] = useState()
   useEffect(() => {
     Orientation.unlockAllOrientations();
   }, [navigation]);
@@ -42,18 +42,21 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     checkDarkMode()
     getMyEditFromFirebase()
+
   }, [])
+
+
 
   const getMyEditFromFirebase = async () => {
 
 
     const Pdf = await AsyncStorage.getItem('OI')
 
-    console.log(Pdf)
+
     // console.log("whats in side", Pdf)
 
     if (Pdf !== null) {
-      
+
     } else {
 
       const promise = []
@@ -63,7 +66,7 @@ const Home = ({ navigation }) => {
         .collection("pdf")
         .get()
         .then((doc) => {
-          console.log("please let me the doc of docs",doc?.docs)
+          console.log("please let me the doc of docs", doc?.docs)
 
 
           doc?.docs?.forEach((e) => {
@@ -72,7 +75,7 @@ const Home = ({ navigation }) => {
 
         }).then(async () => {
 
-          console.log("please let me know the",promise)
+          console.log("please let me know the", promise)
 
           for (const e of promise) {
             try {
@@ -91,7 +94,7 @@ const Home = ({ navigation }) => {
               const fileName = e?.name;
 
               // Save the filePath and fileName pair to AsyncStorage
-              await AsyncStorage.setItem(fileName,filePath)
+              await AsyncStorage.setItem(fileName, filePath)
 
 
               console.log(`Saved path for file ${fileName}: ${filePath}`);
@@ -171,6 +174,7 @@ const Home = ({ navigation }) => {
 
   }
 
+  //unccomment after update
   useEffect(() => {
 
     const updateDimensions = () => {
@@ -243,17 +247,52 @@ const Home = ({ navigation }) => {
   const goToPayment = (price) => {
     setModalVisible(false)
 
-    firestore()
-      .collection('Users')
-      .doc(UID)
-      .update({
-        Plan: price
-      }).then(() => {
 
-        navigation.navigate('Payment')
-      }).catch((e) => {
-        console.log(e)
-      })
+    const currentDate = new Date();
+
+    // Add 14 days to the current date
+    const futureDate = new Date(currentDate);
+    futureDate.setDate(currentDate.getDate() + 14);
+
+    // Format the future date as a string (e.g., "yyyy-mm-dd")
+    const formattedFutureDate = futureDate.toISOString().split('T')[0];
+
+    console.log(`Today's date: ${currentDate.toISOString().split('T')[0]}`);
+    console.log(`Date 14 days from today: ${formattedFutureDate}`);
+
+    if (price == "free") {
+
+
+      firestore()
+        .collection('Users')
+        .doc(UID)
+        .update({
+          Plan: price,
+          Date: new Date(),
+          PlanEnded: formattedFutureDate
+        }).then(() => {
+
+          setModalVisible(false)
+
+        }).catch((e) => {
+          console.log(e)
+        })
+    } else {
+
+      firestore()
+        .collection('Users')
+        .doc(UID)
+        .update({
+          Plan: price
+
+        }).then(() => {
+
+          navigation.navigate('Payment')
+        }).catch((e) => {
+          console.log(e)
+        })
+
+    }
 
   };
 
@@ -406,6 +445,54 @@ const Home = ({ navigation }) => {
       .doc(UID)
       .onSnapshot((val) => {
         if (val?.exists) {
+
+
+          if (val.data().Date) {
+            const timestamp = new Date(val?.data()?.Date?.seconds * 1000 + val?.data()?.Date?.nanoseconds / 1000000);
+
+            // Use the Date object to format the date
+            const formattedDate = timestamp?.toISOString()?.split('T')[0];
+
+            const endDate = new Date(val?.data()?.PlanEnded);
+
+            // Get the current date
+            const currentDate = new Date();
+
+            // Calculate the time difference in milliseconds
+            const timeDifference = endDate - currentDate;
+
+            // Calculate the number of days left
+            const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+            setDaysLeft(daysLeft)
+            if (val?.data()?.Plan == "free") {
+
+
+
+              if (formattedDate == val?.data().PlanEnded) {
+
+                firestore()
+                  .collection('Users')
+                  .doc(UID)
+                  .update({
+                    Expired: true
+                  }).then(()=>{
+                    setModalVisible(true)
+                  })
+
+              } else {
+                firestore()
+                  .collection('Users')
+                  .doc(UID)
+                  .update({
+                    Expired: false
+                  })
+                setModalVisible(true)
+              }
+
+            }
+
+          }
 
           if (val?.data()?.Buy) {
             console.log("hiiiiii")
@@ -641,7 +728,7 @@ const Home = ({ navigation }) => {
         : */}
 
         <View style={{ flexDirection: 'row', backgroundColor: color === true ? 'rgba(252, 252, 252, 0.1)' : colors.primary, width: screenWidth * 0.9, alignSelf: 'center', borderRadius: 20, top: 10, marginBottom: 30, height: screenHeight * 0.92, borderWidth: 1, borderColor: color === true ? 'white' : colors.primary }}>
-          <View style={{ padding: 10, marginLeft: 20, right: screenResolution === "PORTRAIT" ? 0 : -10, }}>
+          <View style={{ padding: 10, marginLeft: 17, right: screenResolution === "PORTRAIT" ? 0 : -10, }}>
 
             <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} style={{ alignItems: 'center', marginTop: 40 }}>
 
@@ -687,9 +774,9 @@ const Home = ({ navigation }) => {
           </View>
 
 
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', justifyContent: 'center', }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
-            <View style={{ width: screenWidth * 0.76, marginTop: 25, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', }}>
+            <View style={{ width: screenWidth * 0.76, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', }}>
 
 
               {card == true ?
@@ -712,7 +799,6 @@ const Home = ({ navigation }) => {
 
                   )
                 })
-
                 :
                 cardDetail.map((item, key) => {
                   return (
@@ -728,21 +814,36 @@ const Home = ({ navigation }) => {
 
 
         <Modal isVisible={isModalVisible}>
-          <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 20, padding: 20, }}>
+          <View style={{ backgroundColor: COLORS.WHITE, padding: 20, alignSelf: 'center' }}>
 
-            <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold', alignSelf: 'center' }}>Buy Now</Text>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
+              <View style={{ height: 1, width: wp('20%'), backgroundColor: COLORS.Text, marginRight: 10 }} />
 
-              <TouchableOpacity onPress={() => goToPayment("5.99")} style={{ height: 100, width: wp('39%'), backgroundColor: colors.secondery, alignItems: 'center', justifyContent: 'center', borderRadius: 10, }}>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white' }}>Monthly</Text>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white' }}>$5.99</Text>
+              <Text style={{ fontSize: hp('2.5%',), fontWeight: 'bold', }}>Premium</Text>
+              <View style={{ height: 1, width: wp('20%'), backgroundColor: COLORS.Text, marginLeft: 10 }} />
 
+
+            </View>
+
+
+            <Text style={{alignSelf:'center', fontSize:22, fontWeight:'bold', color:COLORS.Text, marginTop:20}}>{DaysLeft} Days left</Text>
+
+            <View style={{ justifyContent: 'space-around', marginTop: 20, flexDirection: 'row' }}>
+
+              <TouchableOpacity onPress={() => goToPayment("free")} style={{ height: 200, width: 200, backgroundColor: colors.secondery, justifyContent: 'center', borderRadius: 10, alignItems: 'center' }}>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white' }}>Free</Text>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginTop: 5 }}>14 days Trial</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => goToPayment('70.00')} style={{ height: 100, width: wp('39%'), backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white' }}>Yearly</Text>
-                <Text style={{ fontSize: hp('2%'), fontWeight: 'bold', color: 'white', marginTop: 10 }}>$70.00</Text>
+              <TouchableOpacity onPress={() => goToPayment("5.99")} style={{ height: 200, width: 200, backgroundColor: colors.primary, justifyContent: 'center', borderRadius: 10, alignItems: 'center' }}>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white' }}>$5.99</Text>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginTop: 5 }}>(1 Month)</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => goToPayment('70.00')} style={{ height: 200, width: 200, backgroundColor: colors.primary, justifyContent: 'center', borderRadius: 10, alignItems: 'center' }}>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white' }}>$70.00</Text>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginTop: 5 }}>(12 Month)</Text>
               </TouchableOpacity>
             </View>
 

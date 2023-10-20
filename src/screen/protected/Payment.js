@@ -84,6 +84,18 @@ const Payment = ({ navigation }) => {
 
     const onPayment = async () => {
 
+        const currentDate = new Date();
+
+        // Add 14 days to the current date
+        const futureDate = new Date(currentDate);
+        futureDate.setDate(currentDate.getDate() + 14);
+    
+        // Format the future date as a string (e.g., "yyyy-mm-dd")
+        const formattedFutureDate = futureDate.toISOString().split('T')[0];
+    
+        console.log(`Today's date: ${currentDate.toISOString().split('T')[0]}`);
+        console.log(`Date 14 days from today: ${formattedFutureDate}`);
+
         setLoading(true)
         const dollarinCents = price * 100;
 
@@ -111,7 +123,10 @@ const Payment = ({ navigation }) => {
                     .collection('Users')
                     .doc(UID)
                     .update({
-                        Buy: token ? response.data.id : ""
+                        Buy: token ? response.data.id : "",
+                        Date: new Date(),
+                        PlanEnded : formattedFutureDate
+
                     }).then(() => {
                         // navigation.navigate('home')
                     })

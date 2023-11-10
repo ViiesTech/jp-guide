@@ -119,13 +119,13 @@ const App = () => {
     // <StripeProvider publishableKey={"pk_test_51M8ALKAgW8OMwbeWlIQVZDIbJX1S9hMC8vtik17jjS2P04HQi2sbPcxyvKcN90nLJIuYJpeltBZzvT9uh0hfyTWN00r1AqtMkC"}>
     <Provider store={store}>
 
-      <SafeAreaView style={{ flex: 1 }}>
+      {/* <SafeAreaView style={{ flex: 1 }}> */}
 
         <NavigationContainer>
           <Routes />
 
         </NavigationContainer>
-      </SafeAreaView>
+      {/* </SafeAreaView> */}
     </Provider>
     // </StripeProvider>
   )

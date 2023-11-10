@@ -125,6 +125,16 @@ const SavePdf = ({ navigation }) => {
         };
     }, []);
 
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', () => {
+          // The screen is focused
+          // Call any action
+          StatusBar.setHidden(true)
+        });
+        return unsubscribe
+        
+      },[navigation])
+
     //sadjansjkdnaskjndjsakndjksankdnaskjndjnsajdnaskjndjsankjdnasjndkasjndksandnasjndjkasndjasnda____________
 
 

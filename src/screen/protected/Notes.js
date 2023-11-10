@@ -1,23 +1,11 @@
-import { ImageBackground, View, Text, StyleSheet, StatusBar, ScrollView, SafeAreaView, TouchableOpacity, TextInput, FlatList, Alert, ActivityIndicator, Dimensions, Image } from 'react-native'
+import { ImageBackground, View, Text, StyleSheet, StatusBar, ScrollView, SafeAreaView, TouchableOpacity, TextInput, FlatList, Alert, ActivityIndicator, Dimensions, Image, } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Header from '../../component/Header';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import TextInputComp from '../../component/TextInputComp';
 import colors from '../../constant/colors';
-import Card from '../../component/Card';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { StripeProvider } from '@stripe/stripe-react-native';
 import Modal from "react-native-modal";
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import DarkMode from '../../component/DarkMode';
-import DropDownPicker from 'react-native-dropdown-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { C, T } from '../../arrayindex/Alphabet';
-import { COLORS } from '../../utils/COLORS';
 import Orientation from 'react-native-orientation-locker';
 import { OrientationLocker, PORTRAIT, LANDSCAPE, useDeviceOrientationChange, OrientationType } from "react-native-orientation-locker";
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -158,6 +146,7 @@ const Notes = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    StatusBar.setHidden(true);
 
     const updateDimensions = () => {
       const { width, height } = Dimensions.get('window');

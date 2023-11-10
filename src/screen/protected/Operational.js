@@ -394,6 +394,8 @@ const Operational = ({ route, navigation }) => {
 
         }}
 
+      
+
         bottomToolbarEnabled={false}
 
         showLeadingNavButton={true}
@@ -401,7 +403,39 @@ const Operational = ({ route, navigation }) => {
         followSystemDarkMode={false}
         forceAppTheme={color === true ? Config.ThemeOptions.ThemeDark : Config.ThemeOptions.ThemeLight}
         autoSaveEnabled={true}
-        hideTopAppNavBar={true}
+
+        initialToolbar={Config.DefaultToolbars.Annotate}
+
+        hideDefaultAnnotationToolbars={[
+          Config.DefaultToolbars.FillAndSign,
+          Config.DefaultToolbars.PrepareForm,
+          Config.DefaultToolbars.Insert,
+          Config.DefaultToolbars.Favorite,
+          Config.DefaultToolbars.Measure,
+          Config.DefaultToolbars.Redaction,
+        ]}
+
+        disabledElements={[
+          Config.Buttons.searchButton,
+          Config.Buttons.listsButton,
+          Config.Buttons.moreItemsButton,
+          Config.Buttons.addPageButton,
+          Config.Buttons.InsertBlankPage,
+        ]}  
+
+        hideThumbnailsViewItems={[
+          Config.ThumbnailsViewItem.DeletePages,
+          Config.ThumbnailsViewItem.ExportPages,
+          Config.ThumbnailsViewItem.RotatePages,
+          Config.ThumbnailsViewItem.InsertBlankPage,
+          Config.ThumbnailsViewItem.InsertFromPhoto,
+          Config.ThumbnailsViewItem.InsertFromDocument,
+          Config.ThumbnailsViewItem.InsertFromScanner,
+          Config.ThumbnailsViewItem.InsertFromImage,
+          Config.ThumbnailsViewItem.DuplicatePages,
+        ]}
+
+        // hideTopAppNavBar={true}
         style={{ height: hp('100%'), width: screenWidth }}
 
       />

@@ -66,14 +66,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This will allow us to detect if an Apple Pencil is paired, enabling palm rejection and the ability to scroll with one finger while annotating.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>My description about why I need this capability</string>
+	<string>This will allow us detect if an Apple Pencil is paired, enabling palm rejection and the ability to scroll with one finger while annotating.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>My description about why I need this capability</string>
+	<string>To Add pdf</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>To access location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to photo library so that photos can be selected</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This will allow you to add images to your photo library.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Zocial.ttf</string>

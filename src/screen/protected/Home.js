@@ -24,8 +24,10 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import FastImage from 'react-native-fast-image'
 import NetInfo from "@react-native-community/netinfo";
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import ReactNativeBlobUtil from 'react-native-blob-util'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+
 const Home = ({ navigation }) => {
 
   //Orientation
@@ -42,9 +44,17 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     checkDarkMode()
     getMyEditFromFirebase()
-
   }, [])
 
+  useEffect(()=>{
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      StatusBar.setHidden(false)
+    });
+    return unsubscribe
+
+  },[navigation])
 
 
   const getMyEditFromFirebase = async () => {
@@ -182,7 +192,7 @@ const Home = ({ navigation }) => {
       setScreenWidth(width);
       setScreenHeight(height);
     };
-
+    
     Orientation.addOrientationListener(updateDimensions);
 
     return () => {
@@ -466,8 +476,6 @@ const Home = ({ navigation }) => {
 
             setDaysLeft(daysLeft)
             if (val?.data()?.Plan == "free") {
-
-
 
               if (formattedDate == val?.data().PlanEnded) {
 
@@ -813,6 +821,10 @@ const Home = ({ navigation }) => {
         {/* }  */}
 
 
+                {
+                  //payment modal  have to uncomment when the thing is done :)
+                }
+{/* 
         <Modal isVisible={isModalVisible}>
           <View style={{ backgroundColor: COLORS.WHITE, padding: 20, alignSelf: 'center' }}>
 
@@ -850,7 +862,7 @@ const Home = ({ navigation }) => {
 
 
           </View>
-        </Modal>
+        </Modal> */}
 
 
 

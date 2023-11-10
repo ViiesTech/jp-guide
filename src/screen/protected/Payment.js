@@ -203,16 +203,18 @@ const Payment = ({ navigation }) => {
 
                 <View style={{ padding: 20, flex: 1, backgroundColor: COLORS.WHITE }}>
 
+                   
+
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        {
-                            goBack == true ?
+                        {/* {
+                            goBack == true ? */}
                                 <TouchableOpacity onPress={() => navigation.goBack()}>
                                     <Ionicons name='arrow-back' color={COLORS.Text} size={40} />
                                 </TouchableOpacity>
-                                :
-                                null
+                        {/* //         : */}
+                        {/* //         null */}
 
-                        }
+                        {/* // } */}
 
                         <Text style={{ fontSize: hp('2.5%'), fontWeight: 'bold', color: COLORS.Text, }}>Payment Method</Text>
 

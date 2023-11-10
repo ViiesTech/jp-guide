@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking, _View, ActivityIndicator, Platform } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Button, TextInput, Linking, _View, ActivityIndicator, Platform, } from 'react-native'
 import React, { useRef } from 'react'
 import axios from 'axios';
 import RenderHtml from 'react-native-render-html';
@@ -93,8 +93,6 @@ const PDFText = ({ navigation, route }) => {
   }, [])
 
   //Set Dark mode in pdf 
-
-
   const SetMode = () => {
     if (color === true) {
       // _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.None)
@@ -104,7 +102,6 @@ const PDFText = ({ navigation, route }) => {
       _viewer.current.setColorPostProcessMode(Config.ColorPostProcessMode.None)
     }
   }
-
   //Set Dark mode in pdf 
 
 
@@ -422,6 +419,7 @@ const PDFText = ({ navigation, route }) => {
 
 
   //Have to uncomment this
+  //uncomment this please ok .....
   useEffect(() => {
 
     const updateDimensions = () => {
@@ -519,7 +517,7 @@ const PDFText = ({ navigation, route }) => {
 
   }
 
-  
+
 
   return (
     <View style={{ backgroundColor: COLORS.WHITE, }}>
@@ -540,13 +538,20 @@ const PDFText = ({ navigation, route }) => {
 
 
           <View style={{ flexDirection: 'row', marginLeft: 20 }}>
-
+            {/* 
             <TouchableOpacity onPress={() => LikePdf()} style={{ backgroundColor: colors.primary, height: 50, width: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
               <MaterialCommunityIcons name='thumb-up' size={30} color={Like === "Like" ? "blue" : "white"} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => DisLikePdf()} style={{ marginLeft: 20, backgroundColor: colors.primary, height: 50, width: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }} >
               <MaterialCommunityIcons name='thumb-down' size={30} color={Like === "DisLike" ? "blue" : "white"} />
+            </TouchableOpacity> */}
+
+            <TouchableOpacity onPress={() => {
+              const websiteURL = 'https://demoserver.digital/JP-Guide/feedback/';
+              Linking.openURL(websiteURL).catch((err) => console.error('An error occurred', err));
+            }} style={{ height: 50, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5 }}>
+              <Text style={{ color: "#FFFFFF", textAlign: 'center', fontWeight: 'bold' }}>Submit Feedback</Text>
             </TouchableOpacity>
 
           </View>
@@ -569,7 +574,7 @@ const PDFText = ({ navigation, route }) => {
       <View style={{ flexDirection: 'row', paddingHorizontal: 70, justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
         <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}></Text>
 
-        <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}>Likes {TotalLike.length}</Text>
+        {/* <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}>Likes {TotalLike.length}</Text> */}
         {
           isPdfUpdated === true ?
             <View />
@@ -579,7 +584,11 @@ const PDFText = ({ navigation, route }) => {
               <Text style={{ color: COLORS.WHITE, }}>{isPdfUpdateLoading === true ? <ActivityIndicator size={'small'} color={COLORS?.WHITE} /> : "Update Pdf"}</Text>
             </TouchableOpacity>
         }
+
+        <Text style={{ alignSelf: 'center', fontSize: hp('1.2%'), fontWeight: 'bold', marginTop: 10 }}></Text>
+
       </View>
+
       <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
         <View style={{ alignSelf: 'center' }} >
 
@@ -637,21 +646,30 @@ const PDFText = ({ navigation, route }) => {
 
                 ]}
 
-                topAppNavBarRightBar={[Config.Buttons.reflowButton, Config.Buttons.searchButton]}
+                disabledElements={[
+                  Config.Buttons.searchButton,
+                  Config.Buttons.listsButton,
+                  Config.Buttons.moreItemsButton,
+                  Config.Buttons.addPageButton,
+                  Config.Buttons.InsertBlankPage,
+                ]}  
+
+                hideThumbnailsViewItems={[
+                  Config.ThumbnailsViewItem.DeletePages,
+                  Config.ThumbnailsViewItem.ExportPages,
+                  Config.ThumbnailsViewItem.RotatePages,
+                  Config.ThumbnailsViewItem.InsertBlankPage,
+                  Config.ThumbnailsViewItem.InsertFromPhoto,
+                  Config.ThumbnailsViewItem.InsertFromDocument,
+                  Config.ThumbnailsViewItem.InsertFromScanner,
+                  Config.ThumbnailsViewItem.InsertFromImage,
+
+                  Config.ThumbnailsViewItem.DuplicatePages,
 
 
+                ]}
 
-                
-
-                onCurrentToolbarChanged = {({toolbar}) => {
-                  console.log('toolbar changed to: ' + toolbar);
-                }}
-
-                onAnnotationToolbarItemPress = {({id}) => {
-                  console.log('toolbar item press: ' + id);
-                }}
-
-
+              
                 // hideTopAppNavBar={true}
                 style={{ height: hp('100%'), width: screenWidth }}
 

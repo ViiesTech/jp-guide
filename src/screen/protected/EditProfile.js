@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, ActivityIndicator, ScrollView, ImageBackground, Switch, StyleSheet, useColorScheme } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, ActivityIndicator, ScrollView, ImageBackground, Switch, StyleSheet, useColorScheme,StatusBar } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -30,6 +30,8 @@ const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch()
 
   const color = useSelector(state => state.pdf.Dark)
+
+
 
 
   const COLORS = {
@@ -115,6 +117,8 @@ const EditProfile = ({ navigation }) => {
 
   };
 
+ 
+
 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -143,17 +147,23 @@ const EditProfile = ({ navigation }) => {
       }
 
     }
-
-
     // You can also handle theme switching logic here
   };
 
 
-
+  useEffect(()=>{
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      StatusBar.setHidden(true)
+    });
+    return unsubscribe
+    
+  },[navigation])
 
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+
       <FastImage source={color === true ? require('../../assets/images/hidark.png') : require('../../assets/images/hi.jpeg')} style={{ flex: 1 }}>
 
 
@@ -286,7 +296,7 @@ const EditProfile = ({ navigation }) => {
           </View>
         </ScrollView>
       </FastImage>
-    </SafeAreaView>
+
   )
 }
 export default EditProfile

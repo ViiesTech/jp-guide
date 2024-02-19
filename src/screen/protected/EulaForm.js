@@ -11,7 +11,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth, { firebase } from '@react-native-firebase/auth';
 
 
-const EulaForm = ({navigation}) => {
+const EulaForm = ({ navigation }) => {
 
   const [isChecked, setIsChecked] = useState(false)
 
@@ -76,35 +76,35 @@ const EulaForm = ({navigation}) => {
   };
 
 
-  const  EulaServiceReaded = () => {
+  const EulaServiceReaded = () => {
 
     setLoader(true)
 
 
 
-    if(isChecked === true){
+    if (isChecked === true) {
       const UID = auth()?.currentUser?.uid
 
       firestore()
-      .collection("Users")
-      .doc(UID)
-      .update({
-        "EulaStatus" : true
-      }).then(()=>{
-        console.log("successfully updated")
-        navigation.navigate("Home")
-        setLoader(false)
+        .collection("Users")
+        .doc(UID)
+        .update({
+          "EulaStatus": true
+        }).then(() => {
+          console.log("successfully updated")
+          navigation.navigate("DownloadPdf")
+          setLoader(false)
 
-      }).catch(err => {
-        console.log(err)
-        setLoader(false)
+        }).catch(err => {
+          console.log(err)
+          setLoader(false)
 
-      })
-      
+        })
 
-    }else{
+
+    } else {
       Toast.show({
-        'type' : 'error',
+        'type': 'error',
         'text1': "Please accept the End User License Agreement"
       })
       setLoader(false)
@@ -123,7 +123,7 @@ const EulaForm = ({navigation}) => {
             source={source}
           />
 
-          <View style={{ flexDirection: 'row', height: 100, alignItems: 'center', paddingHorizontal:20 }}>
+          <View style={{ flexDirection: 'row', height: 100, alignItems: 'center', paddingHorizontal: 20 }}>
 
             <TouchableOpacity onPress={() => setIsChecked(!isChecked)} style={{ height: 30, width: 30, backgroundColor: 'white', borderRadius: 5, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
               {
@@ -144,27 +144,27 @@ const EulaForm = ({navigation}) => {
             <Text style={{ marginLeft: 10, fontSize: heightPercentageToDP('2%'), color: "black" }}>Please accept the <Text style={{ textDecorationLine: 'underline', color: 'blue' }}> End User License Agreement</Text></Text>
           </View>
 
-          <View style={{paddingHorizontal:20}}>
+          <View style={{ paddingHorizontal: 20 }}>
 
-            
 
-          <TouchableOpacity onPress={() => EulaServiceReaded()} style={{ height: 50,  backgroundColor:colors.primary, borderRadius: 5, alignItems: 'center', justifyContent: 'center', borderWidth: 1, marginBottom:20}}>
-              
+
+            <TouchableOpacity onPress={() => EulaServiceReaded()} style={{ height: 50, backgroundColor: colors.primary, borderRadius: 5, alignItems: 'center', justifyContent: 'center', borderWidth: 1, marginBottom: 20 }}>
+
               {
                 isLoader === true ?
 
-                <ActivityIndicator style={{alignSelf:'center', }} size={'small'} color={'white'} />
-                :
+                  <ActivityIndicator style={{ alignSelf: 'center', }} size={'small'} color={'white'} />
+                  :
 
-              <Text style={{color:"white", fontWeight:'bold', fontSize:18}}>Continue</Text>
+                  <Text style={{ color: "white", fontWeight: 'bold', fontSize: 18 }}>Continue</Text>
               }
             </TouchableOpacity>
 
-            </View>
+          </View>
         </ScrollView>
       </View>
 
-      <Toast/>
+      <Toast />
 
     </SafeAreaView>
   )

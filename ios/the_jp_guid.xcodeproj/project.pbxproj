@@ -29,7 +29,7 @@
 		FA13AEDC292EF03900A87918 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AECC292EF03900A87918 /* Octicons.ttf */; };
 		FA13AEDD292EF03900A87918 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AECD292EF03900A87918 /* FontAwesome5_Brands.ttf */; };
 		FA13AEDE292EF03900A87918 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA13AECE292EF03900A87918 /* AntDesign.ttf */; };
-		FAB8CEC52A953AB90092B093 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAB8CEC42A953AB90092B093 /* GoogleService-Info.plist */; };
+		FA7371C82B0820C9003C3C5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA7371C72B0820C9003C3C5E /* GoogleService-Info.plist */; };
 		FADEA4E42937F69100DAA21B /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = FADEA4E32937F69100DAA21B /* main.jsbundle */; };
 /* End PBXBuildFile section */
 
@@ -68,8 +68,8 @@
 		FA13AECC292EF03900A87918 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		FA13AECD292EF03900A87918 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
 		FA13AECE292EF03900A87918 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AntDesign.ttf; sourceTree = "<group>"; };
+		FA7371C72B0820C9003C3C5E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FAB8CEC12A93E87B0092B093 /* the_jp_guid.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = the_jp_guid.entitlements; path = the_jp_guid/the_jp_guid.entitlements; sourceTree = "<group>"; };
-		FAB8CEC42A953AB90092B093 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FADEA4E32937F69100DAA21B /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,8 +105,8 @@
 		13B07FAE1A68108700A75B9A /* the_jp_guid */ = {
 			isa = PBXGroup;
 			children = (
-				FAB8CEC42A953AB90092B093 /* GoogleService-Info.plist */,
 				FAB8CEC12A93E87B0092B093 /* the_jp_guid.entitlements */,
+				FA7371C72B0820C9003C3C5E /* GoogleService-Info.plist */,
 				FADEA4E32937F69100DAA21B /* main.jsbundle */,
 				FA13AEBE292EEE3300A87918 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -266,7 +266,6 @@
 				FA13AED0292EF03900A87918 /* MaterialCommunityIcons.ttf in Resources */,
 				FA13AEDC292EF03900A87918 /* Octicons.ttf in Resources */,
 				FA13AED1292EF03900A87918 /* Feather.ttf in Resources */,
-				FAB8CEC52A953AB90092B093 /* GoogleService-Info.plist in Resources */,
 				FA13AED2292EF03900A87918 /* EvilIcons.ttf in Resources */,
 				FA13AEDA292EF03900A87918 /* Zocial.ttf in Resources */,
 				FA13AEDB292EF03900A87918 /* MaterialIcons.ttf in Resources */,
@@ -277,6 +276,7 @@
 				FA13AED7292EF03900A87918 /* FontAwesome5_Solid.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				FA7371C82B0820C9003C3C5E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

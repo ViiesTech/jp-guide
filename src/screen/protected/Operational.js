@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, TouchableOpacity, ScrollView, Image, FlatList, StyleSheet, ActivityIndicator, Dimensions } from 'react-native'
+import { View, Text, StatusBar, TouchableOpacity, ScrollView, Image, FlatList, StyleSheet, ActivityIndicator, Dimensions , Linking} from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import Header from '../../component/Header'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -353,12 +353,23 @@ const Operational = ({ route, navigation }) => {
 
         <Image source={color === true ? require('../../assets/images/logodark.png') : require('../../assets/images/profile.png')} style={{ height: 100, width: 100 }} resizeMode='contain' />
 
+
         {
           isPdfUpdated === false ?
 
-            <TouchableOpacity onPress={() => UpdatePdf()} style={{ backgroundColor: COLORS?.Text, borderRadius: 10, padding: 20 }}>
-              <Text style={{ color: COLORS?.WHITE }}>{isPdfUpdateLoading == true ? <ActivityIndicator size={'small'} color={COLORS.WHITE} /> : "Update"}</Text>
-            </TouchableOpacity>
+            <View style={{marginTop:20, flexDirection:'row'}}>
+
+              <TouchableOpacity onPress={() => {
+                const websiteURL = 'https://demoserver.digital/JP-Guide/feedback/';
+                Linking.openURL(websiteURL).catch((err) => console.error('An error occurred', err));
+              }} style={{ height: 50, backgroundColor: colors.primary, borderRadius: 10, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5 }}>
+                <Text style={{ color: "#FFFFFF", textAlign: 'center', fontWeight: 'bold' }}>Submit Feedback</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => UpdatePdf()} style={{ backgroundColor: COLORS?.Text, borderRadius: 10, paddingHorizontal: 5, marginLeft:10, alignItems:'center', justifyContent:'center' }}>
+                <Text style={{ color: COLORS?.WHITE }}>{isPdfUpdateLoading == true ? <ActivityIndicator size={'small'} color={COLORS.WHITE} /> : "Update"}</Text>
+              </TouchableOpacity>
+            </View>
             :
             <View style={{ height: 40, width: wp('10%'), }} />
         }
@@ -394,7 +405,7 @@ const Operational = ({ route, navigation }) => {
 
         }}
 
-      
+
 
         bottomToolbarEnabled={false}
 
@@ -421,7 +432,7 @@ const Operational = ({ route, navigation }) => {
           Config.Buttons.moreItemsButton,
           Config.Buttons.addPageButton,
           Config.Buttons.InsertBlankPage,
-        ]}  
+        ]}
 
         hideThumbnailsViewItems={[
           Config.ThumbnailsViewItem.DeletePages,
